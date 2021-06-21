@@ -1,0 +1,389 @@
+""" This program contains functions for calculating induced magnetic fields
+    from spherical conductors. Outputs typically appear as mpc, which is
+    the mpmath complex type.
+    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
+    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
+    DOI: TBD
+Author: M.J. Styczinski, mjstyczi@uw.edu """
+
+import os
+import numpy as np
+from collections.abc import Iterable
+import mpmath as mp
+# mpmath is needed for enhanced precision to avoid
+# divide-by-zero errors induced by underflow.
+
+from config import *
+from field_xyz import eval_Bi
+
+# Global variables and settings
+# Set maximum precision for mpmath quantities
+mp.mp.dps = digits_precision
+# Numerical constants in high-precision mpmath format
+zero = mp.mpf("0")
+one = mp.mpf("1")
+j = mp.mpc(1j)
+mu_o = mp.mpf("4.0e-7")*mp.pi
+
+#############################################
+
+"""
+validate()
+    Check inputs to be sure everything will be interpreted correctly.
+    Usage: `r_bds`, `sigmas`, `omegas` = validate(`r_bds`, `sigmas`, `omegas`)
+    Returns:
+        r_bds: float, shape(N).
+        sigmas: float, shape(N).
+        omegas: float, shape(P).
+    Parameters:
+        r_bds: float, shape(N).
+        sigmas: float, shape(N).
+        omegas: float, shape(P).
+    """
+def validate(r_bds, sigmas, omegas):
+    #    Check length of boundary radius and conductivity lists
+    if np.shape(r_bds) != np.shape(sigmas):
+        print("boundaries shape: ",np.shape(r_bds))
+        print("sigmas shape: ",np.shape(sigmas))
+        raise ValueError("The number of boundaries is not equal to the number of conductivities.")
+
+    if not isinstance(r_bds, list):
+        r_bds = [r_bds]
+        sigmas = [sigmas]
+    if not isinstance(omegas, list):
+        omegas = [omegas]
+
+    return r_bds, sigmas, omegas
+
+#############################################
+
+"""
+jnx(), ynx(), jdx(), ydx()
+    Spherical Bessel and Neumann functions for degree n and argument x.
+    jdx and ydx are j_n^\star and y_n^\star in the above publication, and are
+    equal to d(r*jnx(kr))/dr and d(r*ynx(kr))/dr, respectively.
+    Usage: `eval` = jnx(`n`, `x`)
+    Returns:
+        eval: mpc, shape(len(x)). List of results of Bessel functions in mpmath complex (mpc) format. Always returns an array, possibly of length 1.
+    Parameters:
+        n: mpf. Degree of spherical Bessel function. Should be an integer, despite being of mpf type (must be passed as half-integer order to besselj).
+        x: mpc, shape(N). Complex argument of Bessel function (kr). MUST be a list or this will break. Make single values into lists with x = [x].
+    """
+def jnx(n,x):
+    two = mp.mpf("2")
+    jnx = np.array([ mp.besselj( n+mp.mpf("0.5"),xi ) * mp.sqrt(mp.pi/two/xi) for xi in x ])
+    return jnx
+def ynx(n,x):
+    two = mp.mpf("2")
+    ynx = np.array([ mp.bessely( n+mp.mpf("0.5"),xi ) * mp.sqrt(mp.pi/two/xi) for xi in x ])
+    return ynx
+def jdx(n,x):
+    one = mp.mpf("1")
+    jn = jnx(n,x)
+    jP = jnx(n+one,x)
+    jdx = np.array([ (n+one)*jn[i] - x[i]*jP[i] for i in range(len(x)) ])
+    return jdx
+def ydx(n,x):
+    one = mp.mpf("1")
+    yn = ynx(n,x)
+    yP = ynx(n+one,x)
+    ydx = np.array([ (n+one)*yn[i] - x[i]*yP[i] for i in range(len(x)) ])
+    return ydx
+
+#############################################
+
+"""
+AeResponse()
+    The complex response amplitude A^e for degree n excitation field,
+    with spherical symmetry and for one value of ω.
+    Usage: `Ae` = AeResponse(`r_bds`, `sigmas`, `omega`, `nn=1`)
+    Returns:
+        Ae: mpc. The complex amplitude response for the given n and interior structure.
+    Parameters:
+        r_bds: float, shape(N). Radii for each boundary surface in m.
+        sigmas: float, shape(N). Conductivity for each layer under the corresponding boundary in S/m.
+        omega: float. Angular frequency of magnetic oscillations in rad/s.
+        rscaling: float. Ratio of outermost conducting boundary to body radius.
+        nn: integer (1). Degree n of A_n^e to evaluate.
+    """
+def AeResponse(r_bds, sigmas, omega, rscaling, nn=1):
+    n_bds = np.size(r_bds)
+
+    # Convert input data into mpmath floats
+    n = mp.mpf(nn)
+    if not isinstance(r_bds, Iterable):
+        r_bds = [ mp.mpf(r_bds) ]
+        sigmas = [mp.mpf(sigmas)]
+    else:
+        r_bds = [mp.mpf(r_i) for r_i in r_bds]
+        sigmas = [mp.mpf(sig_i) for sig_i in sigmas]
+
+    omega = mp.mpf(omega)
+
+    # Make lists of k values
+    kr_ll = []
+    kr_ul = []
+    for i_bdy in range(n_bds-1):
+        k_lower = mp.sqrt(j*omega*mu_o*sigmas[i_bdy])
+        k_upper = mp.sqrt(j*omega*mu_o*sigmas[i_bdy+1])
+        # kr values for lower/upper layers at each boundary
+        kr_ll.append(k_lower*r_bds[i_bdy])
+        kr_ul.append(k_upper*r_bds[i_bdy])
+    # ka value at outer boundary
+    kr_ex = [mp.sqrt(j*omega*mu_o*sigmas[-1])*r_bds[-1]]
+
+    # Insert kr into Bessel functions for outer bdy only first
+    jn_ex = jnx(nn,kr_ex)
+    jd_ex = jdx(nn,kr_ex)
+    yn_ex = ynx(nn,kr_ex)
+    yd_ex = ydx(nn,kr_ex)
+
+    #    Calculate outer boundary transfer quantities
+    betaQ =  jd_ex - (n+one)*jn_ex
+    gammaQ = yd_ex - (n+one)*yn_ex
+    deltaQ = n*jn_ex + jd_ex
+    epsQ =   n*yn_ex + yd_ex
+
+    # If there's only one boundary, kr_ll and kr_ul are empty and we can immediately calculate Ae.
+    if n_bds == 1:
+        Ae = cpx_div(betaQ,deltaQ) * rscaling**(nn+2)
+        return Ae
+
+    # Continue inserting kr into Bessel functions
+    jn_ll = jnx(nn,kr_ll)
+    jd_ll = jdx(nn,kr_ll)
+    yn_ll = ynx(nn,kr_ll[1:])
+    yd_ll = ydx(nn,kr_ll[1:])
+    yn_ll = np.insert(yn_ll, 0, zero)
+    yd_ll = np.insert(yd_ll, 0, zero)
+
+    jn_ul = jnx(nn,kr_ul)
+    jd_ul = jdx(nn,kr_ul)
+    yn_ul = ynx(nn,kr_ul)
+    yd_ul = ydx(nn,kr_ul)
+
+    # Initialize quantities for recursion relations
+    Lambd = []
+    alph = []
+    beta = []
+    gamm = []
+    delt = []
+    epsi = []
+    C_rel = []
+    D_rel = []
+
+    # Calculate layer transfer quantities
+    beta.append(jn_ll[0]*yd_ul[0] - yn_ul[0]*jd_ll[0])
+    gamm.append(yn_ll[0]*yd_ul[0] - yn_ul[0]*yd_ll[0])
+    delt.append(jn_ul[0]*jd_ll[0] - jn_ll[0]*jd_ul[0])
+    epsi.append(jn_ul[0]*yd_ll[0] - yn_ll[0]*jd_ul[0])
+    Lambd.append(cpx_div_val(delt[0],beta[0]))
+
+    for i in range(1,n_bds-1):
+        beta.append(jn_ll[i]*yd_ul[i] - yn_ul[i]*jd_ll[i])
+        gamm.append(yn_ll[i]*yd_ul[i] - yn_ul[i]*yd_ll[i])
+        delt.append(jn_ul[i]*jd_ll[i] - jn_ll[i]*jd_ul[i])
+        epsi.append(jn_ul[i]*yd_ll[i] - yn_ll[i]*jd_ul[i])
+        this_Lambd = cpx_div_val( delt[-1] + Lambd[-1]*epsi[-1] , beta[-1] + Lambd[-1]*gamm[-1] )
+        Lambd.append(this_Lambd)
+
+    # Finally, find Ae from outer BC, using special beta-eps we eval'd first.
+    Ae = cpx_div((betaQ + Lambd[-1]*gammaQ), (deltaQ + Lambd[-1]*epsQ)) * rscaling**(nn+2)
+    return Ae
+
+# Avoids divide-by-zero errors when Lambd is very close to i (high conductivities)
+def cpx_div(a, b):
+    nvals = np.size(a)
+    amag = [ mp.fabs(ai) for ai in a ]
+    aarg = [ mp.atan2(mp.im(ai), mp.re(ai)) for ai in a ]
+    bmag = [ mp.fabs(bi) for bi in b ]
+    barg = [ mp.atan2(mp.im(bi), mp.re(bi)) for bi in b ]
+
+    div_mag = [ amag[i] / bmag[i] for i in range(nvals) ]
+    div_arg = [ aarg[i] - barg[i] for i in range(nvals) ]
+    quotient = np.array([ div_mag[i] * mp.exp(j * div_arg[i]) for i in range(nvals) ])
+    return quotient
+def cpx_div_val(a, b):
+    amag = mp.fabs(a)
+    aarg = mp.atan2(mp.im(a), mp.re(a))
+    bmag = mp.fabs(b)
+    barg = mp.atan2(mp.im(b), mp.re(b))
+
+    div_mag = amag / bmag
+    div_arg = aarg - barg
+    quotient = div_mag * mp.exp(j * div_arg)
+    return quotient
+
+#############################################
+
+"""
+InducedAeList()
+    The complex response amplitude A^e for degree n excitation field,
+    with spherical symmetry and for a list of ω values.
+    Usage: `Aes`, `AeM`, `AeA` = InducedAeList(`r_bds`, `sigmas`, `omegas`, `nn=1`, `writeout=False`, `path=None`)
+    Returns:
+        Aes: mpc, shape(P). List of complex amplitude responses for the given n and interior structure.
+        AeM: mpc, shape(P). List of response magnitudes for the given n and interior structure.
+        AeA: mpc, shape(P). List of phase arguments for the given n and interior structure.
+    Parameters:
+        r_bds: float, shape(N). Radii for each boundary surface in m.
+        sigmas: float, shape(N). Conductivity for each layer under the corresponding boundary in S/m.
+        omegas: float, shape(P). Angular frequencies of magnetic oscillations in rad/s.
+        rscale_moments: float. Equal to 1/R_body in units of 1/m. For proper scaling when conducting boundaries
+            may or may not coincide with the body surface.
+        nn: integer (1). Degree n of A_n^e to evaluate.
+        writeout: boolean (False). Whether to save a .txt file of values calculated.
+        path: string (None). Path relative to run directory to print output data to. Defaults to './'.
+    """
+def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None):
+    if writeout:
+        print("Calculating A_e for ",len(omegas)," omega values.")
+
+    n_omegas = len(omegas)
+    Aes = np.zeros(n_omegas, dtype=np.complex_)
+
+    if rscale_moments == 1.0:
+        rscaling = rscale_moments
+    else:
+        rscaling = rscale_moments * r_bds[-1]
+
+    # For each omega, evaluate Ae:
+    for i_om in range(n_omegas):
+        Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
+        if writeout and ((i_om*4) % n_omegas < 4): print(i_om," of ",n_omegas," complete.")
+
+    Aes = np.array([ complex(val) for val in Aes ])
+    AeM = np.abs(Aes)
+    AeA = np.angle(Aes)
+
+    if writeout:
+        T_hrs = [ 2*np.pi/omega_i/3600 for omega_i in omegas ]
+
+        if path is None:
+            path = os.getcwd()+'/'
+        fpath = path+"complexAes.dat"
+        fout = open(fpath, "w")
+        header = "{:<13} {:<24} {:<24}\n".format("Period (hr),", "Ae.mag,", "Ae.arg")
+        fout.write(header)
+        [ fout.write( "{:<13} {:<24} {:<24}\n".format(round(T_hrs[i],5), AeM[i], AeA[i]) ) for i in range(len(omegas)) ]
+        fout.close()
+        print("Data for Aes written to file: ",fpath)
+
+    return Aes, AeM, AeA
+
+#############################################
+
+"""
+BiList()
+    The complex induced magnetic moments for a given excitation field,
+    with spherical symmetry and for a list of ω values.
+    Usage: `Binm` = BiList(`r_bds`, `sigmas`, `peak_omegas`, `Benm`, `nprmvals`, `mprmvals`, `rscale_moments`, `n_max=1`, `writeout=True`,
+                            `path=None`, `bodyname=None`, `append=""`)
+    Returns:
+        Binm: complex, shape(n_peaks,2,n_max+1,n_max+1). List of complex amplitude responses for the given Benm, frequencies, and interior structure.
+    Parameters:
+        r_bds: float, shape(N). Radii for each boundary surface in m.
+        sigmas: float, shape(N). Conductivity for each layer under the corresponding boundary in S/m.
+        peak_omegas: float, shape(n_omegas). Angular frequencies of peak oscillations in rad/s.
+        Benm: complex, shape(n_omegas,2,n_max+1,n_max+1). Complex excitation amplitudes for each peak oscillation.
+        nprmvals: integer, shape(Nnmprm). A linear list of n' values for constructing (n',m') pairs in parallelized loops.
+        mprmvals: integer, shape(Nnmprm). A linear list of m' values for constructing (n',m') pairs in parallelized loops.
+        rscale_moments: float. Equal to 1/R_body in units of 1/m. For proper scaling when conducting boundaries
+            may or may not coincide with the body surface.
+        n_max: integer (1). Largest n' represented in the excitation moments.
+        writeout: boolean (True). Whether to save computed values to disk for rapid replotting.
+        path: string (None). Path relative to run directory to print output data to. Defaults to 'induced/'.
+        bodyname: string (None). Body name to include in writeout filename.
+        append: string (""). Optional string appended to file names.
+    """
+def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, bodyname=None, append=""):
+    if writeout:
+        print("Calculating symmetric B_inm for ",len(peak_omegas)," periods.")
+
+        if bodyname is None:
+            bfname = ""
+        else:
+            bfname = bodyname+"_"
+
+    n_omegas = len(peak_omegas)
+    Nnm = len(nprmvals)
+    Binm = np.zeros((n_omegas,2,n_max+1,n_max+1), dtype=np.complex_)
+    Aes = np.zeros(n_omegas, dtype=np.complex_)
+
+    # For each degree n, evaluate all Ae:
+    for ni in range(1,n_max+1):
+        Aes, _, _ = InducedAeList(r_bds, sigmas, peak_omegas, rscale_moments, nn=ni, writeout=False)
+        n = mp.mpf(ni)
+        for i_om in range(n_omegas):
+            Binm[i_om,:,ni,:] = n/(n+one)*Benm[i_om,:n_max+1,ni,:n_max+1]*Aes[i_om]
+
+    if writeout:
+        if path is None:
+            path = "induced/"
+        fpath = path+bfname+"Binm_sym"+ append +".dat"
+        fout = open(fpath, "w")
+        header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr),", "n,", " m,", "Binm_Re (nT)", "Binm_Im (nT)")
+        fout.write(header)
+        for i in range(len(peak_omegas)):
+            T_hrs = 2*np.pi/peak_omegas[i]/3600
+            for i_nm in range(Nnm):
+                sign = int(mprmvals[i_nm]<0)
+                this_Binm = Binm[i,sign,nprmvals[i_nm],abs(mprmvals[i_nm])]
+                fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nprmvals[i_nm], mprmvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
+        fout.close()
+        print("Data for symmetric Binm written to file: ",fpath)
+
+    return Binm
+
+#############################################
+
+"""
+getMagSurf()
+    Evaluates the induced magnetic field at the surface for induced magnetic moments Binm.
+    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `rval`, `ltht`, `lphi`, `nmax_plot=4`)
+    Returns:
+        Bx,By,Bz (each): complex, ndarray shape(lleny,llenx). A (lleny,llenx) array of field values due to the particular Binm values passed.
+            Field values can be obtained for any future time by multiplying each Binm[i,:,:,:] by the corresponding e^-iωt factor.
+            t=0 is defined to be the J2000 epoch.
+    Parameters:
+        nvals: integer, shape(Nnm). Linear list of magnetic moment degrees to be evaluated.
+        mvals: integer, shape(Nnm). Linear list of magnetic moment orders to be evaluated, corresponding to nvals of the same index.
+        Binm: complex, shape(2,n_max+1,n_max+1). Magnetic moment of degree and order n,m that can be indexed by the matched entries
+            in nvals and mvals. Units match the output field.
+        rval: float. Radius of spherical surface over which to evaluate the field. rval has units of R_body, i.e. the physical surface is 1.0.
+        ltht: float, shape(lleny). Array of theta values over which to evaluate the field components.
+        lphi: float, shape(llenx). Array of phi values over which to evaluate the field components.
+        nmax_plot: integer (4). Maximum value of n for evaluating magnetic fields. eval_Bi must have each n explicitly hard-coded,
+            which has only been done up to n=4 because larger-degree moments are expected to have small contributions at altitude.
+    """
+def getMagSurf(nvals,mvals,Binm, rval,ltht,lphi, nmax_plot=4):
+    if nmax_plot>4:
+        nmax_plot = 4
+        raise Warning("Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
+
+    Nnm = len(nvals)
+    lleny = len(ltht)
+    llenx = len(lphi)
+    lin_Binm = np.array([ Binm[int(mvals[iN]<0),nvals[iN],abs(mvals[iN])] for iN in range(Nnm) ])
+
+    Bx, By, Bz = ( np.zeros((lleny,llenx), dtype=np.complex_) for _ in range(3) )
+    x = np.array([ rval*np.sin(thti)*np.cos(phii) for thti in ltht for phii in lphi ])
+    y = np.array([ rval*np.sin(thti)*np.sin(phii) for thti in ltht for phii in lphi ])
+    z = np.array([ rval*np.cos(thti) for thti in ltht for _ in lphi ])
+    r = np.zeros((1,lleny*llenx)) + rval
+
+    pool = mtp.Pool(num_cores)
+    par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
+    pool.close()
+    pool.join()
+    # Unpack results from parallel processing and sum them
+    for res in par_result:
+        this_Bx, this_By, this_Bz = res.get()
+        Bx = Bx + this_Bx
+        By = By + this_By
+        Bz = Bz + this_Bz
+
+    Bx = np.reshape(Bx, (lleny,llenx))
+    By = np.reshape(By, (lleny,llenx))
+    Bz = np.reshape(Bz, (lleny,llenx))
+    return Bx, By, Bz
