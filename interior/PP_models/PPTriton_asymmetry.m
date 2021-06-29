@@ -110,5 +110,5 @@ outPlanet = PlanetProfile(Planet,Seismic,Params);
 
 asymTable = printInteriorAsym(outPlanet);
 fpath_asym = [Planet.name '/interior_model_asym_' Planet.name '.txt'];
-writetable(asymTable,fpath_asym);
+writetable(asymTable{1},fpath_asym);
 disp(['Interior conductivity model saved to ' fpath_asym])

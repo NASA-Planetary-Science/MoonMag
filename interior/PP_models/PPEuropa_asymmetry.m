@@ -136,7 +136,7 @@ Planet.Ocean.w_ocean_pct=0.1*gsw_SSO; Planet.Tb_K = [270.79]; % 22.5 km thick ic
 outPlanet = PlanetProfile(Planet,Seismic,Params);
 
 asymTable = printInteriorAsym(outPlanet);
-writetable(asymTable,[fpath_asym '_Tobie_low.txt']);
+writetable(asymTable{1},[fpath_asym '_Tobie_low.txt']);
 disp(['Interior conductivity model saved to ' fpath_asym '_Tobie_low.txt'])
 
 
@@ -145,5 +145,5 @@ Planet.Ocean.w_ocean_pct=gsw_SSO; Planet.Tb_K = [269.047]; % 22.5 km thick ice
 outPlanet = PlanetProfile(Planet,Seismic,Params);
 
 asymTable = printInteriorAsym(outPlanet);
-writetable(asymTable,[fpath_asym '_Tobie_high.txt']);
+writetable(asymTable{1},[fpath_asym '_Tobie_high.txt']);
 disp(['Interior conductivity model saved to ' fpath_asym '_Tobie_high.txt'])
