@@ -22,7 +22,7 @@ import symmetry_funcs as sym
 import asymmetry_funcs as asym
 import plotting_funcs as plots
 
-def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=True, compare_me=False, do_gif=False):
+def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False):
 
     absolute = (comp==None)   # Whether to plot the symmetric and asymmetric absolute magnitudes in addition to the desired component
     if comp is None:
@@ -49,8 +49,12 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         eval_r = 1.1 # About 25 km altitude
     elif bname == "Miranda":
         p_max_main = 8
-        bname_opt = ""
-        eval_r = eval_radius
+        if surface:
+            bname_opt = "_surface"
+            eval_r = 1.0
+        else:
+            bname_opt = ""
+            eval_r = eval_radius
     elif bname == "Europa":
         if compare_me:
             p_max_main = 2
@@ -129,7 +133,10 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
     elif bname == "Miranda":
         rscale_moments = 1/235.8/1e3
         rscale_asym = 1/185989.764241229
-        r_io = -3
+        if bname_opt == "_surface":
+            r_io = -2
+        else:
+            r_io = -3
     elif bname == "Triton":
         rscale_moments = 1/1353.4/1e3
         rscale_asym = 1/1803400
@@ -230,18 +237,39 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
             # Calculate and print to data files
             Binm_sph = sym.BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt)
             Binm = asym.BiList(r_bds, sigmas, peak_omegas, asym_shape, grav_shape, Benm, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt)
+            n_peaks = len(peak_omegas)
+            if output_Schmidt:
+                nprmvals = [nprm for nprm in range(1, nprm_max_main + 1) for _ in range(0, nprm + 1)]
+                mprmvals = [mprm for nprm in range(1, nprm_max_main + 1) for mprm in range(0, nprm + 1)]
+                nvals = [n for n in range(1, n_max_main + 1) for _ in range(0, n + 1)]
+                mvals = [m for n in range(1, n_max_main + 1) for m in range(0, n + 1)]
+                gnm, hnm = ( np.zeros((n_peaks,n_max_main+1,n_max_main+1), dtype=np.complex_) for _ in range(2) )
+                gnm_sph, hnm_sph = ( np.zeros((n_peaks,nprm_max_main+1,nprm_max_main+1), dtype=np.complex_) for _ in range(2) )
+                for i in range(n_peaks):
+                    gnm[i,...], hnm[i,...] = asym.get_gh_from_Binm(n_max_main,Binm[i,...])
+                    gnm_sph[i,...], hnm_sph[i,...] = asym.get_gh_from_Binm(nprm_max_main,Binm_sph[i,...])
         else:
-            T_hrs, n_asy, m_asy, lin_Binm_Re, lin_Binm_Im = np.loadtxt(inp_Bi_path+bin_name+"Binm_asym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
-            peak_periods = np.unique(T_hrs)
-            n_peaks = len(peak_periods)
-            Nnm_asy = int(len(n_asy)/n_peaks)
-            nmax_asy = int(np.sqrt(Nnm_asy + 1)) - 1
-            lin_Binm = lin_Binm_Re + 1j*lin_Binm_Im
-            Binm = np.reshape(lin_Binm, (n_peaks,Nnm_asy))
+            if output_Schmidt:
+                nprmvals = [nprm for nprm in range(1, nprm_max_main + 1) for _ in range(0, nprm + 1)]
+                mprmvals = [mprm for nprm in range(1, nprm_max_main + 1) for mprm in range(0, nprm + 1)]
+                nvals = [n for n in range(1, n_max_main + 1) for _ in range(0, n + 1)]
+                mvals = [m for n in range(1, n_max_main + 1) for m in range(0, n + 1)]
+                T_hrs, n_asy, m_asy, lin_gnm_Re, lin_gnm_Im, lin_hnm_Re, lin_hnm_Im = np.loadtxt(inp_Bi_path+bin_name+"ghnm_asym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
+                T_hrs_sym, n_sph, m_sph, lin_gnm_sph_Re, lin_gnm_sph_Im, lin_hnm_sph_Re, lin_hnm_sph_Im = np.loadtxt(
+                    inp_Bi_path+bin_name+"ghnm_sym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True,
+                    delimiter=',')
+            else:
+                T_hrs, n_asy, m_asy, lin_Binm_Re, lin_Binm_Im = np.loadtxt(inp_Bi_path+bin_name+"Binm_asym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
+                T_hrs_sym, n_sph, m_sph, lin_Binm_sph_Re, lin_Binm_sph_Im = np.loadtxt(
+                    inp_Bi_path+bin_name+"Binm_sym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True,
+                    delimiter=',')
 
-            T_hrs_sym, n_sph, m_sph, lin_Binm_sph_Re, lin_Binm_sph_Im = np.loadtxt(inp_Bi_path+bin_name+"Binm_sym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
+            peak_periods = np.unique(T_hrs)
+            peak_omegas = 2*np.pi/(peak_periods*3600)
+            n_peaks = len(peak_omegas)
+            Nnm_asy = int(len(n_asy)/n_peaks)
             peak_periods_sym = np.unique(T_hrs_sym)
-            n_peaks_sym = len(peak_periods_sym)
+
             try:
                 same_spectrum = (np.equal(peak_periods, peak_periods_sym)).all()
             except:
@@ -249,10 +277,21 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
             if not same_spectrum:
                 raise ValueError("Periods of excitation for Binm_sph and Binm did not match. Set recalc=True and run again to fix the problem.")
             Nnm_sph = int(len(n_sph)/n_peaks)
-            nmax_sph = int(np.sqrt(Nnm_sph + 1)) - 1
-            lin_Binm_sph = lin_Binm_sph_Re + 1j*lin_Binm_sph_Im
-            Binm_sph = np.reshape(lin_Binm_sph, (n_peaks,Nnm_sph))
-            peak_omegas = 2*np.pi/(peak_periods*3600)
+
+            if output_Schmidt:
+                lin_gnm = lin_gnm_Re + 1j*lin_gnm_Im
+                gnm = np.reshape(lin_gnm, (n_peaks, Nnm_asy))
+                lin_hnm = lin_hnm_Re + 1j*lin_hnm_Im
+                hnm = np.reshape(lin_hnm, (n_peaks, Nnm_asy))
+                lin_gnm_sph = lin_gnm_sph_Re + 1j*lin_gnm_sph_Im
+                gnm_sph = np.reshape(lin_gnm_sph, (n_peaks,Nnm_sph))
+                lin_hnm_sph = lin_hnm_sph_Re + 1j*lin_hnm_sph_Im
+                hnm_sph = np.reshape(lin_hnm_sph, (n_peaks,Nnm_sph))
+            else:
+                lin_Binm = lin_Binm_Re + 1j*lin_Binm_Im
+                Binm = np.reshape(lin_Binm, (n_peaks,Nnm_asy))
+                lin_Binm_sph = lin_Binm_sph_Re + 1j*lin_Binm_sph_Im
+                Binm_sph = np.reshape(lin_Binm_sph, (n_peaks,Nnm_sph))
 
         plot_on_sphere = True
         if plot_on_sphere:
@@ -260,8 +299,15 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         else:
             asym_frac = asym_shape[r_io,...] / r_bds[r_io]
 
-        Binm_sph_rot = Binm_sph*1.0
-        Binm_rot = Binm*1.0
+        if output_Schmidt:
+            gnm_sph_rot = gnm_sph * 1.0
+            gnm_rot = gnm * 1.0
+            hnm_sph_rot = hnm_sph * 1.0
+            hnm_rot = hnm * 1.0
+        else:
+            Binm_sph_rot = Binm_sph * 1.0
+            Binm_rot = Binm * 1.0
+
         if do_gif:
             print("Making "+str(n_frames)+" animation frames.")
             for iT in range(n_frames):
@@ -270,29 +316,47 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
                 tstr = f'{round(t_hr, 1):03}'
                 tframe = tsec + t_hr*3600
                 for i_om in range(n_peaks):
-                    Binm_sph_rot[i_om,...] = Binm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tframe)
-                    Binm_rot[i_om,...]     = Binm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tframe)
+                    if output_Schmidt:
+                        gnm_sph_rot[i_om,...] = gnm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tframe)
+                        gnm_rot[i_om,...]     = gnm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tframe)
+                        hnm_sph_rot[i_om,...] = hnm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tframe)
+                        hnm_rot[i_om,...]     = hnm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tframe)
+                    else:
+                        Binm_sph_rot[i_om,...] = Binm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tframe)
+                        Binm_rot[i_om,...]     = Binm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tframe)
 
-                plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, r_surf_mean=eval_r, asym_frac=asym_frac, pvals=pvals, qvals=qvals,
-                                  difference=gif_diff, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals, bodyname=bname,
-                                  append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, no_title=False)
+                if output_Schmidt:
+                    Binm_rot = (gnm_rot, hnm_rot)
+                    Binm_sph_rot = (gnm_sph_rot, hnm_sph_rot)
+                plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
+                                  pvals=pvals, qvals=qvals, difference=gif_diff, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
+                                  bodyname=bname, append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, absolute=True, no_title=False)
 
             print("Animation frames printed to figures/anim_frames/ folder.")
             print("Stack them into a gif with, e.g.:")
             print("convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
         else:
             for i_om in range(n_peaks):
-                Binm_sph_rot[i_om,...] = Binm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tsec)
-                Binm_rot[i_om,...]     = Binm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tsec)
+                if output_Schmidt:
+                    gnm_sph_rot[i_om,...] = gnm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tsec)
+                    gnm_rot[i_om,...]     = gnm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tsec)
+                    hnm_sph_rot[i_om,...] = hnm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tsec)
+                    hnm_rot[i_om,...]     = hnm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tsec)
+                else:
+                    Binm_sph_rot[i_om,...] = Binm_sph[i_om,...] * np.exp(-1j * peak_omegas[i_om] * tsec)
+                    Binm_rot[i_om,...]     = Binm[i_om,...]     * np.exp(-1j * peak_omegas[i_om] * tsec)
 
             # Plot symmetric moments/difference
-            plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, r_surf_mean=eval_r, asym_frac=asym_frac, pvals=pvals, qvals=qvals, difference=True,
-                            Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals, bodyname=bname,
-                            append=bname_opt+sw_opt, component=comp, absolute=absolute, no_title=no_title_text)
+            if output_Schmidt:
+                Binm_rot = (gnm_rot, hnm_rot)
+                Binm_sph_rot = (gnm_sph_rot, hnm_sph_rot)
+            plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
+                            pvals=pvals, qvals=qvals, difference=plot_diffs, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
+                            bodyname=bname, append=bname_opt+sw_opt, component=comp, absolute=absolute, no_title=no_title_text)
 
         # Restrict plotting of certain diagnostic plots so we don't get spammed when we only want to do this for special conditions
         actually_plot_traces = bname == "Europa" and (compare_me or seawater) and comp == "x"
-        if sub_planet_vert and actually_plot_traces:
+        if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
                 peak_periods, Benm = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
                 int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
@@ -310,7 +374,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
 
         # Plot a time series at the sub-parent-planet point--(0°, 0°) in IAU coordinates.
         # Only tested for Europa, with no ionosphere.
-        if synodic_only and actually_plot_traces:
+        if (synodic_only and actually_plot_traces) and not output_Schmidt:
             if not recalc:
                 synodic_period, Benm = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
                 peak_periods = [synodic_period]

@@ -15,6 +15,7 @@ relative = True    # Whether to use relative (ε/R*chi_pq) or absolute (direct s
 synodic_period_only = True # Whether to consider only the synodic period for induction
 orbital_time_series = False # Whether to plot a time series that considers only the orbital period
 sub_planet_vert = True # Whether to plot a vertical cut at the sub-planetary point (or nearby) for a snapshot in time
+plot_diffs = True # Whether to plot magnetic fields as differences arising due to asymmetry
 gif_diff = True # Whether to plot differences in animation frames or the absolute component
 
 nprm_max_main = 1  # Highest degree in excitation field to use
@@ -22,6 +23,7 @@ eval_radius = 2.0 # Distance (in units of body radii) from body center to use fo
 
 debug = False # Special use debug flag
 convert_depth_to_chipq = True # Prints a file named interior/chi_pq_bodyname.txt for copying over relative harmonic coefficients to degree<p>_shapes_bodyname.txt files. Only used if relative = False.
+output_Schmidt = False # Record induced moment coefficients in Schmidt semi-normalized form in addition to fully normalized moments. Also reads in and plots fields using this normalization.
 
 # @@@@@@@@@@@@@@@@@@@@@@@@
 #   Calculation settings
@@ -62,7 +64,9 @@ lat_min = -90
 lat_max = 90
 do_360 = False # Whether to plot from 0 to 360 (True) or from -180 to 180 (False).
 no_title_text = False
+save_vector = False # Toggle for saving additional vector graphics (pdf)
 pub_override = True # Use fixed colorbar scale for both Europa models
+clabel_pad = 5 # Whitespace to add adjacent to contour labels
 
 # Colorbar and tick formatting
 cbar_pos = [0.90, 0.18, 0.02, 0.6]

@@ -24,6 +24,8 @@ zero = mp.mpf("0")
 one = mp.mpf("1")
 j = mp.mpc(1j)
 mu_o = mp.mpf("4.0e-7")*mp.pi
+sqrt2 = np.sqrt(2)
+sqrt4pi = np.sqrt(4*np.pi)
 
 #############################################
 
@@ -307,7 +309,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
 
     n_omegas = len(peak_omegas)
     Nnm = len(nprmvals)
-    Binm = np.zeros((n_omegas,2,n_max+1,n_max+1), dtype=np.complex_)
+    Binms = np.zeros((n_omegas,2,n_max+1,n_max+1), dtype=np.complex_)
     Aes = np.zeros(n_omegas, dtype=np.complex_)
 
     # For each degree n, evaluate all Ae:
@@ -315,7 +317,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
         Aes, _, _ = InducedAeList(r_bds, sigmas, peak_omegas, rscale_moments, nn=ni, writeout=False)
         n = mp.mpf(ni)
         for i_om in range(n_omegas):
-            Binm[i_om,:,ni,:] = n/(n+one)*Benm[i_om,:n_max+1,ni,:n_max+1]*Aes[i_om]
+            Binms[i_om,:,ni,:] = n/(n+one)*Benm[i_om,:n_max+1,ni,:n_max+1]*Aes[i_om]
 
     if writeout:
         if path is None:
@@ -328,62 +330,57 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
             T_hrs = 2*np.pi/peak_omegas[i]/3600
             for i_nm in range(Nnm):
                 sign = int(mprmvals[i_nm]<0)
-                this_Binm = Binm[i,sign,nprmvals[i_nm],abs(mprmvals[i_nm])]
+                this_Binm = Binms[i,sign,nprmvals[i_nm],abs(mprmvals[i_nm])]
                 fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nprmvals[i_nm], mprmvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
         fout.close()
         print("Data for symmetric Binm written to file: ",fpath)
 
-    return Binm
+        if output_Schmidt:
+            fpath = path+bfname+"ghnm_sym"+append+".dat"
+            fout = open(fpath, "w")
+            header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
+            fout.write(header)
+            for i in range(len(peak_omegas)):
+                T_hrs = 2*np.pi/peak_omegas[i]/3600
+                this_gnm, this_hnm = get_gh_from_Binm(n_max,Binms[i,...])
+                for n in range(1,n_max+1):
+                    for m in range(n+1):
+                        fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
+            fout.close()
+            print("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
+
+    return Binms
 
 #############################################
 
 """
-getMagSurf()
-    Evaluates the induced magnetic field at the surface for induced magnetic moments Binm.
-    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `rval`, `ltht`, `lphi`, `nmax_plot=4`)
+get_gh_from_Binm()
+    Convert from orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics)
+    to Schmidt semi-normalized form without the C-S phase (common in geophysics).
+    Handles all values for a given n at once.
+    Usage: `gnm, hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
     Returns:
-        Bx,By,Bz (each): complex, ndarray shape(lleny,llenx). A (lleny,llenx) array of field values due to the particular Binm values passed.
-            Field values can be obtained for any future time by multiplying each Binm[i,:,:,:] by the corresponding e^-iωt factor.
-            t=0 is defined to be the J2000 epoch.
+        gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
+            Schmidt normalization here means the integral of |Ynm|^2 * dΩ over a unit sphere is
+            4π/(2n+1) for all n and m. No Condon-Shortley phase.
     Parameters:
-        nvals: integer, shape(Nnm). Linear list of magnetic moment degrees to be evaluated.
-        mvals: integer, shape(Nnm). Linear list of magnetic moment orders to be evaluated, corresponding to nvals of the same index.
-        Binm: complex, shape(2,n_max+1,n_max+1). Magnetic moment of degree and order n,m that can be indexed by the matched entries
-            in nvals and mvals. Units match the output field.
-        rval: float. Radius of spherical surface over which to evaluate the field. rval has units of R_body, i.e. the physical surface is 1.0.
-        ltht: float, shape(lleny). Array of theta values over which to evaluate the field components.
-        lphi: float, shape(llenx). Array of phi values over which to evaluate the field components.
-        nmax_plot: integer (4). Maximum value of n for evaluating magnetic fields. eval_Bi must have each n explicitly hard-coded,
-            which has only been done up to n=4 because larger-degree moments are expected to have small contributions at altitude.
+        n_max: integer. Maximum degree n of induced moments.
+        Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments calculated using fully normalized spherical harmonic coefficients.
     """
-def getMagSurf(nvals,mvals,Binm, rval,ltht,lphi, nmax_plot=4):
-    if nmax_plot>4:
-        nmax_plot = 4
-        raise Warning("Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
+def get_gh_from_Binm(n_max, Binm):
+    gnm, hnm = ( np.zeros((n_max+1,n_max+1),dtype=np.complex_) for _ in range(2) )
 
-    Nnm = len(nvals)
-    lleny = len(ltht)
-    llenx = len(lphi)
-    lin_Binm = np.array([ Binm[int(mvals[iN]<0),nvals[iN],abs(mvals[iN])] for iN in range(Nnm) ])
+    for n in range(1,n_max+1):
+        norm = np.sqrt(2*n+1) / sqrt2 / sqrt4pi
 
-    Bx, By, Bz = ( np.zeros((lleny,llenx), dtype=np.complex_) for _ in range(3) )
-    x = np.array([ rval*np.sin(thti)*np.cos(phii) for thti in ltht for phii in lphi ])
-    y = np.array([ rval*np.sin(thti)*np.sin(phii) for thti in ltht for phii in lphi ])
-    z = np.array([ rval*np.cos(thti) for thti in ltht for _ in lphi ])
-    r = np.zeros((1,lleny*llenx)) + rval
+        for m in range(1,n+1):
+            # g terms:
+            gnm[n,m] = ((-1)**m * Binm[0,n,m] + Binm[1,n,m]) * norm
+            # h terms:
+            hnm[n,m] = ((-1)**m * Binm[0,n,m] - Binm[1,n,m]) * 1j * norm
 
-    pool = mtp.Pool(num_cores)
-    par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
-    pool.close()
-    pool.join()
-    # Unpack results from parallel processing and sum them
-    for res in par_result:
-        this_Bx, this_By, this_Bz = res.get()
-        Bx = Bx + this_Bx
-        By = By + this_By
-        Bz = Bz + this_Bz
+        gnm[n,0] = Binm[0,n,0] * norm * sqrt2
 
-    Bx = np.reshape(Bx, (lleny,llenx))
-    By = np.reshape(By, (lleny,llenx))
-    Bz = np.reshape(Bz, (lleny,llenx))
-    return Bx, By, Bz
+    return gnm, hnm
+
+#############################################

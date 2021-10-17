@@ -16,7 +16,7 @@ import mpmath as mp
 # divide-by-zero errors induced by underflow.
 
 from config import *
-from field_xyz import eval_Bi
+from field_xyz import eval_Bi, eval_Bi_Schmidt
 
 # Parallelization is through multiprocessing module
 import multiprocessing as mtp
@@ -265,6 +265,38 @@ def get_chipq_from_CSpq(p,Cpq,Spq):
 #############################################
 
 """
+get_gh_from_Binm()
+    Convert from orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics)
+    to Schmidt semi-normalized form without the C-S phase (common in geophysics).
+    Handles all values for a given n at once.
+    Usage: `gnm, hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
+    Returns:
+        gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
+            Schmidt normalization here means the integral of |Ynm|^2 * dΩ over a unit sphere is
+            4π/(2n+1) for all n and m. No Condon-Shortley phase.
+    Parameters:
+        n_max: integer. Maximum degree n of induced moments.
+        Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments calculated using fully normalized spherical harmonic coefficients.
+    """
+def get_gh_from_Binm(n_max, Binm):
+    gnm, hnm = ( np.zeros((n_max+1,n_max+1),dtype=np.complex_) for _ in range(2) )
+
+    for n in range(1,n_max+1):
+        norm = np.sqrt(2*n+1) / sqrt2 / sqrt4pi
+
+        for m in range(1,n+1):
+            # g terms:
+            gnm[n,m] = ((-1)**m * Binm[0,n,m] + Binm[1,n,m]) * norm
+            # h terms:
+            hnm[n,m] = ((-1)**m * Binm[0,n,m] - Binm[1,n,m]) * 1j * norm
+
+        gnm[n,0] = Binm[0,n,0] * norm * sqrt2
+
+    return gnm, hnm
+
+#############################################
+
+"""
 validate()
     Check inputs to be sure everything will be interpreted correctly.
     Usage: `r_bds`, `sigmas`, `omegas`, `asym_shape` = validate(`r_bds`, `sigmas`, `omegas`, `bcdev`, `asym_shape`, `p_max`)
@@ -478,7 +510,8 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         peak_omegas = [peak_omegas]
     n_peaks = len(peak_omegas)
     Nnm = len(nvals)
-    Binms = np.zeros((n_peaks, 2, nprm_max+p_max+1, nprm_max+p_max+1), dtype=np.complex_)
+    n_max = nprm_max + p_max
+    Binms = np.zeros((n_peaks, 2, n_max+1, n_max+1), dtype=np.complex_)
     if writeout:
         print("Calculating asymmetric B_inm for ",len(peak_omegas)," periods.")
         if bodyname is None:
@@ -524,7 +557,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
             path = "induced/"
         fpath = path+bfname+"Binm_asym"+append+".dat"
         fout = open(fpath, "w")
-        header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr),", "n,", "m,", "Binm_Re (nT)", "Binm_Im (nT)")
+        header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
         for i in range(len(peak_omegas)):
             T_hrs = 2*np.pi/peak_omegas[i]/3600
@@ -534,6 +567,20 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
                 fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nvals[i_nm], mvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
         fout.close()
         print("Data for asymmetric Binm written to file: ",fpath)
+        
+        if output_Schmidt:
+            fpath = path+bfname+"ghnm_asym"+append+".dat"
+            fout = open(fpath, "w")
+            header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
+            fout.write(header)
+            for i in range(len(peak_omegas)):
+                T_hrs = 2*np.pi/peak_omegas[i]/3600
+                this_gnm, this_hnm = get_gh_from_Binm(n_max,Binms[i,...])
+                for n in range(1,n_max+1):
+                    for m in range(n+1):
+                        fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
+            fout.close()
+            print("Data for asymmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
 
     if debug:
         return Binms, Aes, Ats, Ads, krvals
@@ -909,16 +956,20 @@ def get_all_Xid(n_max, p_max, nprm_max, nprmvals, mprmvals):
                     qsign = int(q<0)
                     qabs = abs(q)
 
-                    pool = mtp.Pool(num_cores)
-                    par_result = [pool.apply_async( calc_Xid, args=(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max) ) for iN in range(Nnmprm)]
-                    pool.close()
-                    pool.join()
+                    if do_parallel:
+                        pool = mtp.Pool(num_cores)
+                        par_result = [pool.apply_async( calc_Xid, args=(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max) ) for iN in range(Nnmprm)]
+                        pool.close()
+                        pool.join()
 
                     for iN in range(Nnmprm):
                         nprm = nprmvals[iN]
                         mpsign = int(mprmvals[iN]<0)
                         mpabs = abs(mprmvals[iN])
-                        Xid[msign,n,mabs, qsign,p,qabs, mpsign,nprm,mpabs] = par_result[iN].get()
+                        if do_parallel:
+                            Xid[msign,n,mabs, qsign,p,qabs, mpsign,nprm,mpabs] = par_result[iN].get()
+                        else:
+                            Xid[msign, n, mabs, qsign, p, qabs, mpsign, nprm, mpabs] = calc_Xid(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max)
 
     return Xid
 
@@ -1222,14 +1273,18 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi):
 
     lin_bd_shape = np.array([ asym_shape[int(qvals[iN]<0),pvals[iN],abs(qvals[iN])] for iN in range(Npq) ])
 
-    pool = mtp.Pool(num_cores)
-    par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx) ) for iN in range(Npq)]
-    pool.close()
-    pool.join()
+    if do_parallel:
+        pool = mtp.Pool(num_cores)
+        par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx) ) for iN in range(Npq)]
+        pool.close()
+        pool.join()
 
-    # Unpack the parallel processing results and sum them together
-    for res in par_result:
-        devs = devs + res.get()
+        # Unpack the parallel processing results and sum them together
+        for res in par_result:
+            devs = devs + res.get()
+    else:
+        for iN in range(Npq):
+            devs = devs + eval_dev(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx)
 
     surf = devs + r_mean
     return surf
@@ -1239,7 +1294,7 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi):
 """
 getMagSurf()
     Evaluates the induced magnetic field at the surface for all magnetic moments Binm.
-    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `r_th_ph`, `ltht`, `lphi`, `nmax_plot=4`)
+    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `r_th_ph`, `ltht`, `lphi`, `nmax_plot=4`, `Schmidt=False`)
     Returns:
         Bx,By,Bz (each): complex, shape(lleny,llenx). A (lleny,llenx) array of field values due to the particular Binm values passed.
             Field values can be obtained for any future time by multiplying each Binm[i,:,:,:] by the corresponding e^-iωt factor.
@@ -1247,28 +1302,41 @@ getMagSurf()
     Parameters:
         nvals: integer, shape(Nnm). Linear list of magnetic moment degrees to be evaluated.
         mvals: integer, shape(Nnm). Linear list of magnetic moment orders to be evaluated, corresponding to nvals of the same index.
-        Binm: complex, shape(2,n_max+1,n_max+1) OR shape(Nnm). Magnetic moment of degree and order n,m that can be
-            indexed by the matched entries in nvals and mvals. Units match the output field.
+        Binm: complex, shape(2,n_max+1,n_max+1) OR shape(Nnm); if Schmidt=True, tuple of (gnm,hnm). Magnetic moment of degree and
+            order n,m that can be indexed by the matched entries in nvals and mvals. Units match the output field.
         r_th_ph: float, shape(lleny,llenx). Meshgrid array of r(θ,ϕ) values corresponding to the following tht and phi values.
             r_th_ph has units of R_body, i.e. the physical surface is 1.0.
         ltht: float, shape(lleny). Array of theta values over which to evaluate the field components.
         lphi: float, shape(llenx). Array of phi values over which to evaluate the field components.
         nmax_plot: integer (4). Maximum value of n for evaluating magnetic fields. eval_Bi must have each n explicitly hard-coded,
             which has only been done up to n=4 because larger-degree moments are expected to have small contributions at altitude.
+        Schmidt: boolean (False). Whether input magnetic moments are in Schmidt semi-normalized form without Condon-Shortley
+            phase. If False, moments must be in fully normalized form with the Condon-Shortley phase.
+        gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
     """
-def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4):
+def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False):
     if nmax_plot>4:
         nmax_plot = 4
         print("WARNING: Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
 
-    Nnm = min((nmax_plot+1)**2 - 1, len(nvals))
+    if Schmidt:
+        Nnm = min( int((nmax_plot+1)*(nmax_plot+2)/2) - 1, len(nvals) )
+        gnm, hnm = Binm
+        if np.size(np.shape(gnm)) > 1:
+            lin_gnm = np.array([gnm[nvals[iN], mvals[iN]] for iN in range(Nnm)])
+            lin_hnm = np.array([hnm[nvals[iN], mvals[iN]] for iN in range(Nnm)])
+        else:
+            lin_gnm = gnm
+            lin_hnm = hnm
+    else:
+        Nnm = min((nmax_plot + 1) ** 2 - 1, len(nvals))
+        if np.size(np.shape(Binm)) > 2:
+            lin_Binm = np.array([ Binm[int(mvals[iN]<0),nvals[iN],abs(mvals[iN])] for iN in range(Nnm) ])
+        else:
+            lin_Binm = Binm
+
     lleny = len(ltht)
     llenx = len(lphi)
-    if np.size(np.shape(Binm)) > 2:
-        lin_Binm = np.array([ Binm[int(mvals[iN]<0),nvals[iN],abs(mvals[iN])] for iN in range(Nnm) ])
-    else:
-        lin_Binm = Binm
-
     Bx, By, Bz = ( np.zeros((1,lleny*llenx), dtype=np.complex_) for _ in range(3) )
 
     # If we pass a single value for r(θ,ϕ) = R, evaluate over a sphere with that radius.
@@ -1284,16 +1352,32 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4):
         z = np.array([ r_th_ph[i_th,i_ph]*np.cos(ltht[i_th]) for i_th in range(lleny) for i_ph in range(llenx) ])
         r = np.reshape(r_th_ph, (1,lleny*llenx))
 
-    pool = mtp.Pool(num_cores)
-    par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
-    pool.close()
-    pool.join()
-    # Unpack results from parallel processing and sum them
-    for res in par_result:
-        this_Bx, this_By, this_Bz = res.get()
-        Bx = Bx + this_Bx
-        By = By + this_By
-        Bz = Bz + this_Bz
+    if do_parallel:
+        if Schmidt:
+            pool = mtp.Pool(num_cores)
+            par_result = [pool.apply_async( eval_Bi_Schmidt, args=(nvals[iN],mvals[iN],lin_gnm[iN],lin_hnm[iN], x,y,z,r) ) for iN in range(Nnm)]
+            pool.close()
+            pool.join()
+        else:
+            pool = mtp.Pool(num_cores)
+            par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
+            pool.close()
+            pool.join()
+        # Unpack results from parallel processing and sum them
+        for res in par_result:
+            this_Bx, this_By, this_Bz = res.get()
+            Bx = Bx + this_Bx
+            By = By + this_By
+            Bz = Bz + this_Bz
+    else:
+        for iN in range(Nnm):
+            if Schmidt:
+                this_Bx, this_By, this_Bz = eval_Bi_Schmidt(nvals[iN], mvals[iN], lin_gnm[iN], lin_hnm[iN], x, y, z, r)
+            else:
+                this_Bx, this_By, this_Bz = eval_Bi(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r)
+            Bx = Bx + this_Bx
+            By = By + this_By
+            Bz = Bz + this_Bz
 
     Bx = np.reshape(Bx, (lleny,llenx))
     By = np.reshape(By, (lleny,llenx))

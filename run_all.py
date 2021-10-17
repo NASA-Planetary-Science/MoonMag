@@ -15,7 +15,7 @@ do_Callisto = True
 do_Triton = True
 
 # Make gifs of the specified component for each body after the calculations are done
-make_gifs = True
+make_gifs = False
 gif_comp = None
 
 # Settings

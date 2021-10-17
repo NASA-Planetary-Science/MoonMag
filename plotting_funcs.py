@@ -191,10 +191,6 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         latticks = np.linspace(lat_min, lat_max, 5, endpoint=True, dtype=np.int)
 
     themap = plt.axes(transform=ccrs.RotatedPole())
-    themap.set_xticks(lonticks)
-    themap.set_yticks(latticks)
-    themap.xaxis.set_major_formatter(lon_formatter)
-    themap.yaxis.set_major_formatter(lat_formatter)
     fig.subplots_adjust(left=0.07, right=0.88, wspace=0.15, hspace=0.05, top=0.90, bottom=0.07)
 
     # Apply plot formatting
@@ -227,7 +223,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     # Plot the data
     mesh = plt.pcolormesh(lon, lat, thicks, shading="auto", cmap="PuBu_r")
     cont = plt.contour(lon, lat, thicks, levels=levels, colors="black")
-    lbls = plt.clabel(cont, fmt="%1.0f", fontsize=clabel_size)
+    lbls = plt.clabel(cont, fmt="%1.0f", fontsize=clabel_size, inline_spacing=clabel_pad)
 
     # Finish formatting (as long as we're not making big-label plots)
     if do_cbar:
@@ -280,18 +276,21 @@ plotMagSurf()
     Set asym_frac to None (or omit the argument) to plot the field on a sphere of radius r_surf_mean * R_P,
     where R_P is the planetary radius. If difference=True, spherically symmetric moments Binm_sph must be passed; then
     differences between the two are plotted over the desired surface.
-    Usage: plotMagSurf(`n_peaks`, `Binm`, `nvals`, `mvals`, `do_large`, `r_surf_mean=1.0`, `asym_frac=None`,
+    Usage: plotMagSurf(`n_peaks`, `Binm`, `nvals`, `mvals`, `do_large`, `Schmidt=False`, `r_surf_mean=1.0`, `asym_frac=None`,
                 `pvals=None`, `qvals=None`, `difference=False`, `Binm_sph=None`, `nprmvals=None`, `mprmvals=None`,
                 `fpath=None`, `bodyname=None`, `append=""`, `fend=""`, `tstr=""`, `component=None`, `absolute=False`,
                 `no_title=False`)
     Returns: None
     Parameters:
         n_peaks: integer. Number of peaks in the frequency spectrum to iterate over.
-        Binm: complex, shape(n_peaks,2,n_max+1,n_max+1) OR shape(n_peaks, (n_max+1)**2-1). Induced magnetic moments in nT.
+        Binm: complex, shape(n_peaks,2,n_max+1,n_max+1) OR shape(n_peaks, (n_max+1)**2-1); if Schmidt=True, tuple of (gnm,hnm).
+            Induced magnetic moments in nT.
         nvals: integer, shape(Nnm). A linear list of n values for constructing (n,m) pairs in parallelized loops.
         mvals: integer, shape(Nnm). A linear list of m values for constructing (n,m) pairs in parallelized loops.
         do_large: boolean. Whether to print larger versions of labels and strip off the colorbar, to better display
             in presentation slides or side-by-side figures.
+        Schmidt: boolean (False). Whether input magnetic moments are in Schmidt semi-normalized form without Condon-Shortley
+            phase. If False, moments must be in fully normalized form with the Condon-Shortley phase.
         r_surf_mean: float (1.0). Fraction of body radius for evaluation surface. For example, evaluating
             at the top of a 200 km ionosphere atop a 1000 km radius body has r_surf_mean of 1.2.
         asym_frac: float, shape(2,p_max+1,p_max+1) (None). asym_shape normalized to the desired boundary. The ratio of
@@ -312,12 +311,18 @@ plotMagSurf()
         component: string (None). Optional component to plot instead of magnitude. Accepts 'x', 'y', and 'z'.
         absolute: boolean (False). Optional flag to plot the absolute induced field in addition to differences.
         no_title: boolean (False). If true, print figures without title text.
+        gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
     """
-def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_frac=None, pvals=None, qvals=None, difference=False,
-                Binm_sph=None, nprmvals=None, mprmvals=None, fpath=None, bodyname=None, append="", fend="", tstr="",
-                component=None, absolute=False, no_title=False):
+def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mean=1.0, asym_frac=None, pvals=None, qvals=None,
+                difference=False, Binm_sph=None, nprmvals=None, mprmvals=None, fpath=None, bodyname=None, append="", fend="",
+                tstr="", component=None, absolute=False, no_title=False):
     lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end = get_latlon(do_large)
     do_cbar = not do_large
+
+    if Schmidt:
+        gnm, hnm = Binm
+        if difference:
+            gnm_sph, hnm_sph = Binm_sph
 
     if fpath is None:
         fpath = "figures/"
@@ -355,6 +360,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
     if fend == "":
         print("Creating magnetic plot, this may take some time.")
     fig, axes = plt.subplots(1, 1, figsize=deft_figsize)
+    plt.clf()
     cbar_title = "Magnetic field"+diffstr+" $(\mathrm{nT})$"
     cbar_top = ""
     if do_cbar:
@@ -367,6 +373,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
         latticks = [-90, -45, 0, 45, 90]
 
     themap = plt.axes(transform=ccrs.RotatedPole())
+    themap.set_xticks([])
+    themap.set_yticks([])
 
     if asym_frac is None:
         r_th_ph = r_surf_mean
@@ -375,15 +383,27 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
         r_th_ph = asym.get_rsurf(pvals,qvals,asym_frac, r_surf_mean,tht,phi)
 
     # Combine the moments from all periods of oscillation to find the instantaneous net induced moments
-    Binm_sum = np.sum(Binm, axis=0)
-    Bx, By, Bz = asym.getMagSurf(nvals,mvals,Binm_sum, r_th_ph,tht,phi)
+    if Schmidt:
+        gnm_sum = np.sum(gnm, axis=0)
+        hnm_sum = np.sum(hnm, axis=0)
+        Binm_sum = (gnm_sum, hnm_sum)
+        Bx, By, Bz = asym.getMagSurf(nvals,mvals,Binm_sum, r_th_ph,tht,phi, Schmidt=Schmidt)
+    else:
+        Binm_sum = np.sum(Binm, axis=0)
+        Bx, By, Bz = asym.getMagSurf(nvals,mvals,Binm_sum, r_th_ph,tht,phi)
     Re_Bx = Re_Bx + np.real(Bx)
     Re_By = Re_By + np.real(By)
     Re_Bz = Re_Bz + np.real(Bz)
 
     if difference:
-        Binm_sph_sum = np.sum(Binm_sph, axis=0)
-        Bx_sym, By_sym, Bz_sym = asym.getMagSurf(nprmvals,mprmvals,Binm_sph_sum, r_th_ph,tht,phi)
+        if Schmidt:
+            gnm_sph_sum = np.sum(gnm_sph, axis=0)
+            hnm_sph_sum = np.sum(hnm_sph, axis=0)
+            Binm_sph_sum = (gnm_sph_sum, hnm_sph_sum)
+            Bx_sym, By_sym, Bz_sym = asym.getMagSurf(nprmvals,mprmvals,Binm_sph_sum, r_th_ph,tht,phi, Schmidt=Schmidt)
+        else:
+            Binm_sph_sum = np.sum(Binm_sph, axis=0)
+            Bx_sym, By_sym, Bz_sym = asym.getMagSurf(nprmvals,mprmvals,Binm_sph_sum, r_th_ph,tht,phi)
         Re_Bx_sym = Re_Bx_sym + np.real(Bx_sym)
         Re_By_sym = Re_By_sym + np.real(By_sym)
         Re_Bz_sym = Re_Bz_sym + np.real(Bz_sym)
@@ -434,7 +454,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
     else:
         nt_adjust = 0.0
     if do_large:
-        fig.subplots_adjust(left=0.09, right=0.965, wspace=0.15, hspace=0.05, top=0.875+nt_adjust, bottom=0.1)
+        fig.subplots_adjust(left=0.09, right=0.959, wspace=0.15, hspace=0.05, top=0.875+nt_adjust, bottom=0.1)
         tick_size = deft_ticksize*10/7
         clabel_size = deft_ticksize*8/7
     else:
@@ -444,13 +464,13 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
 
     if do_cbar:
         ptitle = bodyname + " induced field" + comptitlestr + titlestr
-        sym_ptitle = bodyname + " symmetric induced field" + comptitlestr + title_dist
+        sym_ptitle = bodyname + " symmetric induced magnetic field magnitude"
         asym_ptitle = bodyname + " asymmetric induced field" + comptitlestr + title_dist
         abs_cbar_title = "Magnetic field ($\mathrm{nT}$)"
         tsize = deft_tsize
     else:
-        ptitle = "Induced field $B_"+substr+"}$"+titlestr+" $(\mathrm{nT})$" + title_dist
-        sym_ptitle = "Induced field $B_" + substr + ",\mathrm{sym}}$" + title_dist + " $(\mathrm{nT})$"
+        ptitle = "Induced field $B_"+substr+"}$"+titlestr+" $(\mathrm{nT})$"
+        sym_ptitle = "Induced field $B_\mathrm{asym}}$" + title_dist + " $(\mathrm{nT})$"
         asym_ptitle = "Induced field $B_" + substr + ",\mathrm{asym}}$" + title_dist + " $(\mathrm{nT})$"
         tsize = deft_tsize*1.5
 
@@ -461,6 +481,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
             diff_cmap = "seismic"
 
         ptitle = ptitle + " at t=" + tstr + " h"
+        comp_adj = 0
         if bodyname == "Europa":
             if not difference:
                 maxval = None
@@ -477,6 +498,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
                 maxval = None
                 minval = None
             elif component is None:
+                if r_surf_mean < 1.2: maxval = 3.2
                 minval = 0
             else:
                 minval = -maxval
@@ -505,7 +527,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
             maxval = None
             minval = None
         if maxval is not None:
-            clevels = np.linspace(minval, maxval, 9, endpoint=True)
+            clevels = np.linspace(minval, maxval, 9+comp_adj, endpoint=True)
         else:
             clevels = None
     else:
@@ -521,7 +543,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
             maxval = None
         else:
             diff_cmap = "seismic"
-            if pub_override and (bodyname == "Europa" and append[:6] == "_Tobie"):
+            if (pub_override and (bodyname == "Europa" and append[:6] == "_Tobie")) and difference:
                 maxval = 2.4
                 minval = -maxval
                 clevels = np.linspace(minval, maxval, 9, endpoint=True)
@@ -542,7 +564,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
 
     mesh = plt.pcolormesh(lon, lat, B_plot, shading="auto", cmap=plot_cmap, vmin=minval, vmax=maxval)
     cont = plt.contour(lon, lat, B_plot, levels=clevels, colors="black")
-    lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size)
+    lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
 
     # Show colorbar if there's room
     if do_cbar:
@@ -560,7 +582,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
         asym_topofig = bodyname + "_field_asym"
 
     if fend == "":
-        if not do_large:
+        if not do_large and save_vector:
             fig.savefig(fpath+topofig+".pdf", format="pdf")
         fig_dpi = 300
     else:
@@ -576,6 +598,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
             old_cont.remove()
         for old_lbls in lbls:
             old_lbls.remove()
+        del cont
+        del lbls
 
         if (asym_plot > 0).all() or (asym_plot > 0).all():
             minval = np.min(asym_plot)
@@ -593,7 +617,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
         mesh.set_cmap(abs_cmap)
         mesh.set_clim(minval, maxval)
         cont = plt.contour(lon, lat, asym_plot, colors="black")
-        lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size)
+        lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
 
         if do_cbar:
             cbar.set_label(abs_cbar_title)
@@ -609,6 +633,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
             old_cont.remove()
         for old_lbls in lbls:
             old_lbls.remove()
+        del cont
+        del lbls
 
         if (sym_plot>0).all() or (sym_plot>0).all():
             minval=np.min(sym_plot)
@@ -616,18 +642,23 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, r_surf_mean=1.0, asym_fra
         else:
             maxval = np.max(np.abs(sym_plot))
             minval = -maxval
+        sym_clevels = np.linspace(minval, maxval, 10, endpoint=True)
 
         mesh.set_array(sym_plot)
         mesh.set_cmap(abs_cmap)
         mesh.set_clim(minval,maxval)
         cont = plt.contour(lon, lat, sym_plot, colors="black")
-        lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size)
+        lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
 
         if do_cbar:
             cbar.set_label(abs_cbar_title)
 
         if not no_title:
-            fig.suptitle(sym_ptitle, size=tsize)
+            if fend != "":
+                title_tstring = " at t=" + tstr + " h"
+            else:
+                title_tstring = ""
+            fig.suptitle(sym_ptitle + title_tstring, size=tsize)
         print_abs_sym_fname = fpath + sym_topofig + append + lg_end
         fig.savefig(print_abs_sym_fname + ".png", format="png", dpi=fig_dpi)
         print("Contour plot for absolute sym field saved to: " + print_abs_sym_fname + ".png")
