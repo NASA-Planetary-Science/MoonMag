@@ -1,10 +1,11 @@
 """ This program contains functions for calculating induced magnetic fields
     from spherical conductors. Outputs typically appear as mpc, which is
     the mpmath complex type.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world 
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
@@ -324,7 +325,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
             path = "induced/"
         fpath = path+bfname+"Binm_sym"+ append +".dat"
         fout = open(fpath, "w")
-        header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr),", "n,", " m,", "Binm_Re (nT)", "Binm_Im (nT)")
+        header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", " m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
         for i in range(len(peak_omegas)):
             T_hrs = 2*np.pi/peak_omegas[i]/3600
