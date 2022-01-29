@@ -1,9 +1,10 @@
 """ This program contains a function for calculating magnetic fields
     in planetocentric Cartesian coordinates from spherical magnetic moments.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-    Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world 
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import numpy as np
 import scipy as sci
@@ -26,7 +27,7 @@ eval_Be()
         omega: float (None). Optional oscillation frequency in rads/s for evaluating time series. Requires t to be passed as well.
         t: float, shape(Nvals) (None). Optional time values in TDB seconds since J2000 epoch. Required if omega is passed.
     """
-def eval_Be(n,m,Binm, x,y,z,r, omega=None, t=None):
+def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
 
     Bx, By, Bz = (np.zeros(np.size(r), dtype=np.complex_) for _ in range(3))
 
@@ -41,7 +42,7 @@ def eval_Be(n,m,Binm, x,y,z,r, omega=None, t=None):
         # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         A1 = 1/2*np.sqrt(3/2/np.pi)
-        B_base = A1*Binm
+        B_base = A1*Benm
 
         if m == -1:
             Bx = -B_base
@@ -65,7 +66,7 @@ def eval_Be(n,m,Binm, x,y,z,r, omega=None, t=None):
         #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         A2 = -1/4*np.sqrt(15/2/np.pi)
-        B_base = -2*A2*Binm
+        B_base = -2*A2*Benm
 
         rt2o3 = sqrt(2/3)
 
