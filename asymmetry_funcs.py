@@ -1,9 +1,10 @@
 """ This program contains functions for calculating induced magnetic fields
     from near-spherical conductors.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import numpy as np
 from collections.abc import Iterable
@@ -384,7 +385,8 @@ read_Benm()
     Usage: `peak_periods`, `Benm` = read_Benm(`nprm_max`, `p_max`, `bodyname=None`, `fpath=None`, `synodic=False`, `orbital=False`)
     Returns:
         peak_periods: float, shape(n_peaks). Periods in hr of peak oscillations. Values read from files are assumed to be in hr.
-        Benm: complex, shape(n_peaks,2,nprm_max+p_max+1,nprm_max+p_max+1)
+        Benm: complex, shape(n_peaks,2,nprm_max+p_max+1,nprm_max+p_max+1). Excitation moments for each period in nT.
+        B0: float, shape(3). Static background field. Used to reconstruct the net magnetic field for measurement comparisons.
     Parameters:
         nprm_max: integer. Maximum degree of excitation harmonics to input. n' values appear in file names, so appropriate files must
             all be present from n'=1 to n'=nprm_max.
@@ -417,7 +419,7 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
     else:
         Benm_moments = fpath + "Be1xyz" + bfname + ".txt"
     print("Using excitation moments: " + Benm_moments)
-    peak_per1, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
+    peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
     Bex = Bex_Re + 1j*Bex_Im
     Bey = Bey_Re + 1j*Bey_Im
     Bez = Bez_Re + 1j*Bez_Im
@@ -431,6 +433,9 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
     Benm1[:,0,1,0] = -A1*sqrt(2) * Bez
     Benm1[:,0,1,1] =  A1 * (Bex - 1j*Bey)
 
+    # Get static background field
+    B0 = np.array([np.mean(B0x), np.mean(B0y), np.mean(B0z)])
+    
     if nprm_max > 1:
         print("WARNING: n'=2 excitation moments are being considered, but the amplitudes are just a placeholder! Remove this warning when correct Be2xyz have been installed.")
         for nn in range(1,nprm_max+1):
@@ -467,7 +472,7 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         Benm = Benm1
         peak_periods = peak_per1
 
-    return peak_periods, Benm
+    return peak_periods, Benm, B0
 
 #############################################
 

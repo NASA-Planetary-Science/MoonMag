@@ -1,9 +1,10 @@
 """ This program runs calculations for induced magnetic fields
     from near-spherical conductors and plots the results.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world 
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import sys
 from typing import List
@@ -172,7 +173,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
 
         # Read in Benm info
         if plot_field:
-            peak_periods, Benm = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False)
+            peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False)
             peak_omegas = 2*np.pi/(peak_periods*3600)
             if not isinstance(peak_omegas, Iterable):
                 peak_periods = [peak_periods]
@@ -358,7 +359,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         actually_plot_traces = bname == "Europa" and (compare_me or seawater) and comp == "x"
         if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
-                peak_periods, Benm = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
+                peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
                 int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
@@ -370,13 +371,15 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
             z = r * np.sin(np.radians(vert_cut_lat))
             t = np.zeros(t_pts)
             t += t_cut
-            plots.plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max_main, n_max_main, nvals, mvals, R_body=R, component=comp, difference=True, Binm_sph=Binm_sph, bodyname=bname, append=bname_opt+sw_opt+compstr)
+            plots.calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max_main, n_max_main, nvals, mvals, 
+                                    R_body=R, component=comp, difference=True, Binm_sph=Binm_sph, bodyname=bname, 
+                                    append=bname_opt+sw_opt+compstr)
 
         # Plot a time series at the sub-parent-planet point--(0°, 0°) in IAU coordinates.
         # Only tested for Europa, with no ionosphere.
         if (synodic_only and actually_plot_traces) and not output_Schmidt:
             if not recalc:
-                synodic_period, Benm = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
+                synodic_period, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
                 peak_periods = [synodic_period]
             if not sub_planet_vert:
                 int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
@@ -405,7 +408,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
                                                      eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt, convert_depth_to_chipq=convert_depth_to_chipq)
                         r_bds, sigmas, asym_shape = asym.validate(r_bds, sigmas, bcdev, asym_shape, p_max_main)
 
-                    orbital_period, Benm_orbital = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, orbital=True)
+                    orbital_period, Benm_orbital, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, orbital=True)
                     orbital_omega = 2*np.pi/(orbital_period*3600)
                     Binm_sph_orbital = sym.BiList(r_bds, sigmas, [orbital_omega], Benm_orbital, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt + sw_opt)
                     Binm_orbital = asym.BiList(r_bds, sigmas, [orbital_omega], asym_shape, grav_shape, Benm_orbital, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt + sw_opt)
