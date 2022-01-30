@@ -1,14 +1,16 @@
 """ This program contains functions for plotting topography and magnetic fields
     from near-spherical conductors.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world 
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdt
 import cartopy.crs as ccrs
 import cartopy.mpl.ticker as cptick
 import matplotlib.ticker as tick
@@ -22,9 +24,12 @@ import symmetry_funcs as sym
 import asymmetry_funcs as asym
 import field_xyz as field
 
+J2000 = np.datetime64("2000-01-01T11:58:55.816")
+
 mpl.rcParams.update({
     "text.usetex": True,
-    "font.family": font_choice
+    "font.family": font_choice,
+    "text.latex.preamble": "\\usepackage{stix}"
 })
 
 def get_latlon(do_large):
@@ -824,7 +829,7 @@ plotTrajec()
                       `component=None`, `Binm_sph=None`, `net_field=False`, `bodyname=None`, `append=""`, `fpath=None`)
     Returns: None
     Parameters:
-        x,y,z,r,t: float, shape(n_pts). Linear arrays of corresponding x,y,z,r, and t values in units of body radius.
+        t: float, shape(n_pts). Linear arrays of corresponding x,y,z, and r values in units of body radius and t values in seconds past J2000.
         Binm: complex, shape(n_peaks, 2, n_max+1, n_max+1) OR shape(Nnm). Induced moments at J2000.
         Benm: complex, shape(n_peaks, 2, nprm_max+1, nprm_max+1). Excitation moments at J2000.
         peak_omegas: float, shape(n_peaks). List of angular frequencies in rad/s for excitation moments.
@@ -842,7 +847,83 @@ plotTrajec()
         append: string (""). Optional string to append to filenames.
         fpath: string (None). Optional path to figure save location. Passing None defaults to "figures/".  
     """
-def plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals, R_body=None, difference=False, \
+def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fpath=None):
+    if fpath is None:
+        fpath = "figures/"
+
+    # Set plot labels
+    fig, axes = plt.subplots(3, 1)
+
+    fig.suptitle(bodyname + " net magnetic field, IAU coordinates")
+    axes[-1].set_xlabel("Measurement time")
+    axes[0].set_ylabel("$B_x (\mathrm{nT})$")
+    axes[1].set_ylabel("$B_y (\mathrm{nT})$")
+    axes[2].set_ylabel("$B_z (\mathrm{nT})$")
+    axes[0].grid()
+    axes[1].grid()
+    axes[2].grid()
+    datefmt = mdt.ConciseDateFormatter(mdt.AutoDateLocator())
+    axes[0].xaxis.set_major_formatter(datefmt)
+    axes[1].xaxis.set_major_formatter(datefmt)
+    axes[2].xaxis.set_major_formatter(datefmt)
+
+    Bxplot = np.real(Bx)
+    Byplot = np.real(By)
+    Bzplot = np.real(Bz)
+    axes[0].plot(t, Bxplot, color=c[0])
+    axes[1].plot(t, Byplot, color=c[0])
+    axes[2].plot(t, Bzplot, color=c[0])
+    # Legend labels
+    if Bdat is not None:
+        (BxDat, ByDat, BzDat) = Bdat
+        axes[0].plot(t, BxDat, color=c[1])
+        axes[1].plot(t, ByDat, color=c[1])
+        axes[2].plot(t, BzDat, color=c[1])
+
+    if t_CA is not None:
+        axes[0].axvline(x=t_CA, color=c[2])
+        axes[1].axvline(x=t_CA, color=c[2])
+        axes[2].axvline(x=t_CA, color=c[2])
+        topYmin, topYmax = axes[0].get_ylim()
+        axes[0].text(t_CA, topYmax + (topYmax-topYmin)/20, "CA", ha="center")
+
+    # Save and close
+    fig_fname = f"{fpath}{bodyname}-{append}"
+    fig.savefig(fig_fname + ".png", format="png", dpi=200)
+    fig.savefig(fig_fname + ".pdf", format="pdf")
+    plt.close()
+    print(f"Trajectory plot saved to file: {fig_fname}.pdf")
+
+    return
+
+#############################################
+
+
+"""
+calcAndPlotTrajec()
+    Usage: plotTrajec(`x`,`y`,`z`,`r`,`t`, `Binm`, `Benm`, `peak_omegas`, `nprm_max`, `n_max`, `nvals`, `mvals`, `R_body=None`, 
+                      `component=None`, `Binm_sph=None`, `net_field=False`, `bodyname=None`, `append=""`, `fpath=None`)
+    Returns: None
+    Parameters:
+        x,y,z,r,t: float, shape(n_pts). Linear arrays of corresponding x,y,z, and r values in units of body radius and t values in seconds past J2000.
+        Binm: complex, shape(n_peaks, 2, n_max+1, n_max+1) OR shape(Nnm). Induced moments at J2000.
+        Benm: complex, shape(n_peaks, 2, nprm_max+1, nprm_max+1). Excitation moments at J2000.
+        peak_omegas: float, shape(n_peaks). List of angular frequencies in rad/s for excitation moments.
+        nprm_max: integer. Maximum degree n' in excitation moments.
+        n_max: integer. Maximum degree n in induced moments.
+        nvals: integer, shape(Nnm). A linear list of n values for constructing (n,m) pairs to evaluate moments.
+        mvals: integer, shape(Nnm). A linear list of m values for constructing (n,m) pairs to evaluate moments.
+        R_body: float (None). Body radius in km. Required if t is an array of a single value (if we're plotting a snapshot cut).
+        difference: boolean (False). Whether to plot the difference between the asymmetric and symmetric fields. Requires Binm_sph.
+        component: string (None). Component of magnetic field to plot. Options are None (for magnitude), "x", "y", or "z".
+        Binm_sph: complex, shape(n_peaks, 2, nprm_max+1, nprm_max+1) OR shape(Nnmprm) (None). Optional induced moments for a spherically symmetric body,
+            to plot for comparison purposes. Required if difference == True.
+        bodyname: string (None). Name of the body being modeled for titles and filenames.
+        net_field: boolean (False). Whether to plot the net magnetic field or just the induced field.
+        append: string (""). Optional string to append to filenames.
+        fpath: string (None). Optional path to figure save location. Passing None defaults to "figures/".  
+    """
+def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals, R_body=None, difference=False,
                component=None, Binm_sph=None, net_field=False, bodyname=None, append="", fpath=None):
     if fpath is None:
         fpath = "figures/"
@@ -854,7 +935,7 @@ def plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals
     Nnm = (n_max + 1) ** 2 - 1
     Nnmprm = (nprm_max + 1) ** 2 - 1
     n_peaks = np.size(peak_omegas)
-    n_pts = np.size(r)
+    n_pts = np.maximum(np.size(t), np.size(r))
 
     # Linearize Binm values
     if np.size(np.shape(Binm)) > 2:
@@ -902,31 +983,38 @@ def plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals
             Bnet_y += Bi_y
             Bnet_z += Bi_z
 
-    fig, axes = plt.subplots(1, 1)
-
     # Legend labels
     asym_label = "asymmetric"
     sym_label = "symmetric"
     # Set plot labels
     if component is not None:
-        substr = component
-        compstr = "$" + substr + "$ component "
-        coordstr = ", IAU coordinates"
-        if component == "x":
-            Bplot = np.real(Bnet_x)
-            if Binm_sph is not None:
-                Bplot_sph = np.real(Bnet_x_sph)
-        elif component == "y":
-            Bplot = np.real(Bnet_y)
-            if Binm_sph is not None:
-                Bplot_sph = np.real(Bnet_y_sph)
-        elif component == "z":
-            Bplot = np.real(Bnet_z)
-            if Binm_sph is not None:
-                Bplot_sph = np.real(Bnet_z_sph)
+        if component == 'all':
+            fig, axes = plt.subplots(3, 1)
+            Bxplot = np.real(Bnet_x)
+            Byplot = np.real(Bnet_y)
+            Bzplot = np.real(Bnet_z)
         else:
-            raise ValueError("ERROR: Selected component is not supported: '" + component + "'. Please use None (for magnitude) or 'x', 'y', 'z'.")
+            fig, axes = plt.subplots(1, 1)
+            substr = component
+            compstr = "$" + substr + "$ component "
+            coordstr = ", IAU coordinates"
+            if component == "x":
+                Bplot = np.real(Bnet_x)
+                if Binm_sph is not None:
+                    Bplot_sph = np.real(Bnet_x_sph)
+            elif component == "y":
+                Bplot = np.real(Bnet_y)
+                if Binm_sph is not None:
+                    Bplot_sph = np.real(Bnet_y_sph)
+            elif component == "z":
+                Bplot = np.real(Bnet_z)
+                if Binm_sph is not None:
+                    Bplot_sph = np.real(Bnet_z_sph)
+            else:
+                raise ValueError("ERROR: Selected component is not supported: '" + component + "'. Please use None (for magnitude) or 'x', 'y', 'z'.")
     else:
+        component = "mag"
+        fig, axes = plt.subplots(1, 1)
         substr = "\mathrm{mag}"
         compstr = ""
         coordstr = ""
@@ -954,9 +1042,10 @@ def plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals
         endstr = ", " + str(vert_cut_hr) + "$\,\mathrm{hr}$ past J2000"
     else:
         plotx = t/3600
-        xtitle = "Time after" + epstr + " epoch ($\mathrm{hr}$)"
-        trajstr = " along trajectory"
+        xtitle = "Hours past J2000"
+        trajstr = ""
         endstr = ""
+
 
     if net_field and not difference:
         netstr = " net time-varying field "
@@ -965,26 +1054,41 @@ def plotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals
         netstr = " induced field difference "
         ytitle = "$B_"+substr+"$ difference ($\mathrm{nT}$)" + coordstr
         Bplot -= Bplot_sph
-    else:
+    elif component != 'all':
         netstr = " induced field "
         ytitle = "Induced $B_"+substr+"$ ($\mathrm{nT}$)" + coordstr
 
-    axes.set_title(bodyname + netstr + trajstr + endstr)
-    axes.set_xlabel(xtitle)
-    axes.set_ylabel(ytitle)
-    axes.grid()
+    if component == "all":
+        fig.suptitle(bodyname + f" net time-varying field, ${bodyname[0]}\phi\Omega$ coordinates")
+        axes[-1].set_xlabel(xtitle)
+        axes[0].set_ylabel("$B_x (\mathrm{nT})$")
+        axes[1].set_ylabel("$B_y (\mathrm{nT})$")
+        axes[2].set_ylabel("$B_z (\mathrm{nT})$")
+        axes[0].grid()
+        axes[1].grid()
+        axes[2].grid()
 
-    axes.plot(plotx, Bplot, color=c[0], label=asym_label)
-    if Binm_sph is not None and not difference:
-        axes.plot(plotx, Bplot_sph, color=c[1], label=sym_label)
-        plt.legend(loc="best")
+        axes[0].plot(plotx, Bxplot, color=c[0])
+        axes[1].plot(plotx, Byplot, color=c[0])
+        axes[2].plot(plotx, Bzplot, color=c[0])
+    else:
+        axes.set_title(bodyname + netstr + trajstr + endstr)
+        axes.set_xlabel(xtitle)
+        axes.set_ylabel(ytitle)
+        axes.grid()
 
-    #	Save and close
-    fig_fname = fpath + bodyname + "_trajec" + append
+        axes.plot(plotx, Bplot, color=c[0], label=asym_label)
+        if Binm_sph is not None and not difference:
+            axes.plot(plotx, Bplot_sph, color=c[1], label=sym_label)
+            plt.legend(loc="best")
+
+    # Save and close
+    fig_fname = fpath + bodyname + append
     fig.savefig(fig_fname + ".png", format="png", dpi=200)
     fig.savefig(fig_fname + ".pdf", format="pdf")
     plt.close()
     print("Trajectory plot saved to file: ", fig_fname)
+
     return
 
 #############################################
