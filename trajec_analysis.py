@@ -1,5 +1,8 @@
 """ This program calculates magnetic fields along a trajectory
     and is intended for supporting analysis of spacecraft data.
+    Requires installation of spiceypy and several SPICE kernels
+    available from the NAIF data pages:
+    https://naif.jpl.nasa.gov/pub/naif/generic_kernels/
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import sys

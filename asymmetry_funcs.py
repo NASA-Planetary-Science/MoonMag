@@ -538,7 +538,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
         # For each omega, evaluate Bi:
-        pool = mtp.Pool(num_cores)
+        pool = mtp.Pool(np.minimum(num_cores,n_peaks))
         par_result = [pool.apply_async( BinmResponse, (r_bds,sigmas,peak_omegas[i_om],asym_shape,Benm[i_om,...],Xid,p_max,rscaling), par_kw ) for i_om in range(n_peaks)]
         pool.close()
         pool.join()
