@@ -1,9 +1,10 @@
 """ This file contains runtime options for the program eval_induced_field.py
     and dependent functions.
-    Developed in Python 3.8 for "An analytic solution for evaluating the magnetic
-    field induced from an arbitrary, asymmetric ocean world" by Styczinski et al.
-    DOI: TBD
-Author: M.J. Styczinski, mjstyczi@uw.edu """
+    Developed in Python 3.8 for "A perturbation method for evaluating the
+    magnetic field induced from an arbitrary, asymmetric ocean world 
+    analytically" by Styczinski et al.
+    DOI: 10.1016/j.icarus.2021.114840
+Author: M. J. Styczinski, mjstyczi@uw.edu """   
 
 # @@@@@@@@@@@@@@@@@
 #   Main settings
