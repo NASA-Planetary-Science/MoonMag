@@ -101,17 +101,17 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     do_cbar = not do_large
 
     if fpath is None:
-        fpath = "figures/"
+        fpath = "figures"
 
     if bodyname is None:
         bfname = ""
         bstr = ""
     else:
-        bfname = "_"+bodyname
-        bstr = bodyname + "_"
+        bfname = f"_{bodyname}"
+        bstr = f"{bodyname}_"
 
-    path = "interior/"
-    datpath = path+"asym_devs" + bfname + append + ".dat"
+    path = "interior"
+    datpath = os.path.join(path, f"asym_devs{bfname}{append}.dat")
 
     if recalc:
         # Convert from m to km
@@ -132,7 +132,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         fout.write(headinfo)
         headlbls = "Layer descrip., leny (#lats), compared radius (km), mean layer thickness (km):\n"
         fout.write(headlbls)
-        headnums = descrip + "\n" + str(leny) + "\n" + str(R_cmp) + "\n" + str(abs(mean_thick)) + "\n"
+        headnums = f"{descrip}\n{leny}\n{R_cmp}\n{abs(mean_thick)}\n"
         fout.write(headnums)
         colheader = "{:<10}, {:<24}\n".format("Lon (deg)", "Layer thicknesses (km)")
         fout.write(colheader)
@@ -144,7 +144,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
                 fout.write(data_fmt.format(thicks[i_lat,i_lon]))
             fout.write( "\n" )
         fout.close()
-        print("Data for asymmetric layer thicknesses written to file: ",datpath)
+        print(f"Data for asymmetric layer thicknesses written to file: {datpath}")
 
     else:
         fasym = open(datpath)
@@ -170,7 +170,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         lon_min = int(np.min(lon))
         lon_max = int(np.max(lon))
 
-    print("Maximum surface deviation: ", round(np.max(np.abs(thicks-mean_thick)),3), " km")
+    print(f"Maximum surface deviation: {np.max(np.abs(thicks-mean_thick)):.3f} km")
 
     # Generate and format figures
     if lon_min == 0:
@@ -216,10 +216,10 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         tick_size = deft_ticksize
         clabel_size = deft_ticksize * 6 / 7
     if do_cbar:
-        ptitle = bodyname + ": " + descrip + " boundary topography, $\overline{D}=" + str(abs(round(mean_thick))) + "\,\mathrm{km}$"
+        ptitle = f"{bodyname}: {descrip} boundary topography, $\overline{{D}}={abs(mean_thick):.0f}\,\mathrm{{km}}$"
         tsize = deft_tsize
     else:
-        ptitle = descrip + " thickness $(\mathrm{km})$, $\overline{D}=" + str(abs(round(mean_thick))) + "\,\mathrm{km}$"
+        ptitle = f"{descrip} thickness $(\mathrm{{km}})$, $\overline{{D}}={abs(mean_thick):.0f}\,\mathrm{{km}}$"
         tsize = deft_tsize * 1.5
     themap.tick_params(axis='both', which='major', labelsize=tick_size)
     if not no_title:
@@ -236,12 +236,12 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         cbar.ax.set_title(cbar_top, pad=cbar_adj, size=12)
 
     # Save the figure
-    topofig = bstr + "asym_contour"
-    print_fname = fpath + topofig + append + lg_end
-    fig.savefig(print_fname + ".png", format="png", dpi=300)
+    topofig = f"{bstr}asym_contour"
+    print_fname = os.path.join(fpath, f"{topofig}{append}{lg_end}")
+    fig.savefig(f"{print_fname}.png", format="png", dpi=300)
     if not do_large:
-        fig.savefig(print_fname + ".pdf", format="pdf")
-    print("Contour plot for asym bdy saved to: " + print_fname + ".png")
+        fig.savefig(f"{print_fname}.pdf", format="pdf")
+    print(f"Contour plot for asym bdy saved to: {print_fname}.png")
 
     return
 
@@ -330,7 +330,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             gnm_sph, hnm_sph = Binm_sph
 
     if fpath is None:
-        fpath = "figures/"
+        fpath = "figures"
     if component is None:
         compstr = ""
         comptitlestr = " magnitude"
@@ -338,8 +338,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         field_cmap = "afmhot"
     else:
         compstr = component
-        comptitlestr = " $" + component + "$ component"
-        substr = "{" + component
+        comptitlestr = f" ${component}$ component"
+        substr = f"{{{component}"
         field_cmap = "seismic"
 
     Re_Bx, Re_By, Re_Bz = (np.zeros((leny,lenx)) for _ in range(3))
@@ -350,7 +350,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             titlestr = " vs. symmetric"
         else:
             titlestr = diffstr
-        fname_diff = "_" + compstr + "diff"
+        fname_diff = f"_{compstr}diff"
         Re_Bx_sym, Re_By_sym, Re_Bz_sym = (np.zeros((leny,lenx)) for _ in range(3))
     else:
         diffstr = ""
@@ -359,14 +359,14 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
 
     if bodyname is None:
         bodyname = "P"
-    title_dist = " at $r=" + str(round(r_surf_mean,2)) + "R_" + bodyname[0] +"$"  # at J2000 epoch"
+    title_dist = f" at $r={r_surf_mean:.2f}R_{bodyname[0]}$"  # at J2000 epoch"
     titlestr = titlestr + title_dist
 
     if fend == "":
         print("Creating magnetic plot, this may take some time.")
     fig, axes = plt.subplots(1, 1, figsize=deft_figsize)
     plt.clf()
-    cbar_title = "Magnetic field"+diffstr+" $(\mathrm{nT})$"
+    cbar_title = f"Magnetic field{diffstr} $(\mathrm{{nT}})$"
     cbar_top = ""
     if do_cbar:
         cbar_ax = fig.add_axes(cbar_pos)
@@ -423,15 +423,15 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         Bz_diff = Re_Bz - Re_Bz_sym
         Bmag_diff = Bmag - Bmag_sym
 
-        if component == 'x':
+        if component == "x":
             B_plot = Bx_diff
             sym_plot = Re_Bx_sym
             asym_plot = Re_Bx
-        elif component == 'y':
+        elif component == "y":
             B_plot = By_diff
             sym_plot = Re_By_sym
             asym_plot = Re_By
-        elif component == 'z':
+        elif component == "z":
             B_plot = Bz_diff
             sym_plot = Re_Bz_sym
             asym_plot = Re_Bz
@@ -440,11 +440,11 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             sym_plot = Bmag_sym
             asym_plot = Bmag
     else:
-        if component == 'x':
+        if component == "x":
             B_plot = Re_Bx
-        elif component == 'y':
+        elif component == "y":
             B_plot = Re_By
-        elif component == 'z':
+        elif component == "z":
             B_plot = Re_Bz
         else:
             B_plot = Bmag
@@ -468,16 +468,16 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         clabel_size = deft_ticksize*6/7
 
     if do_cbar:
-        ptitle = bodyname + " induced field" + comptitlestr + titlestr
-        sym_ptitle = bodyname + " symmetric induced magnetic field magnitude"
-        asym_ptitle = bodyname + " asymmetric induced field" + comptitlestr + title_dist
+        ptitle = f"{bodyname} induced field{comptitlestr}{titlestr}"
+        sym_ptitle = f"{bodyname} symmetric induced magnetic field magnitude"
+        asym_ptitle = f"{bodyname} asymmetric induced field{comptitlestr}{title_dist}"
         abs_cbar_title = "Magnetic field ($\mathrm{nT}$)"
         tsize = deft_tsize
     else:
-        ptitle = "Induced field $B_"+substr+"}$"+titlestr+" $(\mathrm{nT})$"
-        sym_ptitle = "Induced field $B_\mathrm{asym}}$" + title_dist + " $(\mathrm{nT})$"
-        asym_ptitle = "Induced field $B_" + substr + ",\mathrm{asym}}$" + title_dist + " $(\mathrm{nT})$"
-        tsize = deft_tsize*1.5
+        ptitle = f"Induced field $B_{substr}}}${titlestr} $(\mathrm{{nT}})$"
+        sym_ptitle = f"Induced field $B_\mathrm{{sym}}${title_dist} $(\mathrm{{nT}})$"
+        asym_ptitle = f"Induced field $B_{substr},\mathrm{{asym}}}}${title_dist} $(\mathrm{{nT}})$"
+        tsize = deft_tsize * 1.5
 
     if fend != "":
         if bodyname == "Miranda" and component is None:
@@ -485,7 +485,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         else:
             diff_cmap = "seismic"
 
-        ptitle = ptitle + " at t=" + tstr + " h"
+        ptitle = f"{ptitle} at t={tstr} h"
         comp_adj = 0
         if bodyname == "Europa":
             if not difference:
@@ -578,24 +578,24 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
 
     # Save the figure
     if bodyname is None or bodyname == "":
-        topofig = "field_asym" + fname_diff + lg_end + fend
+        topofig = f"field_asym{fname_diff}{lg_end}{fend}"
         sym_topofig = "field_sym"
         asym_topofig = "field_asym"
     else:
-        topofig = bodyname + "_field_asym" + append + fname_diff + lg_end + fend
-        sym_topofig = bodyname + "_field_sym"
-        asym_topofig = bodyname + "_field_asym"
+        topofig = f"{bodyname}_field_asym{append}{fname_diff}{lg_end}{fend}"
+        sym_topofig = f"{bodyname}_field_sym"
+        asym_topofig = f"{bodyname}_field_asym"
 
     if fend == "":
         if not do_large and save_vector:
-            fig.savefig(fpath+topofig+".pdf", format="pdf")
+            fig.savefig(os.path.join(fpath, f"{topofig}.pdf"), format="pdf")
         fig_dpi = 300
     else:
         fig_dpi = 150
-        fpath = fpath+"anim_frames/"
-    print_fname = fpath + topofig
-    fig.savefig(print_fname + ".png", format="png", dpi=fig_dpi)
-    print("Contour plot for asym field saved to: " + print_fname + ".png")
+        fpath = os.path.join(fpath, "anim_frames")
+    print_fname = os.path.join(fpath, topofig)
+    fig.savefig(f"{print_fname}.png", format="png", dpi=fig_dpi)
+    print(f"Contour plot for asym field saved to: {print_fname}.png")
 
     # Plot the absolute induced field in addition to a difference
     if (absolute and difference) and fend=="":
@@ -629,9 +629,9 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
 
         if not no_title:
             fig.suptitle(asym_ptitle, size=tsize)
-        print_abs_asym_fname = fpath + asym_topofig + append + lg_end
-        fig.savefig(print_abs_asym_fname + ".png", format="png", dpi=fig_dpi)
-        print("Contour plot for absolute asym field saved to: " + print_abs_asym_fname + ".png")
+        print_abs_asym_fname = os.path.join(fpath, f"{asym_topofig}{append}{lg_end}")
+        fig.savefig(f"{print_abs_asym_fname}.png", format="png", dpi=fig_dpi)
+        print(f"Contour plot for absolute asym field saved to: {print_abs_asym_fname}.png")
 
         # Plot analogous plot for field from symmetric shape for comparison
         for old_cont in cont.collections:
@@ -660,13 +660,13 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
 
         if not no_title:
             if fend != "":
-                title_tstring = " at t=" + tstr + " h"
+                title_tstring = f" at t={tstr} h"
             else:
                 title_tstring = ""
-            fig.suptitle(sym_ptitle + title_tstring, size=tsize)
-        print_abs_sym_fname = fpath + sym_topofig + append + lg_end
-        fig.savefig(print_abs_sym_fname + ".png", format="png", dpi=fig_dpi)
-        print("Contour plot for absolute sym field saved to: " + print_abs_sym_fname + ".png")
+            fig.suptitle(f"{sym_ptitle}{title_tstring}", size=tsize)
+        print_abs_sym_fname = os.path.join(fpath, f"{sym_topofig}{append}{lg_end}")
+        fig.savefig(f"{print_abs_sym_fname}.png", format="png", dpi=fig_dpi)
+        print(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.png")
 
     plt.close()
     return
@@ -699,7 +699,7 @@ plotTimeSeries()
     """
 def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mvals, n_pts=200, component=None, Binm_sph=None, bodyname=None, append="", fpath=None):
     if fpath is None:
-        fpath = "figures/"
+        fpath = "figures"
 
     T_secs = T_hrs * 3600
     x = loc[0]
@@ -763,7 +763,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
     # Set plot labels
     if component is not None:
         substr = component
-        compstr = "$" + substr + "$ component "
+        compstr = f"${substr}$ component "
         coordstr = ", IAU coordinates"
         if component == "x":
             Bplot = np.real(Bnet_x)
@@ -778,7 +778,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
             if Binm_sph is not None:
                 Bplot_sph = np.real(Bnet_z_sph)
         else:
-            raise ValueError("ERROR: Selected component is not supported: '" + component + "'. Please use None (for magnitude) or 'x', 'y', 'z'.")
+            raise ValueError(f"ERROR: Selected component is not supported: '{component}'. Please use None (for magnitude) or 'x', 'y', 'z'.")
     else:
         substr = "\mathrm{mag}"
         compstr = ""
@@ -802,9 +802,9 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
         planetname = "saturnian"
     else:
         planetname = "planetary"
-    axes.set_title(bodyname + " net time-varying field " + compstr + "at sub-"+planetname+" point")
-    axes.set_xlabel("Time after"+epstr+" epoch ($\mathrm{hr}$)")
-    axes.set_ylabel("Net $B_"+substr+"$ ($\mathrm{nT}$)" + coordstr)
+    axes.set_title(f"{bodyname} net time-varying field {compstr}at sub-{planetname} point")
+    axes.set_xlabel(f"Time after{epstr} epoch ($\mathrm{{hr}}$)")
+    axes.set_ylabel(f"Net $B_{substr}$ ($\mathrm{{nT}}$){coordstr}")
     axes.grid()
 
     axes.plot(t_h, Bplot, color=c[0], label=asym_label)
@@ -813,11 +813,11 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
         plt.legend(loc="best")
 
     #	Save and close
-    fig_fname = fpath + bodyname + "_tSeries" + append
-    fig.savefig(fig_fname + ".png", format="png", dpi=200)
-    fig.savefig(fig_fname + ".pdf", format="pdf")
+    fig_fname = os.path.join(fpath, f"{bodyname}_tSeries{append}")
+    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
+    fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    print("Time series plot saved to file: ", fig_fname)
+    print(f"Time series plot saved to file: {fig_fname}")
     return
 
 #############################################
@@ -849,7 +849,7 @@ plotTrajec()
     """
 def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fpath=None):
     if fpath is None:
-        fpath = "figures/"
+        fpath = "figures"
 
     # Set plot labels
     fig, axes = plt.subplots(3, 1)
@@ -888,9 +888,9 @@ def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fp
         axes[0].text(t_CA, topYmax + (topYmax-topYmin)/20, "CA", ha="center")
 
     # Save and close
-    fig_fname = f"{fpath}{bodyname}-{append}"
-    fig.savefig(fig_fname + ".png", format="png", dpi=200)
-    fig.savefig(fig_fname + ".pdf", format="pdf")
+    fig_fname = os.path.join(fpath, f"{bodyname}-{append}")
+    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
+    fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
     print(f"Trajectory plot saved to file: {fig_fname}.pdf")
 
@@ -926,7 +926,7 @@ calcAndPlotTrajec()
 def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals, R_body=None, difference=False,
                component=None, Binm_sph=None, net_field=False, bodyname=None, append="", fpath=None):
     if fpath is None:
-        fpath = "figures/"
+        fpath = "figures"
 
     if n_max > 4:
         n_max = 4
@@ -988,7 +988,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
     sym_label = "symmetric"
     # Set plot labels
     if component is not None:
-        if component == 'all':
+        if component == "all":
             fig, axes = plt.subplots(3, 1)
             Bxplot = np.real(Bnet_x)
             Byplot = np.real(Bnet_y)
@@ -1011,7 +1011,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
                 if Binm_sph is not None:
                     Bplot_sph = np.real(Bnet_z_sph)
             else:
-                raise ValueError("ERROR: Selected component is not supported: '" + component + "'. Please use None (for magnitude) or 'x', 'y', 'z'.")
+                raise ValueError(f"ERROR: Selected component is not supported: '{component}'. Please use None (for magnitude) or 'x', 'y', 'z'.")
     else:
         component = "mag"
         fig, axes = plt.subplots(1, 1)
@@ -1038,8 +1038,8 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
             lon_ltr = "E"
         else:
             lon_ltr = "W"
-        trajstr = " above $"+str(abs(vert_cut_lat))+"^\circ\mathrm{"+lat_ltr+"}$, $"+str(abs(vert_cut_lon))+"^\circ\mathrm{"+lon_ltr+"}$"
-        endstr = ", " + str(vert_cut_hr) + "$\,\mathrm{hr}$ past J2000"
+        trajstr = f" above ${abs(vert_cut_lat)}^\circ\mathrm{{{lat_ltr}}}$, ${abs(vert_cut_lon)}^\circ\mathrm{{{lon_ltr}}}$"
+        endstr = f", {vert_cut_hr}$\,\mathrm{{hr}}$ past J2000"
     else:
         plotx = t/3600
         xtitle = "Hours past J2000"
@@ -1049,17 +1049,17 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
 
     if net_field and not difference:
         netstr = " net time-varying field "
-        ytitle = "Net $B_"+substr+"$ ($\mathrm{nT}$)" + coordstr
+        ytitle = f"Net $B_{substr}$ ($\mathrm{{nT}}$){coordstr}"
     elif difference:
         netstr = " induced field difference "
-        ytitle = "$B_"+substr+"$ difference ($\mathrm{nT}$)" + coordstr
+        ytitle = f"$B_{substr}$ difference ($\mathrm{{nT}}$){coordstr}"
         Bplot -= Bplot_sph
-    elif component != 'all':
+    elif component != "all":
         netstr = " induced field "
-        ytitle = "Induced $B_"+substr+"$ ($\mathrm{nT}$)" + coordstr
+        ytitle = f"Induced $B_{substr}$ ($\mathrm{{nT}}$){coordstr}"
 
     if component == "all":
-        fig.suptitle(bodyname + f" net time-varying field, ${bodyname[0]}\phi\Omega$ coordinates")
+        fig.suptitle(f"{bodyname} net time-varying field, ${bodyname[0]}\phi\Omega$ coordinates")
         axes[-1].set_xlabel(xtitle)
         axes[0].set_ylabel("$B_x (\mathrm{nT})$")
         axes[1].set_ylabel("$B_y (\mathrm{nT})$")
@@ -1072,7 +1072,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
         axes[1].plot(plotx, Byplot, color=c[0])
         axes[2].plot(plotx, Bzplot, color=c[0])
     else:
-        axes.set_title(bodyname + netstr + trajstr + endstr)
+        axes.set_title(f"{bodyname}{netstr}{trajstr}{endstr}")
         axes.set_xlabel(xtitle)
         axes.set_ylabel(ytitle)
         axes.grid()
@@ -1083,11 +1083,11 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
             plt.legend(loc="best")
 
     # Save and close
-    fig_fname = fpath + bodyname + append
-    fig.savefig(fig_fname + ".png", format="png", dpi=200)
-    fig.savefig(fig_fname + ".pdf", format="pdf")
+    fig_fname = os.path.join(fpath, f"{bodyname}{append}")
+    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
+    fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    print("Trajectory plot saved to file: ", fig_fname)
+    print(f"Trajectory plot saved to file: {fig_fname}")
 
     return
 
@@ -1123,7 +1123,7 @@ def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_m
     axes.set_ylabel("Complex magnitude")
 
     phax = axes.secondary_yaxis('right', functions=(getphase, getmag))
-    phax.set_ylabel('Phase delay (degrees)')
+    phax.set_ylabel("Phase delay (degrees)")
 
     nstr = str(n)
     AeM_label = "$|\mathcal{A}_" + nstr + "^e|$"
@@ -1163,15 +1163,15 @@ def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_m
     #	Save and close
     plt.legend(loc="best")
     xtn = "png"
-    thefig = "figures/A_functions." + xtn
+    thefig = os.path.join("figures", f"A_functions.{xtn}")
     fig.savefig(thefig, format=xtn, dpi=300)
     plt.close()
-    print("A functions plot printed to: " + thefig)
+    print(f"A functions plot printed to: {thefig}")
 
     return
 
 #	For secondary axis labels
 def getphase(A):
-	return A*90.0
+    return A*90.0
 def getmag(phi):
-	return phi/90.0
+    return phi/90.0

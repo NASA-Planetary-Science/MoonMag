@@ -6,6 +6,7 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
+import os
 import numpy as np
 from collections.abc import Iterable
 from numpy import sqrt
@@ -74,19 +75,19 @@ read_shape()
 def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=None, single_asym=None, concentric=True,
                fpath=None, r_bds=None, r_io=-2, append="", convert_depth_to_chipq=False):
     if fpath is None:
-        fpath = "interior/"
+        fpath = "interior"
     if bodyname is None:
         bfname = ""
     else:
-        bfname = "_"+bodyname
+        bfname = f"_{bodyname}"
 
     # Initialize asymmetric shape array. The latter 3 indices are
     # for q positive (0) or negative (1), p, and |q|.
     asym_shape, grav_shape = ( np.zeros((n_bds,2,p_max+1,p_max+1),dtype=np.complex_) for _ in range(2) )
 
     if single_asym is not None:
-        asym_model = fpath + "depth_chi_pq_shape" + bfname + append + ".txt"
-        print("Using asymmetry model: " + asym_model + " for layer index " + str(single_asym))
+        asym_model = os.path.join(fpath, f"depth_chi_pq_shape{bfname}{append}.txt")
+        print(f"Using asymmetry model: {asym_model} for layer index {single_asym}")
         shape_n = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',')
         scaled_rad = r_bds * rscale
         for p in range(1, p_max + 1):
@@ -106,17 +107,17 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
         # Put scalar value into a list in case there's only a single boundary
         if not isinstance(eps_scaled, Iterable): eps_scaled = [ eps_scaled ]
 
-        asym_model1 = fpath + "degree"
+        asym_model1 = os.path.join(fpath, "degree")
 
         for p in range(1,p_max+1):
             try:
-                asym_model = asym_model1 + str(p) + "_shapes" + bfname + append + ".txt"
+                asym_model = f"{asym_model1}{p}_shapes{bfname}{append}.txt"
                 shape_p = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',', dtype=np.complex_)
-                print("Using asymmetry model: " + asym_model)
+                print(f"Using asymmetry model: {asym_model}")
             except:
-                asym_model = asym_model1 + str(p) + "_shapes.txt"
+                asym_model = f"{asym_model1}{p}_shapes.txt"
                 shape_p = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',', dtype=np.complex_)
-                print("Using asymmetry model: " + asym_model)
+                print(f"Using asymmetry model: {asym_model}")
 
             qcount = 0
             for q in range(-p, p+1):
@@ -126,8 +127,8 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
                     asym_shape[i,qsign,p,qabs] = shape_p[i,qcount]*eps_scaled[i]
                 qcount += 1
     elif concentric:
-        asym_model = fpath + "depth_chi_pq_shape" + bfname + append + ".txt"
-        print("Using asymmetry model: " + asym_model + " concentrically, scaled to a radius of " + 1/rscale)
+        asym_model = os.path.join(fpath, f"depth_chi_pq_shape{bfname}{append}.txt")
+        print(f"Using asymmetry model: {asym_model} concentrically, scaled to a radius of {1/rscale:.2f}")
         shape_n = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',')
         scaled_rad = r_bds * rscale
         for p in range(1,p_max+1):
@@ -146,7 +147,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
         # Apply asymmetry independently to each layer, and read in one file per layer.
         raise RuntimeError("Independently asymmetric layers are not implemented.")
         for n_layer in range(1, n_bds+1):
-            shape_n = np.loadtxt(fpath+"depth_chi_pq_shape"+str(n_layer)+"_"+bfname+".txt", skiprows=1, unpack=False, delimiter=',')
+            shape_n = np.loadtxt(os.path.join(fpath, f"depth_chi_pq_shape{n_layer}_{bfname}.txt"), skiprows=1, unpack=False, delimiter=',')
             for p in range(1, p_max+1):
                 """ Not yet implemented, but this is a starting point.
                 this_min = int(p*(p+1)/2)
@@ -178,11 +179,11 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
         # or to print for readability instead
         print_for_copy = True
         if print_for_copy:
-            chi_head = " p, chipq (-q, ..., q); bcdev=" + str(eps_max) + " m\n"
+            chi_head = f" p, chipq (-q, ..., q); bcdev={eps_max} m\n"
         else:
-            chi_head = " p, q, chipq_re, chipq_im, bcdev=" + str(eps_max) + " m\n"
+            chi_head = f" p, q, chipq_re, chipq_im, bcdev={eps_max} m\n"
         eps = asym_shape[r_io, ...] / eps_max
-        asym_out = fpath + "chi_pq_"+bodyname+".txt"
+        asym_out = os.path.join(fpath, f"chi_pq_{bodyname}.txt")
         with open(asym_out, "w") as f_chi:
             f_chi.write(chi_head)
             for p in range(1, p_max+1):
@@ -196,22 +197,22 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
                             btw_char = "+"
                         else:
                             btw_char = "-"
-                        this_line = this_line + ", " + str(np.real(eps[qsign, p, qabs])) + btw_char + str(np.abs(np.imag(eps[qsign, p, qabs]))) + "j"
+                        this_line = f"{this_line}, {np.real(eps[qsign, p, qabs])}{btw_char}{np.abs(np.imag(eps[qsign, p, qabs]))}j"
                     else:
-                        this_line = " " + str(p) + ", " + str(q).rjust(2) + ", " + str(np.real(eps[qsign, p, qabs])) + btw_char + str(np.abs(np.imag(eps[qsign, p, qabs]))) + "\n"
+                        this_line = f" {p}, {str(q).rjust(2)}, {np.real(eps[qsign, p, qabs])}{btw_char}{np.abs(np.imag(eps[qsign, p, qabs]))}\n"
                         f_chi.write(this_line)
                 if print_for_copy:
                     f_chi.write(this_line+"\n")
-        print("DEBUG: Printed chi_pq values to ",asym_out)
+        print(f"DEBUG: Printed chi_pq values to {asym_out}")
 
     # If this file exists, model tidal perturbations. If not, return None.
-    grav_model = fpath + "gravity" + bfname + append + ".txt"
+    grav_model = os.path.join(fpath, f"gravity{bfname}{append}.txt")
     try:
         g_shape_n = np.loadtxt(grav_model, skiprows=1, unpack=False, delimiter=',')
     except:
         grav_shape = None
     else:
-        print("Using surface gravity shape: " + grav_model)
+        print(f"Using surface gravity shape: {grav_model}")
         for p in range(1, p_max + 1):
             this_min = int(p * (p + 1) / 2)
             this_max = this_min + p + 1
@@ -317,12 +318,12 @@ validate()
 def validate(r_bds, sigmas, bcdev, asym_shape, p_max):
     # Check lengths of model lists
     if np.shape(r_bds) != np.shape(sigmas):
-        print("boundaries shape: ",np.shape(r_bds))
-        print("sigmas shape: ",np.shape(sigmas))
+        print("boundaries shape: ", np.shape(r_bds))
+        print("sigmas shape: ", np.shape(sigmas))
         raise ValueError("The number of boundaries is not equal to the number of conductivities.")
     if np.shape(r_bds) != np.shape(bcdev):
-        print("boundaries shape: ",np.shape(r_bds))
-        print("deviations shape: ",np.shape(bcdev))
+        print("boundaries shape: ", np.shape(r_bds))
+        print("deviations shape: ", np.shape(bcdev))
         raise ValueError("The number of boundaries is not equal to the number of deviations.")
 
     # Make sure interior model is iterable (it's not if there is only 1 boundary)
@@ -334,8 +335,8 @@ def validate(r_bds, sigmas, bcdev, asym_shape, p_max):
     # Double check array lengths all match up
     if np.shape(asym_shape) != (len(r_bds),2,p_max+1,p_max+1):
         if np.shape(r_bds) != np.shape(asym_shape)[0]:
-            print("boundaries length: ",np.shape(r_bds))
-            print("deviations length: ",np.shape(asym_shape)[0])
+            print("boundaries length: ", np.shape(r_bds))
+            print("deviations length: ", np.shape(asym_shape)[0])
             raise ValueError("The number of boundaries is not equal to the number of deviation shapes.")
         else:
             raise ValueError("The number of deviation shapes is not equal to (p_max + 1)^2 - 1.")
@@ -398,11 +399,11 @@ read_Benm()
     """
 def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital=False):
     if fpath is None:
-        fpath = "excitation/"
+        fpath = "excitation"
     if bodyname is None:
         bfname = ""
     else:
-        bfname = "_"+bodyname
+        bfname = f"_{bodyname}"
 
     if synodic and orbital:
         print("WARNING: Both 'synodic' and 'orbital' options passed to asymmetry_funcs.read_Benm. Only synodic will be used.")
@@ -410,15 +411,15 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
 
     if synodic:
         print("Warning: Considering synodic period only for excitation.")
-        Benm_moments = fpath+"synodic_Be1xyz"+bfname+".txt"
+        Benm_moments = os.path.join(fpath, f"synodic_Be1xyz{bfname}.txt")
     elif orbital:
         print("Warning: Considering orbital period only for excitation.")
         if bodyname == "Europa":
             print("Extra warning: This excitation is APPROXIMATE, in that two closely-spaced periods have been summed together and set to T = 85.2 h.")
-        Benm_moments = fpath + "orbital_Be1xyz" + bfname + ".txt"
+        Benm_moments = os.path.join(fpath, f"orbital_Be1xyz{bfname}.txt")
     else:
-        Benm_moments = fpath + "Be1xyz" + bfname + ".txt"
-    print("Using excitation moments: " + Benm_moments)
+        Benm_moments = os.path.join(fpath, f"Be1xyz{bfname}.txt")
+    print(f"Using excitation moments: {Benm_moments}")
     peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
     Bex = Bex_Re + 1j*Bex_Im
     Bey = Bey_Re + 1j*Bey_Im
@@ -441,9 +442,9 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         for nn in range(1,nprm_max+1):
             if nn == 2:
                 peak_per2, xBex_Re, xBex_Im, xBey_Re, xBey_Im, xBez_Re, xBez_Im, yBez_Re, yBez_Im, zBez_Re, zBez_Im    \
-                    = np.loadtxt(fpath+"Be2xyz"+bfname+".txt", skiprows=1, unpack=True, delimiter=',')
-                n_peaks2 = len(peak_per2)
-                Benm2 = np.zeros((n_peaks2,2,nprm_max+p_max+1,nprm_max+p_max+1),dtype=np.complex_)
+                    = np.loadtxt(os.path.join(fpath, f"Be2xyz{bfname}.txt"), skiprows=1, unpack=True, delimiter=',')
+                n_peaks2 = np.size(peak_per2)
+                Benm2 = np.zeros((n_peaks2,2,nprm_max+p_max+1,nprm_max+p_max+1), dtype=np.complex_)
 
                 xBex = xBex_Re + 1j*xBex_Im
                 xBey = xBey_Re + 1j*xBey_Im
@@ -518,11 +519,11 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
     n_max = nprm_max + p_max
     Binms = np.zeros((n_peaks, 2, n_max+1, n_max+1), dtype=np.complex_)
     if writeout:
-        print("Calculating asymmetric B_inm for ",len(peak_omegas)," periods.")
+        print(f"Calculating asymmetric B_inm for {np.size(peak_omegas)} periods.")
         if bodyname is None:
             bfname = ""
         else:
-            bfname = bodyname+"_"
+            bfname = f"{bodyname}_"
     if rscale_moments == 1.0:
         rscaling = rscale_moments
     else:
@@ -551,16 +552,16 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
             krvals = np.zeros(n_peaks, dtype=np.complex_)
             for i_om in range(n_peaks):
                 Binms[0, ...], Aes[i_om, :], Ats[i_om, :], Ads[i_om, :], krvals[i_om] = BinmResponse(r_bds, sigmas, peak_omegas[i_om], asym_shape, Benm[0, ...], Xid, p_max, rscaling, nprm_max=nprm_max, verbose=verbose, debug=debug)
-                if verbose and (i_om+1) % 10 == 0: print(i_om + 1, " of ", n_peaks, " complete.")
+                if verbose and (i_om+1) % 10 == 0: print(f"{i_om + 1} of {n_peaks} complete.")
         else:
             for i_om in range(n_peaks):
                 Binms[i_om, ...] = BinmResponse(r_bds, sigmas, peak_omegas[i_om], asym_shape, Benm[i_om, ...], Xid, p_max, rscaling, nprm_max=nprm_max, verbose=verbose)
-                if verbose: print(i_om + 1, " of ", n_peaks, " complete.")
+                if verbose: print(f"{i_om + 1} of {n_peaks} complete.")
 
     if writeout:
         if path is None:
-            path = "induced/"
-        fpath = path+bfname+"Binm_asym"+append+".dat"
+            path = "induced"
+        fpath = os.path.join(path, f"{bfname}Binm_asym{append}.dat")
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
@@ -571,10 +572,10 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
                 this_Binm = Binms[i,sign,nvals[i_nm],abs(mvals[i_nm])]
                 fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nvals[i_nm], mvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
         fout.close()
-        print("Data for asymmetric Binm written to file: ",fpath)
+        print("Data for asymmetric Binm written to file: ", fpath)
         
         if output_Schmidt:
-            fpath = path+bfname+"ghnm_asym"+append+".dat"
+            fpath = os.path.join(path, f"{bfname}ghnm_asym{append}.dat")
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
             fout.write(header)
@@ -740,7 +741,7 @@ def BinmResponse(r_bds, sigmas, omega, asym_shape, Benm, Xid, p_max, rscaling, n
 
     if verbose:
         T_hrs = round(2*np.pi/omega/3600, 2)
-        print("    Evaluating final products for T = ", T_hrs, "...", flush=True)
+        print(f"    Evaluating final products for T = {T_hrs}...", flush=True)
 
     # Finally, zip it all together:
     Ae = cpx_div( (betaQ + Lambd[:,-1] * gammQ), (deltQ + Lambd[:,-1] * epsiQ) )
@@ -899,7 +900,7 @@ eval_inner_recur_sym()
 def eval_inner_recur_sym(n_max, n_bds, beta, gamm, delt, epsi):
     Lambd = np.zeros((n_max,n_bds), dtype=mpc_global)
     for i in range(n_bds-1):
-        Lambd[:,i+1] = cpx_div((delt[:,i] + Lambd[:,i]*epsi[:,i]) ,   \
+        Lambd[:,i+1] = cpx_div((delt[:,i] + Lambd[:,i]*epsi[:,i]) ,
                                (beta[:,i] + Lambd[:,i]*gamm[:,i]))
 
     return Lambd
@@ -995,15 +996,15 @@ def print_Xid_table(Xid, n_max, p_max, nprm_max):
     head_row = "    "
     for n in range(1, n_max+1):
         for m in range(-n, n+1):
-            head_row = head_row + ("|    Y" + str(n) + str(m) + "    ").ljust(25)
-    head_row = head_row + "|"
+            head_row = head_row + f"|    Y{n}{m}    ".ljust(25)
+    head_row = f"{head_row}|"
     print(head_row)
     # Print shapes as rows
     for p in range(1, p_max+1):
         for q in range(-p, p+1):
             qsign = int(q<0)
             qabs = abs(q)
-            row_str = ("S" + str(p) + str(q)).ljust(4)
+            row_str = f"S{p}{q}".ljust(4)
 
             # Print excitation moments as columns
             for n in range(1, n_max+1):
@@ -1024,19 +1025,19 @@ def print_Xid_table(Xid, n_max, p_max, nprm_max):
                         if(abs_Xi > 1e-18):
                             if(cell_str != "| "):
                                 if(int(this_Xid>0) or round_Xi==0.0):
-                                    cell_str = cell_str + "+ "
+                                    cell_str = f"{cell_str}+ "
                                 else:
-                                    cell_str = cell_str + "- "
+                                    cell_str = f"{cell_str}- "
                             else:
                                 if(int(this_Xid>0) or round_Xi==0.0):
-                                    cell_str = cell_str + " "
+                                    cell_str = f"{cell_str} "
                                 else:
-                                    cell_str = cell_str + "-"
-                            cell_str = (cell_str + str(round_Xi) + "Y" + str(nprm) + str(mprm) + " ").ljust(13)
+                                    cell_str = f"{cell_str}-"
+                            cell_str = f"{cell_str}{round_Xi}Y{nprm}{mprm} ".ljust(13)
 
-                    row_str = row_str + cell_str.ljust(25)
+                    row_str = f"{row_str}{cell_str.ljust(25)}"
 
-            row_str = row_str + "|"
+            row_str = f"{row_str}|"
             print(row_str)
 
     return
@@ -1057,13 +1058,13 @@ def print_Xi_table(n_max, p_max, nprm_max):
     head_row = "    "
     for n in range(1, n_max+1):
         for m in range(-n, n+1):
-            head_row = head_row + ("|    Y" + str(n) + str(m) + "    ").ljust(25)
-    head_row = head_row + "|"
+            head_row = f"{head_row}|    Y{n}{m}    ".ljust(25)
+    head_row = f"{head_row}|"
     print(head_row)
     # Print shapes as rows
     for p in range(1, p_max+1):
         for q in range(-p, p+1):
-            row_str = ("S" + str(p) + str(q)).ljust(4)
+            row_str = f"S{p}{q}".ljust(4)
 
             # Print excitation moments as columns
             for n in range(1, n_max+1):
@@ -1075,22 +1076,22 @@ def print_Xi_table(n_max, p_max, nprm_max):
                         mprm = m + q
 
                         this_Xi = calc_Xi(n,m,p,q,nprm,mprm)
-                        if(abs(this_Xi) > 0.00001):
-                            if(cell_str != "| "):
+                        if abs(this_Xi) > 0.00001:
+                            if cell_str != "| ":
                                 if(int(this_Xi<0)):
-                                    cell_str = cell_str + "- "
+                                    cell_str = f"{cell_str}- "
                                 else:
-                                    cell_str = cell_str + "+ "
+                                    cell_str = f"{cell_str}+ "
                             else:
                                 if(int(this_Xi<0)):
-                                    cell_str = cell_str + "-"
+                                    cell_str = f"{cell_str}-"
                                 else:
-                                    cell_str = cell_str + " "
-                            cell_str = (cell_str + str(round(abs(this_Xi),3)) + "Y" + str(nprm) + str(mprm) + " ").ljust(13)
+                                    cell_str = f"{cell_str} "
+                            cell_str = f"{cell_str}{abs(this_Xi):.3f}Y{nprm}{mprm} ".ljust(13)
 
-                    row_str = row_str + cell_str.ljust(25)
+                    row_str = f"{row_str}{cell_str}".ljust(25)
 
-            row_str = row_str + "|"
+            row_str = f"{row_str}|"
             print(row_str)
 
     return
@@ -1125,7 +1126,7 @@ def calc_Xi(n, m, p, q, nprm, mprm):
         ft_sqrt = np.sqrt( ft(n+m)*ft(n-m)*ft(p+q)*ft(p-q)*ft(nprm+mprm)*ft(nprm-mprm) )
         ft_frac = ft(2*nu)/ft(nu) * ft(2*n-2*nu)/ft(n-nu) * ft(2*p-2*nu)/ft(p-nu) * ft(nprm+nu)/ft(2*nprm+1+2*nu)
 
-        kap_sum = np.sum([ (-1)**kap / ( ft(kap)*ft(2*nu-kap) * ft(n-m-kap)*ft(n+m-(2*nu-kap)) *    \
+        kap_sum = np.sum([ (-1)**kap / ( ft(kap)*ft(2*nu-kap) * ft(n-m-kap)*ft(n+m-(2*nu-kap)) *
             ft(p+q-kap)*ft(p-q-(2*nu-kap)) ) for kap in range(kap_min,kap_max+1) ])
 
         Xi = cs_sign * norm * ft_frac * ft_sqrt * kap_sum
@@ -1169,7 +1170,7 @@ def F_M(n, m, twokap):
             return zero
         else:
             Fm = w_M(n_this,m)*w_P(n_down,m) /    \
-            ( w_M(n_down,m)**2 + w_P(n_down,m)**2 -     \
+            ( w_M(n_down,m)**2 + w_P(n_down,m)**2 -
                 w_M(n_down,m)*w_P(n_down2,m)*F_M(n,m,twokap+2) )
 
     return Fm
@@ -1182,7 +1183,7 @@ def F_P(n, m, twokap, nprm_max):
         n_up = n+(twokap+2)
         n_up2 = n+(twokap+4)
         Fp = w_P(n_this,m)*w_M(n_up,m) /    \
-        ( w_M(n_up,m)**2 + w_P(n_up,m)**2 -     \
+        ( w_M(n_up,m)**2 + w_P(n_up,m)**2 -
             w_P(n_up,m)*w_M(n_up2,m)*F_P(n,m,twokap+2,nprm_max) )
 
     return Fp
@@ -1250,7 +1251,7 @@ def eval_dev(p, q, chi_pq, ltht, lphi, lleny, llenx):
     else:
         this_devs = np.array([ np.real( chi_pq*complex(mp.spherharm(p,q,thti,phii)) ) for thti in ltht for phii in lphi ])
         this_devs = np.reshape(this_devs,(lleny,llenx))
-    print("p,q = ",p,q," completed", flush=True)
+    print(f"p,q = {p}{q} completed", flush=True)
     return this_devs
 
 #############################################

@@ -9,7 +9,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import eval_induced_field as eval
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Each body to include in calculations
     do_Europa = True
     do_Miranda = True
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     
     if do_Europa:
         bname = "Europa"
-        print(" - " + bname + " Tobie model high salinity (Seawater) - ")
+        print(f" - {bname} Tobie model high salinity (Seawater) - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, seawater=True)
             eval.run_calcs(bname, "x", False, do_fields, False, seawater=True)
@@ -46,7 +46,7 @@ if __name__ == '__main__':
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=True)
     
         bname = "Europa"
-        print(" - " + bname + " Tobie model low salinity (10% Seawater) - ")
+        print(f" - {bname} Tobie model low salinity (10% Seawater) - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, seawater=False)
             eval.run_calcs(bname, "x", False, do_fields, False, seawater=False)
@@ -60,7 +60,7 @@ if __name__ == '__main__':
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=False)
     
         bname = "Europa"
-        print(" - " + bname + " previous comparison - ")
+        print(f" - {bname} previous comparison - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, compare_me=True)
             eval.run_calcs(bname, "x", False, do_fields, False, compare_me=True)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     
     if do_Miranda:
         bname = "Miranda"
-        print(" - " + bname + " - ")
+        print(f" - {bname} - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, do_large=False)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=False)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     
     if do_Callisto:
         bname = "Callisto"
-        print(" - " + bname + " - ")
+        print(f" - {bname} - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour)
             eval.run_calcs(bname, "x", False, do_fields, False)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     
     if do_Triton:
         bname = "Triton"
-        print(" - " + bname + " - ")
+        print(f" - {bname} - ")
         if do_detailed:
             eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour)
             eval.run_calcs(bname, "x", False, do_fields, False)

@@ -6,7 +6,7 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
-import sys
+import os, sys
 from typing import List
 
 import numpy as np
@@ -29,17 +29,17 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
     if comp is None:
         compstr = "_mag"
     else:
-        compstr = "_" + comp
+        compstr = f"_{comp}"
 
     if bname is None:
         bfname = ""
     else:
-        bfname = "_"+bname
-        bin_name = bname+"_"
+        bfname = f"_{bname}"
+        bin_name = f"{bname}_"
 
     # IO file paths
-    inp_path = "interior/"
-    inp_Bi_path = "induced/"
+    inp_path = "interior"
+    inp_Bi_path = "induced"
 
     # p_max is highest degree in boundary shapes to use
     # bname_opt and sw_opt are strings to append to filenames to identify special cases
@@ -150,13 +150,12 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         Xid = asym.get_all_Xid(nprm_max_main, p_max_main, n_max_main, nvals, mvals)
         print("#######   Xid values   #######")
         asym.print_Xid_table(Xid, nprm_max_main, p_max_main, n_max_main)
-        print(" ")
-        print("#######   Xi values   #######")
+        print(f"\n#######   Xi values   #######")
         asym.print_Xi_table(nprm_max_main, p_max_main, n_max_main)
 
     if recalc:
-        int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
-        print("Using interior model: " + int_model)
+        int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
+        print(f"Using interior model: {int_model}")
 
         r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
         n_bds = np.size(r_bds)
@@ -186,7 +185,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         grav_shape = None
 
     if debug:
-        fpath = "interior/Avals.dat"
+        fpath = os.path.join("interior", "Avals.dat")
         if recalc:
             Xid = None
             rscaling = None
@@ -209,10 +208,10 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
             AtAd_arg = [-np.angle(val) for val in AtAd]
 
             for i in range(len(omegas)):
-                this_line = str(kr[i]) + ", " + str(Ae_mag[i]) + ", " + str(Ae_arg[i]) + ", " + str(At_mag[i]) + ", " + str(At_arg[i]) + ", " + str(Ad_mag[i]) + ", " + str(Ad_arg[i]) + ", " + str(AtAd_mag[i]) + ", " + str(AtAd_arg[i]) + "\n"
+                this_line = f"{kr[i]}, {Ae_mag[i]}, {Ae_arg[i]}, {At_mag[i]}, {At_arg[i]}, {Ad_mag[i]}, {Ad_arg[i]}, {AtAd_mag[i]}, {AtAd_arg[i]}\n"
                 fout.write(this_line)
             fout.close()
-            print("Data for A functions written to file: ", fpath)
+            print(f"Data for A functions written to file: {fpath}")
         else:
             kr, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_mag, AtAd_arg = np.loadtxt(fpath, skiprows=1, unpack=True, delimiter=',')
 
@@ -255,15 +254,19 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
                 mprmvals = [mprm for nprm in range(1, nprm_max_main + 1) for mprm in range(0, nprm + 1)]
                 nvals = [n for n in range(1, n_max_main + 1) for _ in range(0, n + 1)]
                 mvals = [m for n in range(1, n_max_main + 1) for m in range(0, n + 1)]
-                T_hrs, n_asy, m_asy, lin_gnm_Re, lin_gnm_Im, lin_hnm_Re, lin_hnm_Im = np.loadtxt(inp_Bi_path+bin_name+"ghnm_asym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
+                T_hrs, n_asy, m_asy, lin_gnm_Re, lin_gnm_Im, lin_hnm_Re, lin_hnm_Im = np.loadtxt(
+                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_asym{bname_opt}{sw_opt}.dat"),
+                    skiprows=1, unpack=True, delimiter=',')
                 T_hrs_sym, n_sph, m_sph, lin_gnm_sph_Re, lin_gnm_sph_Im, lin_hnm_sph_Re, lin_hnm_sph_Im = np.loadtxt(
-                    inp_Bi_path+bin_name+"ghnm_sym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True,
-                    delimiter=',')
+                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_sym{bname_opt}{sw_opt}.dat"),
+                    skiprows=1, unpack=True, delimiter=',')
             else:
-                T_hrs, n_asy, m_asy, lin_Binm_Re, lin_Binm_Im = np.loadtxt(inp_Bi_path+bin_name+"Binm_asym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True, delimiter=',')
+                T_hrs, n_asy, m_asy, lin_Binm_Re, lin_Binm_Im = np.loadtxt(
+                    os.path.join(inp_Bi_path, f"{bin_name}Binm_asym{bname_opt}{sw_opt}.dat"),
+                    skiprows=1, unpack=True, delimiter=',')
                 T_hrs_sym, n_sph, m_sph, lin_Binm_sph_Re, lin_Binm_sph_Im = np.loadtxt(
-                    inp_Bi_path+bin_name+"Binm_sym"+bname_opt+sw_opt+".dat", skiprows=1, unpack=True,
-                    delimiter=',')
+                    os.path.join(inp_Bi_path, f"{bin_name}Binm_sym{bname_opt}{sw_opt}.dat"),
+                    skiprows=1, unpack=True, delimiter=',')
 
             peak_periods = np.unique(T_hrs)
             peak_omegas = 2*np.pi/(peak_periods*3600)
@@ -310,11 +313,11 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
             Binm_rot = Binm * 1.0
 
         if do_gif:
-            print("Making "+str(n_frames)+" animation frames.")
+            print(f"Making {n_frames} animation frames.")
             for iT in range(n_frames):
-                iT_str = f'{iT:04}'
+                iT_str = f"{iT:04}"
                 t_hr = peak_periods[-1] * iT / n_frames
-                tstr = f'{round(t_hr, 1):03}'
+                tstr = f"{round(t_hr, 1):03}"
                 tframe = tsec + t_hr*3600
                 for i_om in range(n_peaks):
                     if output_Schmidt:
@@ -333,9 +336,9 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
                                   pvals=pvals, qvals=qvals, difference=gif_diff, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
                                   bodyname=bname, append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, absolute=True, no_title=False)
 
-            print("Animation frames printed to figures/anim_frames/ folder.")
-            print("Stack them into a gif with, e.g.:")
-            print("convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
+            print("Animation frames printed to figures/anim_frames/ folder.\n" +
+                  "Stack them into a gif with, e.g.:\n" +
+                  "convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
         else:
             for i_om in range(n_peaks):
                 if output_Schmidt:
@@ -360,7 +363,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
                 peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
-                int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
+                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
             t_cut = vert_cut_hr * 3600
@@ -382,7 +385,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
                 synodic_period, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
                 peak_periods = [synodic_period]
             if not sub_planet_vert:
-                int_model = inp_path + "interior_model_asym" + bfname + bname_opt + sw_opt + ".txt"
+                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
             r = (localt + R) / R
