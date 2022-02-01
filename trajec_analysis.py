@@ -5,7 +5,7 @@
     https://naif.jpl.nasa.gov/pub/naif/generic_kernels/
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
-import sys
+import os, sys
 import numpy as np
 import field_xyz as field
 import asymmetry_funcs as asym
@@ -17,11 +17,28 @@ import multiprocessing as mtp
 num_cores = mtp.cpu_count()
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
 
+"""
+fitData()
+    Calculates best-fit interior model based on a least-squares fit to spacecraft trajectory measurements
+    from among the available induced magnetic moments, which each correspond to the interior models.
+    Usage: fitData(`bname`, `recalcMoments=True`, `recalcData=True`, `recalcFlybys=True`, `do_parallel=True`)
+    Returns: None
+    Parameters:
+        bname: string. The body name for which to run trajectory analysis.
+        recalcMoments: boolean (True). Whether to run routines from eval_induced_field.py to recalculate
+            the induced magnetic moments.
+        recalcData: boolean (True). Whether to regenerate files containing flyby data in moon-centered
+            IAU coordinates from planet-centered System III coordinates.
+        recalcFlybys: boolean (True). Whether to recalculate modeled magnetic field measurements in
+            moon-centered IAU coordinates based on the induced magnetic moments contained in the induced/
+            directory.
+        do_parallel: boolean (True). Whether to run calculations using parallel processing. 
+    """
 def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_parallel=True):
     print(f" - {bname} - ")
-    kPath = "spice/"
-    datPath = f"{kPath}{bname}/"
-    outPath = "outData/"
+    kPath = "spice"
+    datPath = os.path.join(kPath, bname)
+    outPath = "outData"
 
     kTLS = "naif0012.tls"
     kPCK = "pck00010.tpc"
@@ -78,11 +95,11 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         moon = bname.upper()
         spkParent = f"IAU_{parent}"
         spkMoon = f"IAU_{moon}"
-        kFiles = [f"{kPath}{kName}" for kName in kNames]
+        kFiles = [os.path.join(kPath, kName) for kName in kNames]
         spice.furnsh(kFiles)
 
         for i, thisFlyby in np.ndenumerate(fbList):
-            datName = f"{datPath}{thisFlyby}-mag-sys3.tab"
+            datName = os.path.join(datPath, f"{thisFlyby}-mag-sys3.tab")
             t[i], Br, Bth, Bphi, _, _, _, _, _ = \
                 np.loadtxt(datName, unpack=True, dtype=("U23,f,f,f,f,f,f,f,f"))
             print(f"Loaded flyby data for {datName}")
@@ -108,12 +125,12 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
             ByDat[i] = Bxyz[:,1]
             BzDat[i] = Bxyz[:,2]
 
-            outDatName = f"{datPath}{thisFlyby}-mag-IAU.tab"
+            outDatName = os.path.join(datPath, f"{thisFlyby}-mag-IAU.tab")
             saveDat(t[i], x[i], y[i], z[i], BxDat[i], ByDat[i], BzDat[i], tDescrip, datName=outDatName)
     else:
         print("Reloading flyby data from disk")
         for i, thisFlyby in np.ndenumerate(fbList):
-            datName = f"{datPath}{thisFlyby}-mag-IAU.tab"
+            datName = os.path.join(datPath, f"{thisFlyby}-mag-IAU.tab")
             t[i], x[i], y[i], z[i], BxDat[i], ByDat[i], BzDat[i] = np.loadtxt(datName, unpack=True, skiprows=1,
                                                                               delimiter=',', dtype=("U23,f,f,f,f,f,f"))
             r[i] = np.sqrt(x[i]**2 + y[i]**2 + z[i]**2)
@@ -130,7 +147,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         peak_periods, Benm, B0 = asym.read_Benm(nprm_max, p_max, bodyname=bname, synodic=False, orbital=False)
         peak_omegas = 2 * np.pi / (peak_periods * 3600)
 
-        BinmFiles = filesMatchingPattern(f"induced/{bname}_Binm_asym_Tobie*")
+        BinmFiles = filesMatchingPattern(os.path.join("induced", f"{bname}_Binm_asym_Tobie*"))
         nBinms = np.size(BinmFiles)
         if nBinms <= 10:
             print(f"Running trajectories for induced moments calculations:")
@@ -185,12 +202,12 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
             BxFit[i] = Bx[i,jFit][0]
             ByFit[i] = By[i,jFit][0]
             BzFit[i] = Bz[i,jFit][0]
-            datName = f"{outPath}{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat"
+            datName = os.path.join(outPath, f"{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat")
             saveDat(t[i], x[i], y[i], z[i], BxFit[i], ByFit[i], BzFit[i], tDescrip, datName=datName)
     else:
         print("Reloading best fit data from disk")
         for i, thisFlyby in np.ndenumerate(fbList):
-            fitName = f"{outPath}{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat"
+            fitName = os.path.join(outPath, f"{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat")
             _, x[i], y[i], z[i], BxFit[i], ByFit[i], BzFit[i] = np.loadtxt(fitName, unpack=True, skiprows=1,
                                                                               delimiter=',', dtype=("U23,f,f,f,f,f,f"))
             print(f"Loaded fit data {fitName}")
@@ -201,6 +218,39 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
                          fpath=outPath)
 
 
+"""
+calc_trajec()
+    Calculates magnetic field expected at each measurement time along the spacecraft trajectory, based on the
+    induced magnetic moments Binm that result from the applied magnetic excitations Benm and static background
+    field B0.
+    Usage: Bx, By, Bz = calc_trajec(`x`, `y`, `z`, `r`, `t`, `Binm`, `Benm`, `B0`, `peak_omegas`, `nvals`, `mvals`, 
+                                    `nprm_max=1`, `n_max=1`, `fieldType="net"`, `noiseAmp=None`)
+    Returns:
+        Bx, By, Bz: float, shape(N). Modeled, measurable magnetic field vector components in IAU 
+            body-centered coordinates in nT.
+    Parameters:
+        x,y,z,r: float, shape(N). Position data for the trajectory in IAU body-centered coordinates,
+            in units of body radius.
+        t: float, shape(N). Time of measurement in seconds relative to the J2000 epoch.
+        Binm: complex, shape(n_peaks,2,n_max+1,n_max+1) OR shape(n_peaks, (n_max+1)**2-1). Induced magnetic moments
+            to model in nT in moon-centered IAU coordinates, referenced to J2000 epoch.
+        Benm: complex, shape(n_peaks,2,n_max+1,n_max+1). Excitation moments of time-varying field in nT in 
+            moon-centered IAU coordinates, referenced to J2000 epoch.
+        B0: float, shape(3). Background static magnetic field vector in nT in moon-centered IAU coordinates.
+        peak_omegas: float, shape(n_peaks). Frequencies of the peaks greater than 1 nT in magnitude in the
+            excitation spectrum, in rads/sec.
+        nvals, mvals: int, shape((n_max+1)**2-1). Arrays of degree and order n,m pairs to iterate over for
+            induced and excitation moments.
+        nprm_max: int (1). Maximum degree of excitation moments, referred to as n' in Styczinski et al. (2022).
+        n_max: int (1). Maximum degree of induced moments to model. Typically nprm_max + p_max, which is the largest
+            value n_max can take and so includes all induced moments. Evaluation is only supported up to n_max = 4,
+            so values higher than this will be set to 4 with a warning.
+        fieldType: string ("net"). Type of magnetic field to include in calculations. Options are "net" (net 
+            magnetic field -- induced + excitation + static), "ind" (induced field only), and 
+            "ext" (external field only -- excitation + static).
+        noiseAmp: float (None). Amplitude of Gaussian white noise in nT to add to each magnetic field vector component.
+            Intended for use in generating "realistic" flyby trajectory data.
+    """
 def calc_trajec(x,y,z,r,t, Binm, Benm, B0, peak_omegas, nvals, mvals, nprm_max=1, n_max=1,
                 fieldType="net", noiseAmp=None):
     if n_max > 4:
@@ -267,6 +317,26 @@ def calc_trajec(x,y,z,r,t, Binm, Benm, B0, peak_omegas, nvals, mvals, nprm_max=1
     return Bx, By, Bz
 
 
+"""
+fit_trajec()
+    Determines least-squares difference contribution from each flyby included in the analysis.
+    See calc_trajec for description of input parameters not listed here.
+    Usage: `Bx[i,j]`, `By[i,j]`, `Bz[i,j]`, `dS` = fit_trajec(`x`, `y`, `z`, `r`, `tRel`, `BxDat`, `ByDat`, `BzDat`,
+                                                              `Binm`, `Benm`, `B0`, `peak_omegas`, `nvals`, `mvals`)
+    Returns:
+        [Bx], [By], [Bz]: float, shape(1) of shape(N). Modeled, measurable magnetic field vector components in IAU 
+            body-centered coordinates in nT. Returned as a dimension-1 list of numpy array of length N in order to
+            play nicely with assignment to a single dimension-1 index of object-type numpy array. This is a
+            requirement for ragged nested arrays, which we need because the flybys are not expected to have a
+            consistent number of data points.
+        dS: float. Squared differences for including in least-suqares fits--sum together dS for each flyby to get
+            S, to total squared differences across all flybys. S/sum(Ni), where Ni is the number of measurements
+            for the ith flyby, yields chi^2 for the given model, which is minimized to find the least-squares fit.
+    Parameters:
+        tRel: float, shape(N). Time of measurement in seconds relative to the J2000 epoch.
+        BxDat, ByDat, BzDat: float, shape(N). Vector components of calibrated measurements by a spacecraft
+            magnetometer in IAU body-centered coordinates in nT. 
+    """
 def fit_trajec(x, y, z, r, tRel, BxDat, ByDat, BzDat, Binm, Benm, B0, peak_omegas, nvals, mvals):
     Bx, By, Bz = calc_trajec(x, y, z, r, tRel, Binm, Benm, B0, peak_omegas, nvals, mvals,
                              nprm_max=1, n_max=3, fieldType="net")
@@ -279,9 +349,22 @@ def fit_trajec(x, y, z, r, tRel, BxDat, ByDat, BzDat, Binm, Benm, B0, peak_omega
     return [Bx], [By], [Bz], dS
 
 
+"""
+Bsph2Bxyz()
+    Converts arbitary vector components from axes aligned to spherical coordinates (Vr, Vtheta, Vphi) into 
+    vector components aligned to cartesian axes (Vx, Vy, Vz) in the same coordinate system.
+    Usage: `Bxyz` = Bsph2Bxyz(`Br`, `Bth`, `Bphi`, `th`, `phi`)
+    Returns:
+        Bxyz: type(Br), shape(Nx3). Resultant vector components aligned to cartesian axes. Returned as a single
+            Array for ease of use with spiceypy routines. Matches the data type of Br, which is expected to be
+            either float or complex.
+    Parameters:
+        Br, Bth, Bphi: float OR complex, shape(N). Vector components aligned to r-hat, theta-hat, phi-hat axes.
+        th, phi: float, shape(N). Theta and phi values for the measurement location for each vector to be converted. 
+    """
 def Bsph2Bxyz(Br, Bth, Bphi, th, phi):
     npts = np.size(Br)
-    Bxyz = np.zeros((npts,3))
+    Bxyz = np.zeros((npts,3), dtype=Br.dtype)
     Bxyz[:,0] =  np.sin(th)  * np.cos(phi) * Br \
                + np.cos(th)  * np.cos(phi) * Bth \
                - np.sin(phi) * Bphi
@@ -294,7 +377,23 @@ def Bsph2Bxyz(Br, Bth, Bphi, th, phi):
     return Bxyz
 
 
-def saveDat(t, x, y, z, Bx, By, Bz, tDescrip, datName="trajectory"):
+"""
+saveDat()
+    Writes trajectory data to disk.
+    Usage: saveDat(`t`, `x`, `y`, `z`, `Bx`, `By`, `Bz`, `tDescrip`, `datName="trajectory.dat"`)
+    Returns: None.
+    Parameters:
+        t: datetime64[ms] OR float, shape(N). Measurement times described by tDescrip, castable to string.
+            Data read-in anticipates datetime64[ms] strings organized as YYYY-MM-DDThh:mm:ss.sss, so this
+            is the recommended dtype.
+        x, y, z: float, shape(N). Measurement location for each t in units of body radius in cartesian IAU
+            body-centered coordinates.
+        Bx, By, Bz: float, shape(N). Measured or modeled magnetic field vector at each t in nT, aligned
+            to cartesian IAU body-centered coordinate axes.
+        tDescrip: string. Description for t values in header line of data file.
+        datName: string ("trajectory.dat"). Full file name for output data.
+    """
+def saveDat(t, x, y, z, Bx, By, Bz, tDescrip, datName="trajectory.dat"):
     header = " ".join([f"{tDescrip},".ljust(25),
                        f"X (R_{bname[0]}),".ljust(19),
                        f"Y (R_{bname[0]}),".ljust(19),

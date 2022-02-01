@@ -15,6 +15,12 @@ and you will need a working version of LaTeX installed.
 
 Parallelization is done through the multiprocessing builtin module, and does not function consistently on all systems. If you encounter errors, try to set do_parallel = False in config.py.
 
+Optional -- for trajectory analysis, you will need:
+* The spiceypy Python module, installed using conda install -c conda-forge spiceypy
+* Generic and SPK SPICE kernels available from NAIF. See trajec_analysis.py for the expected kernels.
+* Trajectory measurement files in System III or moon-specific IAU coordinates.
+Run trajectory analysis routines with `python trajec_analysis.py`. Note that this feature is a work in progress.
+
 To generate contour plots showing the asymmetric layer geometry, you will need to edit line 23 in `run_all.py`. These plots take a long time to generate, so they are turned off by default. Animations are set to plot differences in the magnitudes by default. Change this by setting `gif_comp = "x"`, `"y"`, or `"z"` at line 19 in the same file.
 
 ## Configuration
