@@ -396,14 +396,21 @@ read_Benm()
         fpath: string (None). Optional location to search for excitation moment files. Defaults to "excitation/".
         synodic: boolean (False). Option to consider only the strongest excitation period, for simplicity.
         orbital: boolean (False). Option to consider only the orbital period, analogous to the synodic period above.
+        limit_osc: integer (None). Number of oscillation frequencies to limit calculations to, where 1 is just the strongest oscillation.
+        model: string (None). Optional model code to append to file name. 
     """
-def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital=False):
+def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital=False, limit_osc=None,
+              model=None):
     if fpath is None:
         fpath = "excitation"
-    if bodyname is None:
-        bfname = ""
+    if model is None:
+        modelStr = ""
     else:
-        bfname = f"_{bodyname}"
+        modelStr = f"_{model}"
+    if bodyname is None:
+        bfname = f"{modelStr}"
+    else:
+        bfname = f"_{bodyname}{modelStr}"
 
     if synodic and orbital:
         print("WARNING: Both 'synodic' and 'orbital' options passed to asymmetry_funcs.read_Benm. Only synodic will be used.")
@@ -421,11 +428,32 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         Benm_moments = os.path.join(fpath, f"Be1xyz{bfname}.txt")
     print(f"Using excitation moments: {Benm_moments}")
     peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
-    Bex = Bex_Re + 1j*Bex_Im
-    Bey = Bey_Re + 1j*Bey_Im
-    Bez = Bez_Re + 1j*Bez_Im
+    n_peaks1_prelim = peak_per1.size
 
-    n_peaks1 = peak_per1.size
+    Bex = Bex_Re + 1j * Bex_Im
+    Bey = Bey_Re + 1j * Bey_Im
+    Bez = Bez_Re + 1j * Bez_Im
+
+    if limit_osc is None:
+        limit_osc = 0
+    elif limit_osc != 0:
+        if n_peaks1_prelim <= limit_osc:
+            print(f"limit_osc is set to {limit_osc}, but {Benm_moments} contains only {n_peaks1_prelim} oscillation periods. Including all oscillations in calculations.")
+            limit_osc = 0
+        else:
+            if limit_osc < 0: limit_osc = abs(limit_osc)
+            print(f"Limiting Benm to strongest {limit_osc} oscillations.")
+    absBenm = np.sqrt(Bex_Re**2 + Bex_Im**2 + Bey_Re**2 + Bey_Im**2 + Bez_Re**2 + Bez_Im**2)
+    iMax = np.argpartition(absBenm, -limit_osc)[-limit_osc:]
+    peak_per1_lim = np.sort(peak_per1[iMax])
+    iMaxSort = np.array([np.argwhere(peak_per1 == peak_per1_lim[i]) for i in range(np.size(peak_per1_lim))]).flatten()
+
+    peak_per1 = peak_per1[iMaxSort]
+    Bex = Bex[iMaxSort]
+    Bey = Bey[iMaxSort]
+    Bez = Bez[iMaxSort]
+    n_peaks1 = np.size(peak_per1)
+
     Benm1 = np.zeros((n_peaks1,2,nprm_max+p_max+1,nprm_max+p_max+1),dtype=np.complex_)
 
     A1 = sqrt(2*np.pi/3)
@@ -508,7 +536,7 @@ BiList()
         append: string (""). Optional string appended to file names.
         debug: boolean (False). Special use flag.
     """
-def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None, \
+def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None,
            verbose=True, append="", debug=False):
 
     # Clean inputs and initialize

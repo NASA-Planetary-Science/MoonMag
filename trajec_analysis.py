@@ -62,26 +62,29 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
 
     # Calculate the induced magnetic moments for this interior model
     if recalcMoments:
-        eval.run_calcs(bname, None, True, True, False)
+        eval.run_calcs(bname, None, True, True, False, synodic_only=False, seawater=True)
+        eval.run_calcs(bname, None, True, True, False, synodic_only=False, seawater=False)
 
     if bname == "Europa":
         # Get list of usable Galileo flyby reference names
         fbList = np.array(["e4", "e11", "e12", "e14", "e15", "e19", "e26"])
-        # Get list of Galileo flyby closest approach (CA) times
-        CAlist = ["1996-12-19T06:52:58.000",
-                  "1997-11-06T20:31:44.000",
-                  "1997-12-16T12:03:20.000",
-                  "1998-03-29T13:21:06.000",
-                  "1998-05-31T21:12:58.000",
-                  "1999-02-01T02:19:50.000",
-                  "2000-01-03T17:59:44.000"]
+        # Get list of Galileo flyby closest approach (CA) times in UTC
+        # Pulled from .lbl files associated with the s######a.bsp kernels,
+        # which have more precise values than the flyby data files
+        CAlist = ["1996-12-19T06:52:57.770",
+                  "1997-11-06T20:31:44.210",
+                  "1997-12-16T12:03:19.870",
+                  "1998-03-29T13:22:08.330",
+                  "1998-05-31T21:12:56.590",
+                  "1999-02-01T02:19:49.940",
+                  "2000-01-03T17:59:42.590"]
         kNames.append("jup365.bsp")
         kNames.append("s980326a.bsp")
         kNames.append("s000131a.bsp")
         parent = "JUPITER"
         sc = "GALILEO ORBITER"
     else:
-        raise ValueError("Only Europa is currently implemented for flyby data analysis.")
+        raise ValueError(f"{bname} is not implemented for flyby data analysis.")
     CAlist = np.array([np.datetime64(CAi) for CAi in CAlist])
     nFlybys = np.size(fbList)
 
@@ -101,7 +104,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         for i, thisFlyby in np.ndenumerate(fbList):
             datName = os.path.join(datPath, f"{thisFlyby}-mag-sys3.tab")
             t[i], Br, Bth, Bphi, _, _, _, _, _ = \
-                np.loadtxt(datName, unpack=True, dtype=("U23,f,f,f,f,f,f,f,f"))
+                np.loadtxt(datName, unpack=True, dtype="U23,f,f,f,f,f,f,f,f")
             print(f"Loaded flyby data for {datName}")
             tRel[i] = spice.str2et(t[i])
             t[i] = np.array([np.datetime64(ti) for ti in t[i]])
@@ -132,9 +135,9 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         for i, thisFlyby in np.ndenumerate(fbList):
             datName = os.path.join(datPath, f"{thisFlyby}-mag-IAU.tab")
             t[i], x[i], y[i], z[i], BxDat[i], ByDat[i], BzDat[i] = np.loadtxt(datName, unpack=True, skiprows=1,
-                                                                              delimiter=',', dtype=("U23,f,f,f,f,f,f"))
+                                                                              delimiter=',', dtype="U23,f,f,f,f,f,f")
             r[i] = np.sqrt(x[i]**2 + y[i]**2 + z[i]**2)
-            spice.furnsh(kPath + kTLS)
+            spice.furnsh(os.path.join(kPath, kTLS))
             tRel[i] = spice.str2et(t[i])
             t[i] = np.array([np.datetime64(ti) for ti in t[i]])
             print(f"Loaded flyby data {datName}")
@@ -209,7 +212,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         for i, thisFlyby in np.ndenumerate(fbList):
             fitName = os.path.join(outPath, f"{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat")
             _, x[i], y[i], z[i], BxFit[i], ByFit[i], BzFit[i] = np.loadtxt(fitName, unpack=True, skiprows=1,
-                                                                              delimiter=',', dtype=("U23,f,f,f,f,f,f"))
+                                                                              delimiter=',', dtype="U23,f,f,f,f,f,f")
             print(f"Loaded fit data {fitName}")
 
     for i, thisFlyby in np.ndenumerate(fbList):
@@ -417,4 +420,4 @@ if __name__ == "__main__":
     else:
         print("No body name entered. Defaulting to Europa.")
         bname = "Europa"
-    fitData(bname, recalcMoments=False, recalcData=True, recalcFlybys=True, do_parallel=False)
+    fitData(bname, recalcMoments=True, recalcData=False, recalcFlybys=True, do_parallel=False)

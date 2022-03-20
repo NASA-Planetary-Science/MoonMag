@@ -13,7 +13,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 ppgc = 540  # Points per great circle (sets longitudinal resolution for plots)
 
 relative = True    # Whether to use relative (ε/R*chi_pq) or absolute (direct spherical harmonic coefficients) formulation for reading Ypq. Affects which files are needed/read to interpret the asymmetric interior structure.
-synodic_period_only = True # Whether to consider only the synodic period for induction
+synodic_period_only = False # Whether to consider only the synodic period for induction
 orbital_time_series = False # Whether to plot a time series that considers only the orbital period
 sub_planet_vert = True # Whether to plot a vertical cut at the sub-planetary point (or nearby) for a snapshot in time
 plot_diffs = True # Whether to plot magnetic fields as differences arising due to asymmetry

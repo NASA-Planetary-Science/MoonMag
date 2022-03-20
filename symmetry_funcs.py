@@ -13,6 +13,9 @@ from collections.abc import Iterable
 import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
+import multiprocessing as mtp
+num_cores = mtp.cpu_count()
+mtp.set_start_method("fork")
 
 from config import *
 from field_xyz import eval_Bi
@@ -238,7 +241,7 @@ InducedAeList()
         writeout: boolean (False). Whether to save a .txt file of values calculated.
         path: string (None). Path relative to run directory to print output data to. Defaults to './'.
     """
-def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None):
+def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append=""):
     if writeout:
         print("Calculating A_e for ",len(omegas)," omega values.")
 
@@ -251,9 +254,16 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
         rscaling = rscale_moments * r_bds[-1]
 
     # For each omega, evaluate Ae:
-    for i_om in range(n_omegas):
-        Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
-        if writeout and ((i_om*4) % n_omegas < 4): print(i_om," of ",n_omegas," complete.")
+    if do_parallel:
+        pool = mtp.Pool(num_cores)
+        par_result = [pool.apply_async(AeResponse, args=(r_bds, sigmas, omegas[i_om], rscaling), kwds={'nn':nn}) for i_om in range(n_omegas)]
+        pool.close()
+        pool.join()
+        Aes = [par_result[i_om].get() for i_om in range(n_omegas)]
+    else:
+        for i_om in range(n_omegas):
+            Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
+            if writeout and ((i_om*4) % n_omegas < 4): print(i_om," of ",n_omegas," complete.", flush=True)
 
     Aes = np.array([ complex(val) for val in Aes ])
     AeM = np.abs(Aes)
@@ -264,11 +274,11 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
 
         if path is None:
             path = os.getcwd()+'/'
-        fpath = path+"complexAes.dat"
+        fpath = os.path.join(path, f"complexAes{append}.dat")
         fout = open(fpath, "w")
-        header = "{:<13} {:<24} {:<24}\n".format("Period (hr),", "Ae.mag,", "Ae.arg")
+        header = "{:<13}, {:<24}, {:<24}\n".format("Period (hr)", "Ae.mag", "Ae.arg (rad)")
         fout.write(header)
-        [ fout.write( "{:<13} {:<24} {:<24}\n".format(round(T_hrs[i],5), AeM[i], AeA[i]) ) for i in range(len(omegas)) ]
+        [ fout.write( f"{T_hrs[i]:13.5f}, {AeM[i]:24.12e}, {AeA[i]:24.12e}\n" ) for i in range(len(omegas)) ]
         fout.close()
         print("Data for Aes written to file: ",fpath)
 
@@ -299,7 +309,8 @@ BiList()
         bodyname: string (None). Body name to include in writeout filename.
         append: string (""). Optional string appended to file names.
     """
-def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, bodyname=None, append=""):
+def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, 
+           bodyname=None, append="", output_Schmidt=False):
     if writeout:
         print("Calculating symmetric B_inm for ",len(peak_omegas)," periods.")
 
@@ -311,11 +322,10 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
     n_omegas = len(peak_omegas)
     Nnm = len(nprmvals)
     Binms = np.zeros((n_omegas,2,n_max+1,n_max+1), dtype=np.complex_)
-    Aes = np.zeros(n_omegas, dtype=np.complex_)
 
     # For each degree n, evaluate all Ae:
     for ni in range(1,n_max+1):
-        Aes, _, _ = InducedAeList(r_bds, sigmas, peak_omegas, rscale_moments, nn=ni, writeout=False)
+        Aes, _, _ = InducedAeList(r_bds, sigmas, peak_omegas, rscale_moments, nn=ni)
         n = mp.mpf(ni)
         for i_om in range(n_omegas):
             Binms[i_om,:,ni,:] = n/(n+one)*Benm[i_om,:n_max+1,ni,:n_max+1]*Aes[i_om]
@@ -323,7 +333,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
     if writeout:
         if path is None:
             path = "induced/"
-        fpath = path+bfname+"Binm_sym"+ append +".dat"
+        fpath = os.path.join(path, f"{bfname}Binm_sym{append}.dat")
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", " m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)

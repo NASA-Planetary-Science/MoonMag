@@ -23,7 +23,8 @@ import symmetry_funcs as sym
 import asymmetry_funcs as asym
 import plotting_funcs as plots
 
-def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False):
+def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
+              do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False):
 
     absolute = (comp==None)   # Whether to plot the symmetric and asymmetric absolute magnitudes in addition to the desired component
     if comp is None:
@@ -74,11 +75,9 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
         bname_opt = ""
         eval_r = eval_radius
 
-    # Override config setting in the case of previous work comparison
+    # Override synodic_only setting in the case of previous work comparison
     if bname == "Europa" and compare_me:
         synodic_only = True
-    else:
-        synodic_only = synodic_period_only
 
     # Highest degree of induced moments
     n_max_main = nprm_max_main + p_max_main
@@ -115,6 +114,10 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawat
     elif bname == "Callisto":
         rscale_moments = 1/2410.3/1e3
         rscale_asym = 1/2510300
+        r_io = -1
+    elif bname == "Ganymede":
+        rscale_moments = 1/2634.1/1e3
+        rscale_asym = 1/2484100
         r_io = -1
     elif bname == "Enceladus":
         rscale_moments = 1/252.1/1e3

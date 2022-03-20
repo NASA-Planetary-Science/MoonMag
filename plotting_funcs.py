@@ -1170,6 +1170,56 @@ def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_m
 
     return
 
+
+def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
+    c = ["blue", "green", "brown", "black", "red"]
+    style1 = "solid"
+    style2 = "dashed"
+
+    fig, axes = plt.subplots(1, 1, figsize=(5.5, 4))
+
+    # Set plot labels
+    axes.set_title(f"Complex response amplitudes $\mathcal{{A}}^e_{n}$")
+    axes.set_xlabel("Period $(\mathrm{hr})$")
+    axes.set_ylabel("Response amplitude $A$")
+
+    plt.rcParams["text.latex.preamble"] = r"\usepackage{stix}\usepackage{upgreek}"
+    AeM_label = f"$A$"
+    AeA_label = "$\\upphi$"
+    Tin_label = "$T_\mathrm{exc}$"
+
+    phax = axes.secondary_yaxis('right', functions=(getphase, getmag))
+    phax.set_ylabel("Phase delay $\\upphi$ (degrees)")
+
+    for i,modelID in enumerate(intModels):
+        axes.plot(T_h,  Ae_mag[modelID],         color=c[i%4], linestyle=style1, label=f"{AeM_label} {modelID}")
+        axes.plot(T_h, -Ae_arg[modelID]*2/np.pi, color=c[i%4], linestyle=style2, label=f"{AeA_label} {modelID}")
+
+    axes.axvline(Tinterest_h[0], color=c[4], alpha=BeRatio[0], zorder=-1, label=Tin_label)
+    for i in range(1, np.size(Tinterest_h)):
+        axes.axvline(Tinterest_h[i], color=c[4], alpha=BeRatio[i], zorder=-1)
+
+    # Set bounds on axes:
+    ylim = 1.02
+
+    axes.set_xscale('log')
+    axes.set_xlim([np.min(T_h), np.max(T_h)])
+    axes.set_ylim([0.0, ylim])
+
+    # Adjust decoration
+    axes.grid()
+    axes.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+
+    # Save and close
+    plt.legend(loc="upper right")
+    xtn = "png"
+    thefig = os.path.join("figures", f"A_functions{fEnd}.{xtn}")
+    fig.savefig(thefig, format=xtn, dpi=300)
+    plt.close()
+    print(f"A functions plot printed to: {thefig}")
+
+    return
+
 #	For secondary axis labels
 def getphase(A):
     return A*90.0
