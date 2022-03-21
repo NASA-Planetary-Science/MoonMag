@@ -1191,13 +1191,15 @@ def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
     phax = axes.secondary_yaxis('right', functions=(getphase, getmag))
     phax.set_ylabel("Phase delay $\\upphi$ (degrees)")
 
+    lThick = 1.0
     for i,modelID in enumerate(intModels):
-        axes.plot(T_h,  Ae_mag[modelID],         color=c[i%4], linestyle=style1, label=f"{AeM_label} {modelID}")
-        axes.plot(T_h, -Ae_arg[modelID]*2/np.pi, color=c[i%4], linestyle=style2, label=f"{AeA_label} {modelID}")
+        axes.plot(T_h,  Ae_mag[modelID],         color=c[i%4], linestyle=style1, label=f"{AeM_label} {modelID}", linewidth=lThick)
+        axes.plot(T_h, -Ae_arg[modelID]*2/np.pi, color=c[i%4], linestyle=style2, label=f"{AeA_label} {modelID}", linewidth=lThick)
 
-    axes.axvline(Tinterest_h[0], color=c[4], alpha=BeRatio[0], zorder=-1, label=Tin_label)
+    vThick = 0.5
+    axes.axvline(Tinterest_h[0], color=c[4], alpha=BeRatio[0], zorder=-1, label=Tin_label, linewidth=vThick)
     for i in range(1, np.size(Tinterest_h)):
-        axes.axvline(Tinterest_h[i], color=c[4], alpha=BeRatio[i], zorder=-1)
+        axes.axvline(Tinterest_h[i], color=c[4], alpha=BeRatio[i], zorder=-1, linewidth=vThick)
 
     # Set bounds on axes:
     ylim = 1.02
@@ -1213,10 +1215,10 @@ def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
     # Save and close
     plt.legend(loc="upper right")
     xtn = "png"
-    thefig = os.path.join("figures", f"A_functions{fEnd}.{xtn}")
+    thefig = os.path.join("figures", f"A1e{fEnd}.{xtn}")
     fig.savefig(thefig, format=xtn, dpi=300)
     plt.close()
-    print(f"A functions plot printed to: {thefig}")
+    print(f"Ae plot printed to: {thefig}")
 
     return
 

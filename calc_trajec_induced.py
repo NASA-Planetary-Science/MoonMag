@@ -65,6 +65,7 @@ for fType in fNameList:
     BinmJ2000juno[fType] = np.reshape(lin_Binm_Re + 1j*lin_Binm_Im, (np.size(omegaJuno[fType]), -1))
 
 npts = 0
+nEnds = np.empty(0)
 kernels = [os.path.join(kPath, kName) for kName in kNamesGal]
 spice.furnsh(kernels)
 for fb in galFiles:
@@ -91,6 +92,7 @@ for fb in galFiles:
             Bvals = "".join([f", {BxGal[fb][fType][i]:12.3f}, {ByGal[fb][fType][i]:12.3f}, {BzGal[fb][fType][i]:12.3f}" for fType in fNameList])
             f.write(f"{t}{Bvals}, {x[i]:12.5f}, {y[i]:12.5f}, {z[i]:12.5f}\n")
     npts += len(x)
+    nEnds = np.append(nEnds, npts)
 spice.kclear()
 
 nptsGal = npts + 0
@@ -123,24 +125,35 @@ spice.kclear()
 
 
 fig, axes = plt.subplots(3, 1, figsize=(6, 6))
-fig.suptitle(f"Induced field components")
+fig.suptitle(f"Ganymede induced field components, all flybys")
 axes[2].set_xlabel("Measurement index")
 axes[0].set_ylabel("IAU $B_x$ (nT)")
 axes[1].set_ylabel("IAU $B_y$ (nT)")
 axes[2].set_ylabel("IAU $B_z$ (nT)")
-c = ["blue", "green", "brown", "black", "red", "#b000ff"]
+c = ["blue", "green", "brown", "black", "red", "#b000ff", 'gray']
 
 nptsGal = np.size(BxG[fNameList[0]])
 npts = nptsGal + np.size(BxJ[fNameList[0]])
+vThick = 0.5
+jThick = 0.75
+lThick = 1.0
 ind = np.arange(0, npts)
 for i,fType in enumerate(fNameList):
-    axes[0].plot(ind, np.concatenate((BxG[fType], BxJ[fType])), color=c[i%4], label=fType)
-    axes[1].plot(ind, np.concatenate((ByG[fType], ByJ[fType])), color=c[i%4], label=fType)
-    axes[2].plot(ind, np.concatenate((BzG[fType], BzJ[fType])), color=c[i%4], label=fType)
-    axes[0].axvline(nptsGal, color=c[5], zorder=-1)
-    axes[1].axvline(nptsGal, color=c[5], zorder=-1)
-    axes[2].axvline(nptsGal, color=c[5], zorder=-1)
+    axes[0].plot(ind, np.concatenate((BxG[fType], BxJ[fType])), color=c[i%4], label=fType, linewidth=lThick)
+    axes[1].plot(ind, np.concatenate((ByG[fType], ByJ[fType])), color=c[i%4], label=fType, linewidth=lThick)
+    axes[2].plot(ind, np.concatenate((BzG[fType], BzJ[fType])), color=c[i%4], label=fType, linewidth=lThick)
+    axes[0].axvline(nptsGal, color=c[5], zorder=-1, linewidth=jThick)
+    axes[1].axvline(nptsGal, color=c[5], zorder=-1, linewidth=jThick)
+    axes[2].axvline(nptsGal, color=c[5], zorder=-1, linewidth=jThick)
+    for n in nEnds[:-1]:
+        axes[0].axvline(n, color=c[6], zorder=-1, linewidth=vThick)
+        axes[1].axvline(n, color=c[6], zorder=-1, linewidth=vThick)
+        axes[2].axvline(n, color=c[6], zorder=-1, linewidth=vThick)
 
+
+axes[0].set_xlim([0,npts])
+axes[1].set_xlim([0,npts])
+axes[2].set_xlim([0,npts])
 axes[0].legend()
 
 xtn = "png"
