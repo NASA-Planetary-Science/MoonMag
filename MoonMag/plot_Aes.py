@@ -1,7 +1,7 @@
 import numpy as np
 import os
-import asymmetry_funcs as asym
-import plotting_funcs as plots
+import MoonMag.asymmetry_funcs as asym
+import MoonMag.plotting_funcs as plots
 
 bname = "Ganymede"
 fNameList = ["high", "low", "simple"]

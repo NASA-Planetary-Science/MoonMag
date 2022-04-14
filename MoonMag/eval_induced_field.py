@@ -18,10 +18,10 @@ from skyfield import api as skyapi
 from datetime import datetime as dtime
 from datetime import timezone
 
-from config import *
-import symmetry_funcs as sym
-import asymmetry_funcs as asym
-import plotting_funcs as plots
+from MoonMag.config import *
+import MoonMag.symmetry_funcs as sym
+import MoonMag.asymmetry_funcs as asym
+import MoonMag.plotting_funcs as plots
 
 def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
               do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False):

@@ -1,8 +1,8 @@
 import numpy as np
 import os
-import symmetry_funcs as sym
-import asymmetry_funcs as asym
-import plotting_funcs as plots
+import MoonMag.symmetry_funcs as sym
+import MoonMag.asymmetry_funcs as asym
+import MoonMag.plotting_funcs as plots
 
 output_Schmidt = 1
 

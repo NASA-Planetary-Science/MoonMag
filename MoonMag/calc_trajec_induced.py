@@ -2,7 +2,7 @@ import numpy as np
 import os
 import spiceypy as spice
 from glob import glob as filesMatchingPattern
-import trajec_analysis as traj
+import MoonMag.trajec_analysis as traj
 import matplotlib.pyplot as plt
 
 bname = "Ganymede"

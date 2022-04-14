@@ -7,7 +7,7 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
-import eval_induced_field as eval
+import MoonMag.eval_induced_field as eval
 
 if __name__ == "__main__":
     # Each body to include in calculations

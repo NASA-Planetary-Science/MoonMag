@@ -1,5 +1,5 @@
-# Supplemental Materials for "An analytic solution for evaluating the magnetic field induced from an arbitrary, asymmetric ocean world"
-Python software for evaluating magnetic fields from asymmetric ocean moons. Written in Python 3.8. For help, please contact M. Styczinski at [mjstyczi@uw.edu](mailto:mjstyczi@uw.edu).
+# Magnetic induction calculations and analysis for sounding of icy moons
+Written in Python 3.8 as supplemental material for "An analytic solution for evaluating the magnetic field induced from an arbitrary, asymmetric ocean world" DOI: [10.1016/j.icarus.2021.114840](https://doi.org/10.1016/j.icarus.2021.114840). For help, please contact M. Styczinski at [marshall.j.styczinski@jpl.nasa.gov](mailto:marshall.j.styczinski@jpl.nasa.gov).
 
 ## Quick start
 * Run the file `run_all.py` using a Python 3 interpreter.

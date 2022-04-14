@@ -17,8 +17,8 @@ import multiprocessing as mtp
 num_cores = mtp.cpu_count()
 mtp.set_start_method("fork")
 
-from config import *
-from field_xyz import eval_Bi
+from MoonMag.config import *
+from MoonMag.field_xyz import eval_Bi
 
 # Global variables and settings
 # Set maximum precision for mpmath quantities

@@ -19,10 +19,10 @@ import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
 
-from config import *
-import symmetry_funcs as sym
-import asymmetry_funcs as asym
-import field_xyz as field
+from MoonMag.config import *
+import MoonMag.symmetry_funcs as sym
+import MoonMag.asymmetry_funcs as asym
+import MoonMag.field_xyz as field
 
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
 

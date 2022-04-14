@@ -17,8 +17,8 @@ import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
 
-from config import *
-from field_xyz import eval_Bi, eval_Bi_Schmidt
+from MoonMag.config import *
+from MoonMag.field_xyz import eval_Bi, eval_Bi_Schmidt
 
 # Parallelization is through multiprocessing module
 import multiprocessing as mtp

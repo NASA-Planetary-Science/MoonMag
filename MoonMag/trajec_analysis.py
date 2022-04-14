@@ -7,10 +7,10 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os, sys
 import numpy as np
-import field_xyz as field
-import asymmetry_funcs as asym
-import plotting_funcs as plots
-import eval_induced_field as eval
+import MoonMag.field_xyz as field
+import MoonMag.asymmetry_funcs as asym
+import MoonMag.plotting_funcs as plots
+import MoonMag.eval_induced_field as eval
 from glob import glob as filesMatchingPattern
 import spiceypy as spice
 import multiprocessing as mtp
