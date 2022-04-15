@@ -321,12 +321,12 @@ validate()
 def validate(r_bds, sigmas, bcdev, asym_shape, p_max):
     # Check lengths of model lists
     if np.shape(r_bds) != np.shape(sigmas):
-        log.debug("boundaries shape: ", np.shape(r_bds))
-        log.debug("sigmas shape: ", np.shape(sigmas))
+        log.error(f"boundaries shape: {np.shape(r_bds)}")
+        log.error(f"sigmas shape: {np.shape(sigmas)}")
         raise ValueError("The number of boundaries is not equal to the number of conductivities.")
     if np.shape(r_bds) != np.shape(bcdev):
-        log.debug("boundaries shape: ", np.shape(r_bds))
-        log.debug("deviations shape: ", np.shape(bcdev))
+        log.error(f"boundaries shape: {np.shape(r_bds)}")
+        log.error(f"deviations shape: {np.shape(bcdev)}")
         raise ValueError("The number of boundaries is not equal to the number of deviations.")
 
     # Make sure interior model is iterable (it's not if there is only 1 boundary)
@@ -621,7 +621,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
                     for m in range(n+1):
                         fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
             fout.close()
-            log.info("Data for asymmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
+            log.info(f"Data for asymmetric, Schmidt semi-normalized g_nm and h_nm written to file: {fpath}")
 
     if debug:
         return Binms, Aes, Ats, Ads, krvals
@@ -1306,7 +1306,7 @@ def eval_dev(p, q, chi_pq, ltht, lphi, lleny, llenx):
     else:
         this_devs = np.array([ np.real( chi_pq*complex(mp.spherharm(p,q,thti,phii)) ) for thti in ltht for phii in lphi ])
         this_devs = np.reshape(this_devs,(lleny,llenx))
-    log.debug(f"p,q = {p}{q} completed", flush=True)
+    log.debug(f"p,q = {p}{q} completed")
     return this_devs
 
 #############################################

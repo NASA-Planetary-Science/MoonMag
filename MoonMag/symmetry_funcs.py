@@ -50,8 +50,8 @@ validate()
 def validate(r_bds, sigmas, omegas):
     #    Check length of boundary radius and conductivity lists
     if np.shape(r_bds) != np.shape(sigmas):
-        log.debug("boundaries shape: ",np.shape(r_bds))
-        log.debug("sigmas shape: ",np.shape(sigmas))
+        log.debug(f"boundaries shape: {np.shape(r_bds)}")
+        log.debug(f"sigmas shape: {np.shape(sigmas)}")
         raise ValueError("The number of boundaries is not equal to the number of conductivities.")
 
     if not isinstance(r_bds, list):
@@ -244,7 +244,7 @@ InducedAeList()
     """
 def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append="", do_parallel=True):
     if writeout:
-        log.debug("Calculating A_e for ",np.size(omegas)," omega values.")
+        log.debug(f"Calculating A_e for {np.size(omegas)} omega values.")
 
     n_omegas = np.size(omegas)
     Aes = np.zeros(n_omegas, dtype=np.complex_)
@@ -264,7 +264,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
     else:
         for i_om in range(n_omegas):
             Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
-            if (i_om*4) % n_omegas < 4: log.debug(i_om," of ",n_omegas," complete.", flush=True)
+            if (i_om*4) % n_omegas < 4: log.debug(f"{i_om} of {n_omegas} complete.")
 
     Aes = np.array([ complex(val) for val in Aes ])
     AeM = np.abs(Aes)
@@ -281,7 +281,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
         fout.write(header)
         [ fout.write( f"{T_hrs[i]:13.5f}, {AeM[i]:24.12e}, {AeA[i]:24.12e}\n" ) for i in range(np.size(omegas)) ]
         fout.close()
-        log.info("Data for Aes written to file: ",fpath)
+        log.info(f"Data for Aes written to file: {fpath}")
 
     return Aes, AeM, AeA
 
@@ -359,7 +359,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
                     for m in range(n+1):
                         fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
             fout.close()
-            log.info("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
+            log.info("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: {fpath}")
 
     return Binms
 
