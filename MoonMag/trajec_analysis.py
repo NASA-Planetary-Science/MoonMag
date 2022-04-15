@@ -7,6 +7,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os, sys
 import numpy as np
+import logging as log
 import MoonMag.field_xyz as field
 import MoonMag.asymmetry_funcs as asym
 import MoonMag.plotting_funcs as plots
@@ -15,6 +16,7 @@ from glob import glob as filesMatchingPattern
 import spiceypy as spice
 import multiprocessing as mtp
 num_cores = mtp.cpu_count()
+mtpFork = mtp.get_context("fork")
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
 
 """
@@ -181,7 +183,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         for i, thisFlyby in np.ndenumerate(fbList):
             print(f"Getting square differences for {thisFlyby.upper()}, #{i[0]+1} of {nFlybys}.")
             if do_parallel and not tooFewProc:
-                pool = mtp.Pool(num_cores)
+                pool = mtpFork.Pool(num_cores)
                 par_result = [pool.apply_async(fit_trajec, (x[i], y[i], z[i], r[i], tRel[i],
                                                             BxDat[i], ByDat[i], BzDat[i], Binm[j], Benm, B0,
                                                             peak_omegas, nvals[j], mvals[j]))
@@ -200,7 +202,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         S = np.array([np.sum(dS[:,j]) for j in range(nBinms)])
         chi2 = S / np.sum([np.size(r[i]) for i in range(nFlybys)])
         jFit = np.argmin(chi2)
-        print(f"Plotting fits for best-fit chi-squared value of {chi2[jFit]:.1f}.")
+        log.debug(f"Plotting fits for best-fit chi-squared value of {chi2[jFit]:.1f}.")
         for i, thisFlyby in np.ndenumerate(fbList):
             BxFit[i] = Bx[i,jFit][0]
             ByFit[i] = By[i,jFit][0]
@@ -208,12 +210,12 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
             datName = os.path.join(outPath, f"{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat")
             saveDat(t[i], x[i], y[i], z[i], BxFit[i], ByFit[i], BzFit[i], tDescrip, datName=datName)
     else:
-        print("Reloading best fit data from disk")
+        log.debug("Reloading best fit data from disk")
         for i, thisFlyby in np.ndenumerate(fbList):
             fitName = os.path.join(outPath, f"{bname}-{thisFlyby.upper()}-MAG-IAU-bestFit.dat")
             _, x[i], y[i], z[i], BxFit[i], ByFit[i], BzFit[i] = np.loadtxt(fitName, unpack=True, skiprows=1,
                                                                               delimiter=',', dtype="U23,f,f,f,f,f,f")
-            print(f"Loaded fit data {fitName}")
+            log.debug(f"Loaded fit data {fitName}")
 
     for i, thisFlyby in np.ndenumerate(fbList):
         plots.plotTrajec(t[i], BxFit[i], ByFit[i], BzFit[i], Bdat=(BxDat[i], ByDat[i], BzDat[i]),
@@ -258,7 +260,7 @@ def calc_trajec(x,y,z,r,t, Binm, Benm, B0, peak_omegas, nvals, mvals, nprm_max=1
                 fieldType="net", noiseAmp=None):
     if n_max > 4:
         n_max = 4
-        print("WARNING: Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
+        log.warning("Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
 
     if fieldType == "ind":
         Benm = 0
@@ -408,7 +410,7 @@ def saveDat(t, x, y, z, Bx, By, Bz, tDescrip, datName="trajectory.dat"):
         fdat.write(header)
         for i, ti in np.ndenumerate(t):
             fdat.write(f"{ti}, {x[i]:17.10e}, {y[i]:17.10e}, {z[i]:17.10e}, {Bx[i]:17.10e}, {By[i]:17.10e}, {Bz[i]:17.10e}\n")
-    print(f"Trajectory data saved to file: {datName}")
+    log.info(f"Trajectory data saved to file: {datName}")
 
     return
 
@@ -418,6 +420,6 @@ if __name__ == "__main__":
         # Body name was passed as command line argument
         bname = sys.argv[1]
     else:
-        print("No body name entered. Defaulting to Europa.")
+        log.info("No body name entered. Defaulting to Europa.")
         bname = "Europa"
     fitData(bname, recalcMoments=True, recalcData=False, recalcFlybys=True, do_parallel=False)

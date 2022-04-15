@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import log as logging
 import spiceypy as spice
 from glob import glob as filesMatchingPattern
 import MoonMag.trajec_analysis as traj
@@ -69,7 +70,7 @@ nEnds = np.empty(0)
 kernels = [os.path.join(kPath, kName) for kName in kNamesGal]
 spice.furnsh(kernels)
 for fb in galFiles:
-    print(f"Evaluating times from {fb}")
+    log.debug(f"Evaluating times from {fb}")
     tUTCgal[fb], _, _, _, _, _, _, _ = np.loadtxt(fb, unpack=True, dtype="U23,f,f,f,f,f,f,f", delimiter="\t")
     etsGal[fb] = spice.str2et(tUTCgal[fb])
     xyzGal[fb], _ = spice.spkpos(scSpice[0], etsGal[fb], spkMoon, 'NONE', moon)
@@ -99,7 +100,7 @@ nptsGal = npts + 0
 kernels = [os.path.join(kPath, kName) for kName in kNamesJuno]
 spice.furnsh(kernels)
 for fb in junoFiles:
-    print(f"Evaluating times from {fb}")
+    log.debug(f"Evaluating times from {fb}")
     tUTCjuno[fb], _, _, _, _, _, _, _ = np.loadtxt(fb, unpack=True, dtype="U23,f,f,f,f,f,f,f", delimiter="\t")
     etsJuno[fb] = spice.str2et(tUTCjuno[fb])
     xyzJuno[fb], _ = spice.spkpos(scSpice[1], etsJuno[fb], spkMoon, 'NONE', moon)
@@ -160,4 +161,4 @@ xtn = "png"
 thefig = os.path.join("figures", f"BindGanymedeFlybys.{xtn}")
 fig.savefig(thefig, format=xtn, dpi=300)
 plt.close()
-print(f"Induced field plot printed to: {thefig}")
+log.info(f"Induced field plot printed to: {thefig}")

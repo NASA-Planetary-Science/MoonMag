@@ -8,6 +8,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import numpy as np
 import scipy as sci
+import logging as log
 from math import *
 
 """
@@ -28,8 +29,6 @@ eval_Be()
         t: float, shape(Nvals) (None). Optional time values in TDB seconds since J2000 epoch. Required if omega is passed.
     """
 def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
-
-    Bx, By, Bz = (np.zeros(np.size(r), dtype=np.complex_) for _ in range(3))
 
     if omega is None:
         timeRot = 1.0
@@ -57,7 +56,7 @@ def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
             By = 1j*B_base
             Bz = 0
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Be, n=1 and m is not between -n and n.")
 
     elif n==2:
@@ -91,11 +90,11 @@ def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
             By = B_base * (y - 1j*x)
             Bz = 0
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi, n=2 and m is not between -n and n.")
 
     else:
-        print(" n = ", n)
+        log.error(" n = ", n)
         raise ValueError("In field_xyz.eval_Be, n>2 but only n=1 to n=2 are supported.")
 
     Bx = Bx * timeRot
@@ -124,8 +123,6 @@ eval_Bi()
         t: float, shape(Nvals) (None). Optional time values in TDB seconds since J2000 epoch. Required if omega is passed.
     """
 def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
-
-    Bx, By, Bz = (np.zeros(np.size(r), dtype=np.complex_) for _ in range(3))
 
     if omega is None:
         timeRot = 1.0
@@ -156,7 +153,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
             By = By * ( (-3*x*y) + 1j*(x**2 - 2*y**2 + z**2) )
             Bz = Bz * ( (-3*x*z) + 1j*(-3*y*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi, n=1 and m is not between -n and n.")
 
     elif n==2:
@@ -192,7 +189,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
             By = By * ( (-7*x**2*y + 3*y**3 - 2*y*z**2) + 1j*(2*x**3 - 8*x*y**2 + 2*x*z**2) )
             Bz = Bz * ( (-5*x**2*z + 5*y**2*z) + 1j*(-10*x*y*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi, n=2 and m is not between -n and n.")
 
     elif n==3:
@@ -238,7 +235,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
             By = By * -( (13*x**3*y - 15*x*y**3 + 6*x*y*z**2) + 1j*(-3*x**4 + 21*x**2*y**2 - 3*x**2*z**2 - 4*y**4 + 3*y**2*z**2) )
             Bz = Bz * -( (7*x**3*z - 21*x*y**2*z) + 1j*(21*x**2*y*z - 7*y**3*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi, n=3 and m is not between -n and n.")
 
     elif n==4:
@@ -293,11 +290,11 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
             By = By * rt7o8*( (21*x**4*y - 46*x**2*y**3 + 5*y**5 + 12*x**2*y*z**2 - 4*y**3*z**2) + 1j*(-4*x**5 + 44*x**3*y**2 - 24*x*y**4 - 4*x**3*z**2 + 12*x*y**2*z**2) )
             Bz = Bz * rt7o8*( (9*x**4*z - 54*x**2*y**2*z + 9*y**4*z) + 1j*(36*x**3*y*z - 36*x*y**3*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi, n=4 and m is not between -n and n.")
 
     else:
-        print(" n = ", n)
+        log.error(" n = ", n)
         raise ValueError("In field_xyz.eval_Bi, n>4 but only n=1 to n=4 are supported.")
 
     Bx = Bx * timeRot
@@ -353,7 +350,7 @@ def eval_Bi_Schmidt(n,m,g_nm,h_nm, x,y,z,r, omega=None, t=None):
             By = By * ( g_nm*(3*x*y) + h_nm*(-x**2 + 2*y**2 - z**2) )
             Bz = Bz * ( g_nm*(3*x*z) + h_nm*(3*y*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi_Schmidt, n=1 and m is not between 0 and n.")
 
     elif n==2:
@@ -381,7 +378,7 @@ def eval_Bi_Schmidt(n,m,g_nm,h_nm, x,y,z,r, omega=None, t=None):
             By = By * ( g_nm*(7*x**2*y - 3*y**3 + 2*y*z**2) + h_nm*(-2*x**3 + 8*x*y**2 - 2*x*z**2) )
             Bz = Bz * ( g_nm*(5*x**2*z - 5*y**2*z) + h_nm*(10*x*y*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi_Schmidt, n=2 and m is not between 0 and n.")
 
     elif n==3:
@@ -454,11 +451,11 @@ def eval_Bi_Schmidt(n,m,g_nm,h_nm, x,y,z,r, omega=None, t=None):
             By = By * rt7*( g_nm*(21/4*x**4*y - 23/2*x**2*y**3 + 5/4*y**5 + 3*x**2*y*z**2 - y**3*z**2) + h_nm*(-x**5 + 11*x**3*y**2 - 6*x*y**4 - x**3*z**2 + 3*x*y**2*z**2) )
             Bz = Bz * rt7*( g_nm*(9/4*x**4*z - 27/2*x**2*y**2*z + 9/4*y**4*z) + h_nm*(9*x**3*y*z - 9*x*y**3*z) )
         else:
-            print(" m = ", m)
+            log.error(" m = ", m)
             raise ValueError("In field_xyz.eval_Bi_Schmidt, n=4 and m is not between 0 and n.")
 
     else:
-        print(" n = ", n)
+        log.error(" n = ", n)
         raise ValueError("In field_xyz.eval_Bi_Schmidt, n>4 but only n=1 to n=4 are supported.")
 
     Bx = Bx * timeRot

@@ -6,12 +6,15 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """   
 
+import logging as log
+
 # @@@@@@@@@@@@@@@@@
 #   Main settings
 # @@@@@@@@@@@@@@@@@
 
 ppgc = 540  # Points per great circle (sets longitudinal resolution for plots)
 
+verbose = True
 relative = True    # Whether to use relative (ε/R*chi_pq) or absolute (direct spherical harmonic coefficients) formulation for reading Ypq. Affects which files are needed/read to interpret the asymmetric interior structure.
 synodic_period_only = False # Whether to consider only the synodic period for induction
 orbital_time_series = False # Whether to plot a time series that considers only the orbital period
@@ -80,3 +83,13 @@ deft_ticksize = 14
 # and use "serif" to match captions in final print versions.
 # serif selects stix fonts and sans-serif selects computer modern sans-serif (cmss).
 font_choice = "serif"
+
+# Set output message level
+if verbose:
+    logLevel = log.DEBUG
+else:
+    logLevel = log.INFO
+printFmt = '[%(levelname)s] %(message)s'
+log.basicConfig(level=logLevel, format=printFmt)
+# Stop matplotlib spamming debug messages
+log.getLogger('matplotlib').setLevel(log.WARNING)

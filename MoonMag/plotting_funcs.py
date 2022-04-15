@@ -8,6 +8,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
+import logging as log
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdt
@@ -120,7 +121,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         asym_shape_km = asym_shape / 1e3
         mean_thick = abs(R_cmp - r_mean)
 
-        print("Calculating topographic data, this may take some time.")
+        log.debug("Calculating topographic data, this may take some time.")
         # Evaluate the deviations to get r(θ,ϕ)
         surf = asym.get_rsurf(pvals, qvals, asym_shape_km[index, :, :, :], r_mean, tht, phi)
 
@@ -144,7 +145,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
                 fout.write(data_fmt.format(thicks[i_lat,i_lon]))
             fout.write( "\n" )
         fout.close()
-        print(f"Data for asymmetric layer thicknesses written to file: {datpath}")
+        log.info(f"Data for asymmetric layer thicknesses written to file: {datpath}")
 
     else:
         fasym = open(datpath)
@@ -170,7 +171,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         lon_min = int(np.min(lon))
         lon_max = int(np.max(lon))
 
-    print(f"Maximum surface deviation: {np.max(np.abs(thicks-mean_thick)):.3f} km")
+    log.debug(f"Maximum surface deviation: {np.max(np.abs(thicks-mean_thick)):.3f} km")
 
     # Generate and format figures
     if lon_min == 0:
@@ -241,7 +242,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     fig.savefig(f"{print_fname}.png", format="png", dpi=300)
     if not do_large:
         fig.savefig(f"{print_fname}.pdf", format="pdf")
-    print(f"Contour plot for asym bdy saved to: {print_fname}.png")
+    log.info(f"Contour plot for asym bdy saved to: {print_fname}.png")
 
     return
 
@@ -363,7 +364,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
     titlestr = titlestr + title_dist
 
     if fend == "":
-        print("Creating magnetic plot, this may take some time.")
+        log.debug("Creating magnetic plot, this may take some time.")
     fig, axes = plt.subplots(1, 1, figsize=deft_figsize)
     plt.clf()
     cbar_title = f"Magnetic field{diffstr} $(\mathrm{{nT}})$"
@@ -384,7 +385,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
     if asym_frac is None:
         r_th_ph = r_surf_mean
     else:
-        print("Getting asymmetric surface shape...")
+        log.debug("Getting asymmetric surface shape...")
         r_th_ph = asym.get_rsurf(pvals,qvals,asym_frac, r_surf_mean,tht,phi)
 
     # Combine the moments from all periods of oscillation to find the instantaneous net induced moments
@@ -595,7 +596,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         fpath = os.path.join(fpath, "anim_frames")
     print_fname = os.path.join(fpath, topofig)
     fig.savefig(f"{print_fname}.png", format="png", dpi=fig_dpi)
-    print(f"Contour plot for asym field saved to: {print_fname}.png")
+    log.info(f"Contour plot for asym field saved to: {print_fname}.png")
 
     # Plot the absolute induced field in addition to a difference
     if (absolute and difference) and fend=="":
@@ -631,7 +632,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             fig.suptitle(asym_ptitle, size=tsize)
         print_abs_asym_fname = os.path.join(fpath, f"{asym_topofig}{append}{lg_end}")
         fig.savefig(f"{print_abs_asym_fname}.png", format="png", dpi=fig_dpi)
-        print(f"Contour plot for absolute asym field saved to: {print_abs_asym_fname}.png")
+        log.info(f"Contour plot for absolute asym field saved to: {print_abs_asym_fname}.png")
 
         # Plot analogous plot for field from symmetric shape for comparison
         for old_cont in cont.collections:
@@ -666,7 +667,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             fig.suptitle(f"{sym_ptitle}{title_tstring}", size=tsize)
         print_abs_sym_fname = os.path.join(fpath, f"{sym_topofig}{append}{lg_end}")
         fig.savefig(f"{print_abs_sym_fname}.png", format="png", dpi=fig_dpi)
-        print(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.png")
+        log.info(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.png")
 
     plt.close()
     return
@@ -712,7 +713,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
 
     if n_max > 4:
         n_max = 4
-        print("WARNING: Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
+        log.warning("Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
     Nnm = (n_max + 1) ** 2 - 1
     Nnmprm = (nprm_max + 1) ** 2 - 1
 
@@ -817,7 +818,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
     fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
     fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    print(f"Time series plot saved to file: {fig_fname}")
+    log.info(f"Time series plot saved to file: {fig_fname}")
     return
 
 #############################################
@@ -892,7 +893,7 @@ def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fp
     fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
     fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    print(f"Trajectory plot saved to file: {fig_fname}.pdf")
+    log.info(f"Trajectory plot saved to file: {fig_fname}.pdf")
 
     return
 
@@ -930,7 +931,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
 
     if n_max > 4:
         n_max = 4
-        print("WARNING: Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
+        log.warning("Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
 
     Nnm = (n_max + 1) ** 2 - 1
     Nnmprm = (nprm_max + 1) ** 2 - 1
@@ -1087,7 +1088,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
     fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
     fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    print(f"Trajectory plot saved to file: {fig_fname}")
+    log.info(f"Trajectory plot saved to file: {fig_fname}")
 
     return
 
@@ -1166,7 +1167,7 @@ def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_m
     thefig = os.path.join("figures", f"A_functions.{xtn}")
     fig.savefig(thefig, format=xtn, dpi=300)
     plt.close()
-    print(f"A functions plot printed to: {thefig}")
+    log.info(f"A functions plot printed to: {thefig}")
 
     return
 
@@ -1218,7 +1219,7 @@ def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
     thefig = os.path.join("figures", f"A1e{fEnd}.{xtn}")
     fig.savefig(thefig, format=xtn, dpi=300)
     plt.close()
-    print(f"Ae plot printed to: {thefig}")
+    log.info(f"Ae plot printed to: {thefig}")
 
     return
 

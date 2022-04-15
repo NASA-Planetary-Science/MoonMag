@@ -8,6 +8,7 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
+import logging as log
 import numpy as np
 from collections.abc import Iterable
 import mpmath as mp
@@ -15,7 +16,7 @@ import mpmath as mp
 # divide-by-zero errors induced by underflow.
 import multiprocessing as mtp
 num_cores = mtp.cpu_count()
-mtp.set_start_method("fork")
+mtpFork = mtp.get_context("fork")
 
 from MoonMag.config import *
 from MoonMag.field_xyz import eval_Bi
@@ -49,8 +50,8 @@ validate()
 def validate(r_bds, sigmas, omegas):
     #    Check length of boundary radius and conductivity lists
     if np.shape(r_bds) != np.shape(sigmas):
-        print("boundaries shape: ",np.shape(r_bds))
-        print("sigmas shape: ",np.shape(sigmas))
+        log.debug("boundaries shape: ",np.shape(r_bds))
+        log.debug("sigmas shape: ",np.shape(sigmas))
         raise ValueError("The number of boundaries is not equal to the number of conductivities.")
 
     if not isinstance(r_bds, list):
@@ -87,13 +88,13 @@ def jdx(n,x):
     one = mp.mpf("1")
     jn = jnx(n,x)
     jP = jnx(n+one,x)
-    jdx = np.array([ (n+one)*jn[i] - x[i]*jP[i] for i in range(len(x)) ])
+    jdx = np.array([ (n+one)*jn[i] - x[i]*jP[i] for i in range(np.size(x)) ])
     return jdx
 def ydx(n,x):
     one = mp.mpf("1")
     yn = ynx(n,x)
     yP = ynx(n+one,x)
-    ydx = np.array([ (n+one)*yn[i] - x[i]*yP[i] for i in range(len(x)) ])
+    ydx = np.array([ (n+one)*yn[i] - x[i]*yP[i] for i in range(np.size(x)) ])
     return ydx
 
 #############################################
@@ -241,11 +242,11 @@ InducedAeList()
         writeout: boolean (False). Whether to save a .txt file of values calculated.
         path: string (None). Path relative to run directory to print output data to. Defaults to './'.
     """
-def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append=""):
+def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append="", do_parallel=True):
     if writeout:
-        print("Calculating A_e for ",len(omegas)," omega values.")
+        log.debug("Calculating A_e for ",np.size(omegas)," omega values.")
 
-    n_omegas = len(omegas)
+    n_omegas = np.size(omegas)
     Aes = np.zeros(n_omegas, dtype=np.complex_)
 
     if rscale_moments == 1.0:
@@ -255,7 +256,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
 
     # For each omega, evaluate Ae:
     if do_parallel:
-        pool = mtp.Pool(num_cores)
+        pool = mtpFork.Pool(num_cores)
         par_result = [pool.apply_async(AeResponse, args=(r_bds, sigmas, omegas[i_om], rscaling), kwds={'nn':nn}) for i_om in range(n_omegas)]
         pool.close()
         pool.join()
@@ -263,7 +264,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
     else:
         for i_om in range(n_omegas):
             Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
-            if writeout and ((i_om*4) % n_omegas < 4): print(i_om," of ",n_omegas," complete.", flush=True)
+            if (i_om*4) % n_omegas < 4: log.debug(i_om," of ",n_omegas," complete.", flush=True)
 
     Aes = np.array([ complex(val) for val in Aes ])
     AeM = np.abs(Aes)
@@ -278,9 +279,9 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
         fout = open(fpath, "w")
         header = "{:<13}, {:<24}, {:<24}\n".format("Period (hr)", "Ae.mag", "Ae.arg (rad)")
         fout.write(header)
-        [ fout.write( f"{T_hrs[i]:13.5f}, {AeM[i]:24.12e}, {AeA[i]:24.12e}\n" ) for i in range(len(omegas)) ]
+        [ fout.write( f"{T_hrs[i]:13.5f}, {AeM[i]:24.12e}, {AeA[i]:24.12e}\n" ) for i in range(np.size(omegas)) ]
         fout.close()
-        print("Data for Aes written to file: ",fpath)
+        log.info("Data for Aes written to file: ",fpath)
 
     return Aes, AeM, AeA
 
@@ -312,15 +313,15 @@ BiList()
 def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, 
            bodyname=None, append="", output_Schmidt=False):
     if writeout:
-        print("Calculating symmetric B_inm for ",len(peak_omegas)," periods.")
+        log.debug(f"Calculating symmetric B_inm for {np.size(peak_omegas)} periods.")
 
         if bodyname is None:
             bfname = ""
         else:
             bfname = bodyname+"_"
 
-    n_omegas = len(peak_omegas)
-    Nnm = len(nprmvals)
+    n_omegas = np.size(peak_omegas)
+    Nnm = np.size(nprmvals)
     Binms = np.zeros((n_omegas,2,n_max+1,n_max+1), dtype=np.complex_)
 
     # For each degree n, evaluate all Ae:
@@ -337,28 +338,28 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", " m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
-        for i in range(len(peak_omegas)):
+        for i in range(np.size(peak_omegas)):
             T_hrs = 2*np.pi/peak_omegas[i]/3600
             for i_nm in range(Nnm):
                 sign = int(mprmvals[i_nm]<0)
                 this_Binm = Binms[i,sign,nprmvals[i_nm],abs(mprmvals[i_nm])]
                 fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nprmvals[i_nm], mprmvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
         fout.close()
-        print("Data for symmetric Binm written to file: ",fpath)
+        log.info(f"Data for symmetric Binm written to file: {fpath}")
 
         if output_Schmidt:
             fpath = path+bfname+"ghnm_sym"+append+".dat"
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
             fout.write(header)
-            for i in range(len(peak_omegas)):
+            for i in range(np.size(peak_omegas)):
                 T_hrs = 2*np.pi/peak_omegas[i]/3600
                 this_gnm, this_hnm = get_gh_from_Binm(n_max,Binms[i,...])
                 for n in range(1,n_max+1):
                     for m in range(n+1):
                         fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
             fout.close()
-            print("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
+            log.info("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
 
     return Binms
 

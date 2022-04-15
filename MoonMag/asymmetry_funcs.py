@@ -8,6 +8,8 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
+import logging as log
+from scipy.io import savemat, loadmat
 from collections.abc import Iterable
 from numpy import sqrt
 from math import floor
@@ -23,6 +25,7 @@ from MoonMag.field_xyz import eval_Bi, eval_Bi_Schmidt
 # Parallelization is through multiprocessing module
 import multiprocessing as mtp
 num_cores = mtp.cpu_count()
+mtpFork = mtp.get_context("fork")
 
 # Global variables and settings
 # Set maximum precision for mpmath quantities
@@ -87,7 +90,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
 
     if single_asym is not None:
         asym_model = os.path.join(fpath, f"depth_chi_pq_shape{bfname}{append}.txt")
-        print(f"Using asymmetry model: {asym_model} for layer index {single_asym}")
+        log.debug(f"Using asymmetry model: {asym_model} for layer index {single_asym}")
         shape_n = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',')
         scaled_rad = r_bds * rscale
         for p in range(1, p_max + 1):
@@ -113,11 +116,11 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
             try:
                 asym_model = f"{asym_model1}{p}_shapes{bfname}{append}.txt"
                 shape_p = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',', dtype=np.complex_)
-                print(f"Using asymmetry model: {asym_model}")
+                log.debug(f"Using asymmetry model: {asym_model}")
             except:
                 asym_model = f"{asym_model1}{p}_shapes.txt"
                 shape_p = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',', dtype=np.complex_)
-                print(f"Using asymmetry model: {asym_model}")
+                log.debug(f"Using asymmetry model: {asym_model}")
 
             qcount = 0
             for q in range(-p, p+1):
@@ -128,7 +131,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
                 qcount += 1
     elif concentric:
         asym_model = os.path.join(fpath, f"depth_chi_pq_shape{bfname}{append}.txt")
-        print(f"Using asymmetry model: {asym_model} concentrically, scaled to a radius of {1/rscale:.2f}")
+        log.debug(f"Using asymmetry model: {asym_model} concentrically, scaled to a radius of {1/rscale:.2f}")
         shape_n = np.loadtxt(asym_model, skiprows=1, unpack=False, delimiter=',')
         scaled_rad = r_bds * rscale
         for p in range(1,p_max+1):
@@ -203,7 +206,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
                         f_chi.write(this_line)
                 if print_for_copy:
                     f_chi.write(this_line+"\n")
-        print(f"DEBUG: Printed chi_pq values to {asym_out}")
+        log.debug(f"Printed chi_pq values to {asym_out}")
 
     # If this file exists, model tidal perturbations. If not, return None.
     grav_model = os.path.join(fpath, f"gravity{bfname}{append}.txt")
@@ -212,7 +215,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
     except:
         grav_shape = None
     else:
-        print(f"Using surface gravity shape: {grav_model}")
+        log.debug(f"Using surface gravity shape: {grav_model}")
         for p in range(1, p_max + 1):
             this_min = int(p * (p + 1) / 2)
             this_max = this_min + p + 1
@@ -318,12 +321,12 @@ validate()
 def validate(r_bds, sigmas, bcdev, asym_shape, p_max):
     # Check lengths of model lists
     if np.shape(r_bds) != np.shape(sigmas):
-        print("boundaries shape: ", np.shape(r_bds))
-        print("sigmas shape: ", np.shape(sigmas))
+        log.debug("boundaries shape: ", np.shape(r_bds))
+        log.debug("sigmas shape: ", np.shape(sigmas))
         raise ValueError("The number of boundaries is not equal to the number of conductivities.")
     if np.shape(r_bds) != np.shape(bcdev):
-        print("boundaries shape: ", np.shape(r_bds))
-        print("deviations shape: ", np.shape(bcdev))
+        log.debug("boundaries shape: ", np.shape(r_bds))
+        log.debug("deviations shape: ", np.shape(bcdev))
         raise ValueError("The number of boundaries is not equal to the number of deviations.")
 
     # Make sure interior model is iterable (it's not if there is only 1 boundary)
@@ -333,10 +336,10 @@ def validate(r_bds, sigmas, bcdev, asym_shape, p_max):
         np.reshape(asym_shape, (1,2,p_max+1,p_max+1))
 
     # Double check array lengths all match up
-    if np.shape(asym_shape) != (len(r_bds),2,p_max+1,p_max+1):
+    if np.shape(asym_shape) != (np.size(r_bds),2,p_max+1,p_max+1):
         if np.shape(r_bds) != np.shape(asym_shape)[0]:
-            print("boundaries length: ", np.shape(r_bds))
-            print("deviations length: ", np.shape(asym_shape)[0])
+            log.error(f"boundaries length: {np.shape(r_bds)}")
+            log.error(f"deviations length: {np.shape(asym_shape)[0]}")
             raise ValueError("The number of boundaries is not equal to the number of deviation shapes.")
         else:
             raise ValueError("The number of deviation shapes is not equal to (p_max + 1)^2 - 1.")
@@ -369,13 +372,13 @@ def jdx(n,x):
     one = mp.mpf(1)
     jn = jnx(n,x)
     jP = jnx(n+one,x)
-    jdx = np.array([ (n+one)*jn[i] - x[i]*jP[i] for i in range(len(x)) ])
+    jdx = np.array([ (n+one)*jn[i] - x[i]*jP[i] for i in range(np.size(x)) ])
     return jdx
 def ydx(n,x):
     one = mp.mpf(1)
     yn = ynx(n,x)
     yP = ynx(n+one,x)
-    ydx = np.array([ (n+one)*yn[i] - x[i]*yP[i] for i in range(len(x)) ])
+    ydx = np.array([ (n+one)*yn[i] - x[i]*yP[i] for i in range(np.size(x)) ])
     return ydx
 
 #############################################
@@ -413,20 +416,20 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         bfname = f"_{bodyname}{modelStr}"
 
     if synodic and orbital:
-        print("WARNING: Both 'synodic' and 'orbital' options passed to asymmetry_funcs.read_Benm. Only synodic will be used.")
+        log.warning("Both 'synodic' and 'orbital' options passed to asymmetry_funcs.read_Benm. Only synodic will be used.")
         orbital = False
 
     if synodic:
-        print("Warning: Considering synodic period only for excitation.")
+        log.warning("Considering synodic period only for excitation.")
         Benm_moments = os.path.join(fpath, f"synodic_Be1xyz{bfname}.txt")
     elif orbital:
-        print("Warning: Considering orbital period only for excitation.")
+        log.warning("Considering orbital period only for excitation.")
         if bodyname == "Europa":
-            print("Extra warning: This excitation is APPROXIMATE, in that two closely-spaced periods have been summed together and set to T = 85.2 h.")
+            log.warning("Extra warning: This excitation is APPROXIMATE, in that two closely-spaced periods have been summed together and set to T = 85.2 h.")
         Benm_moments = os.path.join(fpath, f"orbital_Be1xyz{bfname}.txt")
     else:
         Benm_moments = os.path.join(fpath, f"Be1xyz{bfname}.txt")
-    print(f"Using excitation moments: {Benm_moments}")
+    log.debug(f"Using excitation moments: {Benm_moments}")
     peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
     n_peaks1_prelim = peak_per1.size
 
@@ -438,20 +441,24 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         limit_osc = 0
     elif limit_osc != 0:
         if n_peaks1_prelim <= limit_osc:
-            print(f"limit_osc is set to {limit_osc}, but {Benm_moments} contains only {n_peaks1_prelim} oscillation periods. Including all oscillations in calculations.")
+            log.debug(f"limit_osc is set to {limit_osc}, but {Benm_moments} contains only {n_peaks1_prelim} oscillation periods. Including all oscillations in calculations.")
             limit_osc = 0
         else:
             if limit_osc < 0: limit_osc = abs(limit_osc)
-            print(f"Limiting Benm to strongest {limit_osc} oscillations.")
+            log.debug(f"Limiting Benm to strongest {limit_osc} oscillations.")
     absBenm = np.sqrt(Bex_Re**2 + Bex_Im**2 + Bey_Re**2 + Bey_Im**2 + Bez_Re**2 + Bez_Im**2)
-    iMax = np.argpartition(absBenm, -limit_osc)[-limit_osc:]
-    peak_per1_lim = np.sort(peak_per1[iMax])
-    iMaxSort = np.array([np.argwhere(peak_per1 == peak_per1_lim[i]) for i in range(np.size(peak_per1_lim))]).flatten()
+    if synodic or orbital:
+        iMaxSort = 0
+    else:
+        iMax = np.argpartition(absBenm, -limit_osc)[-limit_osc:]
+        peak_per1_lim = np.sort(peak_per1[iMax])
+        iMaxSort = np.array([np.argwhere(peak_per1 == peak_per1_lim[i]) for i in range(np.size(peak_per1_lim))]).flatten()
 
-    peak_per1 = peak_per1[iMaxSort]
-    Bex = Bex[iMaxSort]
-    Bey = Bey[iMaxSort]
-    Bez = Bez[iMaxSort]
+        peak_per1 = peak_per1[iMaxSort]
+        Bex = Bex[iMaxSort]
+        Bey = Bey[iMaxSort]
+        Bez = Bez[iMaxSort]
+        
     n_peaks1 = np.size(peak_per1)
 
     Benm1 = np.zeros((n_peaks1,2,nprm_max+p_max+1,nprm_max+p_max+1),dtype=np.complex_)
@@ -466,7 +473,7 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
     B0 = np.array([np.mean(B0x), np.mean(B0y), np.mean(B0z)])
     
     if nprm_max > 1:
-        print("WARNING: n'=2 excitation moments are being considered, but the amplitudes are just a placeholder! Remove this warning when correct Be2xyz have been installed.")
+        log.warning("n'=2 excitation moments are being considered, but the amplitudes are just a placeholder! Remove this warning when correct Be2xyz have been installed.")
         for nn in range(1,nprm_max+1):
             if nn == 2:
                 peak_per2, xBex_Re, xBex_Im, xBey_Re, xBey_Im, xBez_Re, xBez_Im, yBez_Re, yBez_Im, zBez_Re, zBez_Im    \
@@ -537,17 +544,17 @@ BiList()
         debug: boolean (False). Special use flag.
     """
 def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None,
-           verbose=True, append="", debug=False):
+           verbose=True, append="", debug=False, do_parallel=True):
 
     # Clean inputs and initialize
     if not isinstance(peak_omegas, Iterable):
         peak_omegas = [peak_omegas]
-    n_peaks = len(peak_omegas)
-    Nnm = len(nvals)
+    n_peaks = np.size(peak_omegas)
+    Nnm = np.size(nvals)
     n_max = nprm_max + p_max
     Binms = np.zeros((n_peaks, 2, n_max+1, n_max+1), dtype=np.complex_)
+    log.debug(f"Calculating asymmetric B_inm for {np.size(peak_omegas)} periods.")
     if writeout:
-        print(f"Calculating asymmetric B_inm for {np.size(peak_omegas)} periods.")
         if bodyname is None:
             bfname = ""
         else:
@@ -562,12 +569,12 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         asym_shape = asym_shape_layers + grav_shape
 
     # Get mixing coefficients
-    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals)
+    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True)
 
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
         # For each omega, evaluate Bi:
-        pool = mtp.Pool(np.minimum(num_cores,n_peaks))
+        pool = mtpFork.Pool(np.minimum(num_cores,n_peaks))
         par_result = [pool.apply_async( BinmResponse, (r_bds,sigmas,peak_omegas[i_om],asym_shape,Benm[i_om,...],Xid,p_max,rscaling), par_kw ) for i_om in range(n_peaks)]
         pool.close()
         pool.join()
@@ -580,11 +587,11 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
             krvals = np.zeros(n_peaks, dtype=np.complex_)
             for i_om in range(n_peaks):
                 Binms[0, ...], Aes[i_om, :], Ats[i_om, :], Ads[i_om, :], krvals[i_om] = BinmResponse(r_bds, sigmas, peak_omegas[i_om], asym_shape, Benm[0, ...], Xid, p_max, rscaling, nprm_max=nprm_max, verbose=verbose, debug=debug)
-                if verbose and (i_om+1) % 10 == 0: print(f"{i_om + 1} of {n_peaks} complete.")
+                if (i_om+1) % 10 == 0: log.debug(f"{i_om + 1} of {n_peaks} complete.")
         else:
             for i_om in range(n_peaks):
                 Binms[i_om, ...] = BinmResponse(r_bds, sigmas, peak_omegas[i_om], asym_shape, Benm[i_om, ...], Xid, p_max, rscaling, nprm_max=nprm_max, verbose=verbose)
-                if verbose: print(f"{i_om + 1} of {n_peaks} complete.")
+                log.debug(f"{i_om + 1} of {n_peaks} complete.")
 
     if writeout:
         if path is None:
@@ -593,28 +600,28 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
-        for i in range(len(peak_omegas)):
+        for i in range(np.size(peak_omegas)):
             T_hrs = 2*np.pi/peak_omegas[i]/3600
             for i_nm in range(Nnm):
                 sign = int(mvals[i_nm]<0)
                 this_Binm = Binms[i,sign,nvals[i_nm],abs(mvals[i_nm])]
                 fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format(round(T_hrs,5), nvals[i_nm], mvals[i_nm], np.real(this_Binm), np.imag(this_Binm)) )
         fout.close()
-        print("Data for asymmetric Binm written to file: ", fpath)
-        
+        log.info(f"Data for asymmetric Binm written to file: {fpath}")
+
         if output_Schmidt:
             fpath = os.path.join(path, f"{bfname}ghnm_asym{append}.dat")
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
             fout.write(header)
-            for i in range(len(peak_omegas)):
+            for i in range(np.size(peak_omegas)):
                 T_hrs = 2*np.pi/peak_omegas[i]/3600
                 this_gnm, this_hnm = get_gh_from_Binm(n_max,Binms[i,...])
                 for n in range(1,n_max+1):
                     for m in range(n+1):
                         fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
             fout.close()
-            print("Data for asymmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
+            log.info("Data for asymmetric, Schmidt semi-normalized g_nm and h_nm written to file: ",fpath)
 
     if debug:
         return Binms, Aes, Ats, Ads, krvals
@@ -707,7 +714,7 @@ def BinmResponse(r_bds, sigmas, omega, asym_shape, Benm, Xid, p_max, rscaling, n
     zetaQ = n*jn_ex
     eta_Q = n*yn_ex
 
-    if verbose: print("    Initialized transfer calculations...", flush=True)
+    log.debug("    Initialized transfer calculations...")
 
     # If there's only one boundary, kr_ll and kr_ul are empty and we can immediately calculate A function values.
     if n_bds > 1:
@@ -755,7 +762,7 @@ def BinmResponse(r_bds, sigmas, omega, asym_shape, Benm, Xid, p_max, rscaling, n
 
     Ad = (xi__Q + Lambd[:nprm_max,ni_bds]*rho_Q) / (deltQ[:nprm_max] + Lambd[:nprm_max,ni_bds]*epsiQ[:nprm_max])
 
-    if verbose: print("    Calculating series results...", flush=True)
+    log.debug("    Calculating series results...")
 
     # Finally, evaluate the asymmetry series terms:
     Delta = get_Deltanmi(n_max, p_max, nprm_max, n, n_bds, r_bds, Benm, asym_shape, Xid, aBar, Ad, TransferQts2)
@@ -769,7 +776,7 @@ def BinmResponse(r_bds, sigmas, omega, asym_shape, Benm, Xid, p_max, rscaling, n
 
     if verbose:
         T_hrs = round(2*np.pi/omega/3600, 2)
-        print(f"    Evaluating final products for T = {T_hrs}...", flush=True)
+        log.debug(f"    Evaluating final products for T = {T_hrs}...")
 
     # Finally, zip it all together:
     Ae = cpx_div( (betaQ + Lambd[:,-1] * gammQ), (deltQ + Lambd[:,-1] * epsiQ) )
@@ -935,7 +942,7 @@ def eval_inner_recur_sym(n_max, n_bds, beta, gamm, delt, epsi):
 
 # Avoids divide-by-zero errors when Lambd is very close to i (high conductivities)
 def cpx_div(a, b):
-    nvals = len(a)
+    nvals = np.size(a)
     amag = [ mp.fabs(ai) for ai in a ]
     aarg = [ mp.atan2(mp.im(ai), mp.re(ai)) for ai in a ]
     bmag = [ mp.fabs(bi) for bi in b ]
@@ -976,34 +983,54 @@ get_all_Xid()
         nprmvals: integer, shape((nprm_max+1)**2-1). Flattened array of nprm values.
         mprmvals: integer, shape((nprm_max+1)**2-1). Flattened array of mprm values corresponding to each nrpm above.
     """
-def get_all_Xid(n_max, p_max, nprm_max, nprmvals, mprmvals):
-    Xid = np.zeros((2,n_max+1,n_max+1, 2,p_max+1,p_max+1, 2,nprm_max+1,nprm_max+1), dtype=mpf_global)
-    Nnmprm = len(nprmvals)
+def get_all_Xid(n_max, p_max, nprm_max, nprmvals, mprmvals, do_parallel=True,
+                writeout=True, reload=False, fpath=None, fname=None):
+    if writeout or reload:
+        if fpath is None:
+            fpath = "induced"
+        if fname is None:
+            fname = f"Xid_values_n{n_max}_p{p_max}_np{nprm_max}"
 
-    for n in range(1,n_max+1):
-        for m in range(-n,n+1):
-            msign = int(m<0)
-            mabs = abs(m)
+        fullFile = os.path.join(fpath, fname+".mat")
+        fileExists = os.path.isfile(fullFile)
+        if reload and not fileExists:
+            log.warning(f'Xid file {fullFile} does not exist, but reload is True. Calculating instead.')
+            reload = False
+            writeout = True
 
-            for p in range(1,p_max+1):
-                for q in range(-p,p+1):
-                    qsign = int(q<0)
-                    qabs = abs(q)
+    if reload:
+        Xid = loadmat(fullFile)['Xid']
+    else:
+        Xid = np.zeros((2,n_max+1,n_max+1, 2,p_max+1,p_max+1, 2,nprm_max+1,nprm_max+1), dtype=mpf_global)
+        Nnmprm = np.size(nprmvals)
 
-                    if do_parallel:
-                        pool = mtp.Pool(num_cores)
-                        par_result = [pool.apply_async( calc_Xid, args=(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max) ) for iN in range(Nnmprm)]
-                        pool.close()
-                        pool.join()
+        for n in range(1,n_max+1):
+            for m in range(-n,n+1):
+                msign = int(m<0)
+                mabs = abs(m)
 
-                    for iN in range(Nnmprm):
-                        nprm = nprmvals[iN]
-                        mpsign = int(mprmvals[iN]<0)
-                        mpabs = abs(mprmvals[iN])
+                for p in range(1,p_max+1):
+                    for q in range(-p,p+1):
+                        qsign = int(q<0)
+                        qabs = abs(q)
+
                         if do_parallel:
-                            Xid[msign,n,mabs, qsign,p,qabs, mpsign,nprm,mpabs] = par_result[iN].get()
-                        else:
-                            Xid[msign, n, mabs, qsign, p, qabs, mpsign, nprm, mpabs] = calc_Xid(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max)
+                            pool = mtpFork.Pool(num_cores)
+                            par_result = [pool.apply_async( calc_Xid, args=(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max) ) for iN in range(Nnmprm)]
+                            pool.close()
+                            pool.join()
+
+                        for iN in range(Nnmprm):
+                            nprm = nprmvals[iN]
+                            mpsign = int(mprmvals[iN]<0)
+                            mpabs = abs(mprmvals[iN])
+                            if do_parallel:
+                                Xid[msign,n,mabs, qsign,p,qabs, mpsign,nprm,mpabs] = par_result[iN].get()
+                            else:
+                                Xid[msign, n, mabs, qsign, p, qabs, mpsign, nprm, mpabs] = calc_Xid(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max)
+        if writeout:
+            savemat(fullFile, {'Xid': Xid.astype(np.float_)})
+            log.debug(f'Saved Xid values to file: {fullFile}')
 
     return Xid
 
@@ -1279,7 +1306,7 @@ def eval_dev(p, q, chi_pq, ltht, lphi, lleny, llenx):
     else:
         this_devs = np.array([ np.real( chi_pq*complex(mp.spherharm(p,q,thti,phii)) ) for thti in ltht for phii in lphi ])
         this_devs = np.reshape(this_devs,(lleny,llenx))
-    print(f"p,q = {p}{q} completed", flush=True)
+    log.debug(f"p,q = {p}{q} completed", flush=True)
     return this_devs
 
 #############################################
@@ -1299,16 +1326,16 @@ get_rsurf()
         ltht: float, shape(lleny). Local copy of theta grid values (faster execution than referencing a global variable).
         lphi: float, shape(lleny). Local copy of phi grid values.
     """
-def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi):
-    Npq = len(pvals)
-    lleny = len(ltht)
-    llenx = len(lphi)
+def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi, do_parallel=True):
+    Npq = np.size(pvals)
+    lleny = np.size(ltht)
+    llenx = np.size(lphi)
     devs = np.zeros((lleny,llenx))
 
     lin_bd_shape = np.array([ asym_shape[int(qvals[iN]<0),pvals[iN],abs(qvals[iN])] for iN in range(Npq) ])
 
     if do_parallel:
-        pool = mtp.Pool(num_cores)
+        pool = mtpFork.Pool(num_cores)
         par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx) ) for iN in range(Npq)]
         pool.close()
         pool.join()
@@ -1348,13 +1375,13 @@ getMagSurf()
             phase. If False, moments must be in fully normalized form with the Condon-Shortley phase.
         gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
     """
-def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False):
+def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False, do_parallel=True):
     if nmax_plot>4:
         nmax_plot = 4
-        print("WARNING: Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
+        log.warning("Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
 
     if Schmidt:
-        Nnm = min( int((nmax_plot+1)*(nmax_plot+2)/2) - 1, len(nvals) )
+        Nnm = min( int((nmax_plot+1)*(nmax_plot+2)/2) - 1, np.size(nvals) )
         gnm, hnm = Binm
         if np.size(np.shape(gnm)) > 1:
             lin_gnm = np.array([gnm[nvals[iN], mvals[iN]] for iN in range(Nnm)])
@@ -1363,14 +1390,14 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False):
             lin_gnm = gnm
             lin_hnm = hnm
     else:
-        Nnm = min((nmax_plot + 1) ** 2 - 1, len(nvals))
+        Nnm = min((nmax_plot + 1) ** 2 - 1, np.size(nvals))
         if np.size(np.shape(Binm)) > 2:
             lin_Binm = np.array([ Binm[int(mvals[iN]<0),nvals[iN],abs(mvals[iN])] for iN in range(Nnm) ])
         else:
             lin_Binm = Binm
 
-    lleny = len(ltht)
-    llenx = len(lphi)
+    lleny = np.size(ltht)
+    llenx = np.size(lphi)
     Bx, By, Bz = ( np.zeros((1,lleny*llenx), dtype=np.complex_) for _ in range(3) )
 
     # If we pass a single value for r(θ,ϕ) = R, evaluate over a sphere with that radius.
@@ -1388,12 +1415,12 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False):
 
     if do_parallel:
         if Schmidt:
-            pool = mtp.Pool(num_cores)
+            pool = mtpFork.Pool(num_cores)
             par_result = [pool.apply_async( eval_Bi_Schmidt, args=(nvals[iN],mvals[iN],lin_gnm[iN],lin_hnm[iN], x,y,z,r) ) for iN in range(Nnm)]
             pool.close()
             pool.join()
         else:
-            pool = mtp.Pool(num_cores)
+            pool = mtpFork.Pool(num_cores)
             par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
             pool.close()
             pool.join()

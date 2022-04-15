@@ -7,6 +7,7 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os, sys
+import logging as log
 from typing import List
 
 import numpy as np
@@ -149,16 +150,16 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
     R = 1 / rscale_moments / 1e3
 
     if debug:
-        print("Debug: Getting Xi/Xid values")
+        log.debug("Getting Xi/Xid values")
         Xid = asym.get_all_Xid(nprm_max_main, p_max_main, n_max_main, nvals, mvals)
-        print("#######   Xid values   #######")
+        log.debug("#######   Xid values   #######")
         asym.print_Xid_table(Xid, nprm_max_main, p_max_main, n_max_main)
-        print(f"\n#######   Xi values   #######")
+        log.debug(f"\n#######   Xi values   #######")
         asym.print_Xi_table(nprm_max_main, p_max_main, n_max_main)
 
     if recalc:
         int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
-        print(f"Using interior model: {int_model}")
+        log.debug(f"Using interior model: {int_model}")
 
         r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
         n_bds = np.size(r_bds)
@@ -214,12 +215,12 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                 this_line = f"{kr[i]}, {Ae_mag[i]}, {Ae_arg[i]}, {At_mag[i]}, {At_arg[i]}, {Ad_mag[i]}, {Ad_arg[i]}, {AtAd_mag[i]}, {AtAd_arg[i]}\n"
                 fout.write(this_line)
             fout.close()
-            print(f"Data for A functions written to file: {fpath}")
+            log.info(f"Data for A functions written to file: {fpath}")
         else:
             kr, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_mag, AtAd_arg = np.loadtxt(fpath, skiprows=1, unpack=True, delimiter=',')
 
         plots.plotAfunctions(kr, 1, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_mag, AtAd_arg)
-        print("Debug: quitting")
+        log.debug("Quitting.")
         quit()
 
     if plot_asym:
@@ -316,7 +317,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
             Binm_rot = Binm * 1.0
 
         if do_gif:
-            print(f"Making {n_frames} animation frames.")
+            log.debug(f"Making {n_frames} animation frames.")
             for iT in range(n_frames):
                 iT_str = f"{iT:04}"
                 t_hr = peak_periods[-1] * iT / n_frames
@@ -339,7 +340,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                                   pvals=pvals, qvals=qvals, difference=gif_diff, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
                                   bodyname=bname, append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, absolute=True, no_title=False)
 
-            print("Animation frames printed to figures/anim_frames/ folder.\n" +
+            log.info("Animation frames printed to figures/anim_frames/ folder.\n" +
                   "Stack them into a gif with, e.g.:\n" +
                   "convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
         else:
