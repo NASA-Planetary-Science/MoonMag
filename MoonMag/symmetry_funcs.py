@@ -264,7 +264,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
     else:
         for i_om in range(n_omegas):
             Aes[i_om] = AeResponse(r_bds,sigmas,omegas[i_om],rscaling,nn=nn)
-            if (i_om*4) % n_omegas < 4: log.debug(f"{i_om} of {n_omegas} complete.")
+            if (i_om*4) % n_omegas < 4: log.debug(f"{i_om + 1} of {n_omegas} complete.")
 
     Aes = np.array([ complex(val) for val in Aes ])
     AeM = np.abs(Aes)
