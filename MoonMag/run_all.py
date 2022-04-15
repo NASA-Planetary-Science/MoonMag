@@ -9,7 +9,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import MoonMag.eval_induced_field as eval
 
-if __name__ == "__main__":
+def run_all():
     # Each body to include in calculations
     do_Europa = True
     do_Miranda = True
@@ -29,7 +29,22 @@ if __name__ == "__main__":
     
     # Uses the following command structure:
     # eval.run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=False, compare_me=False, do_gif=False)
-    
+
+    if do_Miranda:
+        bname = "Miranda"
+        print(f" - {bname} - ")
+        if do_detailed:
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, do_large=False)
+            eval.run_calcs(bname, "x", False, do_fields, False, do_large=False)
+            eval.run_calcs(bname, "y", False, do_fields, False, do_large=False)
+            eval.run_calcs(bname, "z", False, do_fields, False, do_large=False)
+
+        if do_large_plots:
+            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True)
+            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
+            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
+            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
+
     if do_Europa:
         bname = "Europa"
         print(f" - {bname} Tobie model high salinity (Seawater) - ")
@@ -73,21 +88,6 @@ if __name__ == "__main__":
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, compare_me=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, compare_me=True)
     
-    if do_Miranda:
-        bname = "Miranda"
-        print(f" - {bname} - ")
-        if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, do_large=False)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=False)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=False)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=False)
-    
-        if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
-    
     if do_Callisto:
         bname = "Callisto"
         print(f" - {bname} - ")
@@ -129,3 +129,7 @@ if __name__ == "__main__":
             eval.run_calcs("Callisto", gif_comp, False, True, False, do_gif=True)
         if do_Triton:
             eval.run_calcs("Triton", gif_comp, False, True, False, do_gif=True)
+
+
+if __name__ == "__main__":
+    run_all()
