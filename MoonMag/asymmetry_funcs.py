@@ -553,9 +553,10 @@ BiList()
         do_parallel: boolean (True). Toggle for running certain calculations in parallel.
         outFname: string (None). Output filename to use when writeout = True.
         outFnameS: string (None). As above, for output Gauss coefficients in the Schmidt normalization.
+        Xid: complex (None, shape ...). Option to pass in Xid to avoid needing to reload from disk or recalculate.
     """
 def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None,
-           verbose=True, append="", debug=False, do_parallel=True, outFname=None, outFnameS=None):
+           verbose=True, append="", debug=False, do_parallel=True, outFname=None, outFnameS=None, Xid=None):
 
     # Clean inputs and initialize
     if not isinstance(peak_omegas, Iterable):
@@ -580,7 +581,8 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         asym_shape = asym_shape_layers + grav_shape
 
     # Get mixing coefficients
-    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True, do_parallel=do_parallel, fpath=path)
+    if Xid is None:
+        Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True, do_parallel=do_parallel, fpath=path)
 
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
