@@ -1,3 +1,0 @@
-Radius (m),Conductivity (S/m),Bdy deviation (ε/R)
-1537500,2750,0.00163
-1560000,1e-10,0
