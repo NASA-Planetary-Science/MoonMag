@@ -19,6 +19,7 @@ import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
 
+from MoonMag import _excitation, _interior, _induced
 from MoonMag.config import *
 from MoonMag.field_xyz import eval_Bi, eval_Bi_Schmidt
 
@@ -78,7 +79,7 @@ read_shape()
 def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=None, single_asym=None, concentric=True,
                fpath=None, r_bds=None, r_io=-2, append="", convert_depth_to_chipq=False):
     if fpath is None:
-        fpath = "interior"
+        fpath = _interior
     if bodyname is None:
         bfname = ""
     else:
@@ -400,12 +401,13 @@ read_Benm()
         synodic: boolean (False). Option to consider only the strongest excitation period, for simplicity.
         orbital: boolean (False). Option to consider only the orbital period, analogous to the synodic period above.
         limit_osc: integer (None). Number of oscillation frequencies to limit calculations to, where 1 is just the strongest oscillation.
-        model: string (None). Optional model code to append to file name. 
+        model: string (None). Optional model code to append to file name.
+        fName: string (None). Optional override of naming conventions to specify filename.  
     """
 def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital=False, limit_osc=None,
-              model=None):
+              model=None, fName=None):
     if fpath is None:
-        fpath = "excitation"
+        fpath = _excitation
     if model is None:
         modelStr = ""
     else:
@@ -421,14 +423,20 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
 
     if synodic:
         log.warning("Considering synodic period only for excitation.")
-        Benm_moments = os.path.join(fpath, f"synodic_Be1xyz{bfname}.txt")
+        if fName is None:
+            Benm_moments = os.path.join(fpath, f"synodic_Be1xyz{bfname}.txt")
+        else:
+            limit_osc = 1
+            Benm_moments = os.path.join(fpath, f"{fName}.txt")
     elif orbital:
         log.warning("Considering orbital period only for excitation.")
         if bodyname == "Europa":
             log.warning("Extra warning: This excitation is APPROXIMATE, in that two closely-spaced periods have been summed together and set to T = 85.2 h.")
         Benm_moments = os.path.join(fpath, f"orbital_Be1xyz{bfname}.txt")
     else:
-        Benm_moments = os.path.join(fpath, f"Be1xyz{bfname}.txt")
+        if fName is None:
+            fName = f'Be1xyz{bfname}'
+        Benm_moments = os.path.join(fpath, f"{fName}.txt")
     log.debug(f"Using excitation moments: {Benm_moments}")
     peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
     n_peaks1_prelim = peak_per1.size
@@ -537,14 +545,17 @@ BiList()
         p_max: integer. Maximum degree p of boundary shapes.
         nprm_max: integer (1). Maximum degree n' of Benm to evaluate. n'=1 is uniform field vector.
         writeout: boolean (True). Whether to save computed values to disk for rapid replotting.
-        path: string (None). Path relative to run directory to print output data to. Defaults to "induced/".
+        path: string (None). Path relative to run directory to print output data to. Defaults to "<install_loc>/MoonMag/induced/".
         bodyname: string (None). Body name to include in writeout filename.
         verbose: boolean (True). Whether to print progress updates to the terminal.
-        append: string (""). Optional string appended to file names.
+        append: string (""). Optional string appended to default file names.
         debug: boolean (False). Special use flag.
+        do_parallel: boolean (True). Toggle for running certain calculations in parallel.
+        outFname: string (None). Output filename to use when writeout = True.
+        outFnameS: string (None). As above, for output Gauss coefficients in the Schmidt normalization.
     """
 def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None,
-           verbose=True, append="", debug=False, do_parallel=True):
+           verbose=True, append="", debug=False, do_parallel=True, outFname=None, outFnameS=None):
 
     # Clean inputs and initialize
     if not isinstance(peak_omegas, Iterable):
@@ -569,7 +580,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         asym_shape = asym_shape_layers + grav_shape
 
     # Get mixing coefficients
-    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True, do_parallel=do_parallel, path=path)
+    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True, do_parallel=do_parallel, fpath=path)
 
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
@@ -595,8 +606,10 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
 
     if writeout:
         if path is None:
-            path = "induced"
-        fpath = os.path.join(path, f"{bfname}Binm_asym{append}.dat")
+            path = _induced
+        if outFname is None:
+            outFname = f'{bfname}Binm_asym{append}'
+        fpath = os.path.join(path, f"{outFname}.dat")
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
@@ -610,7 +623,9 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         log.info(f"Data for asymmetric Binm written to file: {fpath}")
 
         if output_Schmidt:
-            fpath = os.path.join(path, f"{bfname}ghnm_asym{append}.dat")
+            if outFnameS is None:
+                outFnameS = f'{bfname}ghnm_asym{append}'
+            fpath = os.path.join(path, f"{outFnameS}.dat")
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
             fout.write(header)
@@ -987,7 +1002,7 @@ def get_all_Xid(n_max, p_max, nprm_max, nprmvals, mprmvals, do_parallel=True,
                 writeout=True, reload=False, fpath=None, fname=None):
     if writeout or reload:
         if fpath is None:
-            fpath = "induced"
+            fpath = _induced
         if fname is None:
             fname = f"Xid_values_n{n_max}_p{p_max}_np{nprm_max}"
 

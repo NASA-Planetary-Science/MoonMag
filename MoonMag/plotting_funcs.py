@@ -20,6 +20,7 @@ import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
 
+from MoonMag import _interior
 from MoonMag.config import *
 import MoonMag.symmetry_funcs as sym
 import MoonMag.asymmetry_funcs as asym
@@ -97,7 +98,8 @@ plotAsym()
         descrip: string ("Ice--ocean"). Description of the asymmetric layer being plotted, for plot titles.
         no_title: boolean (False). If true, print figures without title text.
     """
-def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=None, pvals=None, qvals=None, fpath=None, bodyname=None, append="", descrip="Ice--ocean", no_title=False):
+def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=None, pvals=None, qvals=None, inpath=None,
+             fpath=None, outFname=None, bodyname=None, append="", descrip="Ice--ocean", no_title=False):
     lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end = get_latlon(do_large)
     do_cbar = not do_large
 
@@ -111,8 +113,11 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         bfname = f"_{bodyname}"
         bstr = f"{bodyname}_"
 
-    path = "interior"
-    datpath = os.path.join(path, f"asym_devs{bfname}{append}.dat")
+    if inpath is None:
+        inpath = _interior
+    if outFname is None:
+        outFname = f'asym_devs{bfname}{append}'
+    datpath = os.path.join(inpath, f"{outFname}.dat")
 
     if recalc:
         # Convert from m to km

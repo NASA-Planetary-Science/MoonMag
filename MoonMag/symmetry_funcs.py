@@ -18,6 +18,7 @@ import multiprocessing as mtp
 num_cores = mtp.cpu_count()
 mtpFork = mtp.get_context("fork")
 
+from MoonMag import _induced
 from MoonMag.config import *
 from MoonMag.field_xyz import eval_Bi
 
@@ -241,8 +242,10 @@ InducedAeList()
         nn: integer (1). Degree n of A_n^e to evaluate.
         writeout: boolean (False). Whether to save a .txt file of values calculated.
         path: string (None). Path relative to run directory to print output data to. Defaults to './'.
+        outFname: strgin (None). Output filename to use when writeout = False.
     """
-def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append="", do_parallel=True):
+def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, path=None, append="", do_parallel=True,
+                  outFname=None):
     if writeout:
         log.debug(f"Calculating A_e for {np.size(omegas)} omega values.")
 
@@ -275,7 +278,9 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
 
         if path is None:
             path = os.getcwd()+'/'
-        fpath = os.path.join(path, f"complexAes{append}.dat")
+        if outFname is None:
+            outFname = f'complexAes{append}'
+        fpath = os.path.join(path, f"{outFname}.dat")
         fout = open(fpath, "w")
         header = "{:<13}, {:<24}, {:<24}\n".format("Period (hr)", "Ae.mag", "Ae.arg (rad)")
         fout.write(header)
@@ -306,12 +311,14 @@ BiList()
             may or may not coincide with the body surface.
         n_max: integer (1). Largest n' represented in the excitation moments.
         writeout: boolean (True). Whether to save computed values to disk for rapid replotting.
-        path: string (None). Path relative to run directory to print output data to. Defaults to 'induced/'.
+        path: string (None). Path relative to run directory to print output data to. Defaults to '<install_loc>/MoonMag/induced/'.
         bodyname: string (None). Body name to include in writeout filename.
-        append: string (""). Optional string appended to file names.
+        append: string (""). Optional string appended to default file names.
+        outFname: string (None). Output filename to use when writeout = True.
+        outFnameS: string (None). As above, for output Gauss coefficients in the Schmidt normalization.
     """
 def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, 
-           bodyname=None, append="", output_Schmidt=False):
+           bodyname=None, append="", output_Schmidt=False, outFname=None, outFnameS=None):
     if writeout:
         log.debug(f"Calculating symmetric B_inm for {np.size(peak_omegas)} periods.")
 
@@ -333,8 +340,10 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
 
     if writeout:
         if path is None:
-            path = "induced/"
-        fpath = os.path.join(path, f"{bfname}Binm_sym{append}.dat")
+            path = _induced
+        if outFname is None:
+            outFname = f'{bfname}Binm_sym{append}'
+        fpath = os.path.join(path, f"{outFname}.dat")
         fout = open(fpath, "w")
         header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", " m ", "Binm_Re (nT)", "Binm_Im (nT)")
         fout.write(header)
@@ -348,7 +357,9 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
         log.info(f"Data for symmetric Binm written to file: {fpath}")
 
         if output_Schmidt:
-            fpath = path+bfname+"ghnm_sym"+append+".dat"
+            if outFnameS is None:
+                outFnameS = f'{bfname}ghnm_asym{append}'
+            fpath = os.path.join(path, f"{outFnameS}.dat")
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
             fout.write(header)
