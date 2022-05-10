@@ -569,7 +569,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         asym_shape = asym_shape_layers + grav_shape
 
     # Get mixing coefficients
-    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True)
+    Xid = get_all_Xid(nprm_max, p_max, nprm_max+p_max, nvals, mvals, reload=True, do_parallel=do_parallel, path=path)
 
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
