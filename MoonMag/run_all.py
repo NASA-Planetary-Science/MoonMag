@@ -21,11 +21,11 @@ def run_all():
     gif_comp = None
     
     # Settings
-    do_recalc = True # Whether to recalculate the induced moments and contours when they will be plotted (only affects first run for each body, as the moments are the same for each component)
-    initial_contour = False # Whether to plot a contour map along with field magnitudes (the first calc run for each body). Warning: this takes a long time at high resolution!
-    do_fields = True # Whether to evaluate and plot fields
-    do_detailed = True # Whether to make standard plots (this option is independent from do_large_plots)
-    do_large_plots = False # Whether to make copies with larger print and no colorbars, for cramped spaces
+    do_recalc = True  # Whether to recalculate the induced moments and contours when they will be plotted (only affects first run for each body, as the moments are the same for each component)
+    initial_contour = False  # Whether to plot a contour map along with field magnitudes (the first calc run for each body). Warning: this takes a long time at high resolution!
+    do_fields = True  # Whether to evaluate and plot fields
+    do_detailed = True  # Whether to make standard plots (this option is independent from do_large_plots)
+    do_large_plots = False  # Whether to make copies with larger print and no colorbars, for cramped spaces
     
     # Uses the following command structure:
     # eval.run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=False, compare_me=False, do_gif=False)

@@ -7,7 +7,7 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os, sys
 import numpy as np
-import logging as log
+import logging
 import MoonMag.field_xyz as field
 import MoonMag.asymmetry_funcs as asym
 import MoonMag.plotting_funcs as plots
@@ -15,9 +15,14 @@ import MoonMag.eval_induced_field as eval
 from glob import glob as filesMatchingPattern
 import spiceypy as spice
 import multiprocessing as mtp
+
 num_cores = mtp.cpu_count()
 mtpFork = mtp.get_context("fork")
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
+log = logging.getLogger(__name__)
+logLevel = logging.DEBUG
+printFmt = '[%(levelname)s] %(message)s'
+log.basicConfig(level=logLevel, format=printFmt)
 
 """
 fitData()

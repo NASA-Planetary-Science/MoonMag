@@ -7,7 +7,6 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os, sys
-import logging as log
 from typing import List
 
 import numpy as np
@@ -25,7 +24,8 @@ import MoonMag.asymmetry_funcs as asym
 import MoonMag.plotting_funcs as plots
 
 def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
-              do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False):
+              do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False,
+              inp_path=None, inp_Bi_path=None):
 
     absolute = (comp==None)   # Whether to plot the symmetric and asymmetric absolute magnitudes in addition to the desired component
     if comp is None:
@@ -40,8 +40,10 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
         bin_name = f"{bname}_"
 
     # IO file paths
-    inp_path = "interior"
-    inp_Bi_path = "induced"
+    if inp_path is None:
+        inp_path = os.path.join("MoonMag", "interior")
+    if inp_Bi_path is None:
+        inp_Bi_path = os.path.join("MoonMag", "induced")
 
     # p_max is highest degree in boundary shapes to use
     # bname_opt and sw_opt are strings to append to filenames to identify special cases

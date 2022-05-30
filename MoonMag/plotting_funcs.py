@@ -8,12 +8,9 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
-import logging as log
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdt
-import cartopy.crs as ccrs
-import cartopy.mpl.ticker as cptick
 import matplotlib.ticker as tick
 #import pyshtools as pysh
 import mpmath as mp
@@ -55,24 +52,24 @@ def get_latlon(do_large):
         lg_end = ""
     latticks = np.linspace(lat_min, lat_max, n_latticks, endpoint=True, dtype=np.int)
 
-    # Standard cptick.LongitudeFormatter() forces [-180,180] longitudes, hard-coded.
+    # Generate lat/lon formatters
     if do_360:
         phi = phi_std
         lon = elon
 
-        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v))
+        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=True))
         lon_min = 0
         lon_max = 360
-        lonticks = np.linspace(lon_min, lon_max, n_lonticks, endpoint=True, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int)
     else:
-        lon_formatter = cptick.LongitudeFormatter()
+        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=False))
         lon_min = -180
         lon_max = 180
-        lonticks = np.linspace(lon_min, lon_max, n_lonticks, endpoint=True, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int)
 
     return lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end
 
-lat_formatter = cptick.LatitudeFormatter()
+lat_formatter = tick.FuncFormatter(lambda v, pos: lat_formatted(v))
 con_formatter = tick.FuncFormatter(lambda v, pos:cformat(v))
 
 """
@@ -173,17 +170,31 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         lon = asym_contents[:, 0]
         thicks = np.transpose(asym_contents[:, 1:])
 
-        lon_min = int(np.min(lon))
-        lon_max = int(np.max(lon))
-
     log.debug(f"Maximum surface deviation: {np.max(np.abs(thicks-mean_thick)):.3f} km")
 
     # Generate and format figures
-    if lon_min == 0:
-        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v))
+    lon_adj = lon + 0
+    if do_360:
+        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=True))
+        lon_adj[lon_adj==-180] = 180.1
+        lon_adj[lon_adj<0] = lon_adj[lon_adj<0] + 360
+        iSort = np.argsort(lon_adj)
     else:
-        lon_formatter = cptick.LongitudeFormatter()
-    lonticks = np.linspace(lon_min, lon_max, n_lonticks, endpoint=True, dtype=np.int)
+        lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=False))
+        lon_adj[lon_adj==360] = -0.1
+        lon_adj[lon_adj>=180] = lon_adj[lon_adj>=180] - 360
+        iSort = np.argsort(lon_adj)
+        
+    lon_adj = lon_adj[iSort]
+    thicks_adj = thicks[:,iSort]
+
+    # Stitch endpoints together if we adjusted the plotting coords
+    if not (np.max(lon_adj) == 180 or np.max(lon_adj) == 360):
+        if do_360:
+            lon_adj = np.append(lon_adj, 360)
+        else:
+            lon_adj = np.append(lon_adj, 180)
+        thicks_adj = np.append(thicks_adj, thicks_adj[:,0:1], axis=1)
 
     if bodyname == "Miranda":
         levels = round(mean_thick) + np.array([-15, -11, -7, -3, 1, 5, 9])*49.810/20.852 # For matching plot from Hemingway and Mittal (2019)
@@ -193,15 +204,17 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         levels = None
 
     fig, axes = plt.subplots(1, 1, figsize=deft_figsize)
+    axes.set_xticks([])
+    axes.set_yticks([])
     cbar_title = "Layer thickness $(\mathrm{km})$"
     cbar_top = ""
     if do_cbar:
         cbar_ax = fig.add_axes(cbar_pos)
     else:
-        lonticks = np.linspace(lon_min, lon_max, 5, endpoint=True, dtype=np.int)
-        latticks = np.linspace(lat_min, lat_max, 5, endpoint=True, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, 5, dtype=np.int)
+        latticks = np.linspace(lat_min, lat_max, 5, dtype=np.int)
 
-    themap = plt.axes(transform=ccrs.RotatedPole())
+    themap = plt.axes()
     fig.subplots_adjust(left=0.07, right=0.88, wspace=0.15, hspace=0.05, top=0.90, bottom=0.07)
 
     # Apply plot formatting
@@ -232,8 +245,8 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         fig.suptitle(ptitle, size=tsize)
 
     # Plot the data
-    mesh = plt.pcolormesh(lon, lat, thicks, shading="auto", cmap="PuBu_r")
-    cont = plt.contour(lon, lat, thicks, levels=levels, colors="black")
+    mesh = plt.pcolormesh(lon_adj, lat, thicks_adj, shading="auto", cmap="PuBu_r")
+    cont = plt.contour(lon_adj, lat, thicks_adj, levels=levels, colors="black")
     lbls = plt.clabel(cont, fmt="%1.0f", fontsize=clabel_size, inline_spacing=clabel_pad)
 
     # Finish formatting (as long as we're not making big-label plots)
@@ -254,14 +267,19 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
 #############################################
 
 #For configuring longitudes from -180 to 180 or 0 to 360.
-def east_formatted(longitude):
+def east_formatted(longitude, EAST=True):
     fmt_string = u'{longitude:{num_format}}{degree}{hemisphere}'
-    return fmt_string.format(longitude=longitude, num_format='g',
-                            hemisphere=lon_hemisphere(longitude),
+    return fmt_string.format(longitude=abs(longitude), num_format='g',
+                            hemisphere=lon_hemisphere(longitude, EAST=EAST),
                             degree=u'\u00B0')
-def lon_hemisphere(longitude):
-    longitude = fix_lons(longitude)
-    if longitude == 0:
+def lon_hemisphere(longitude, EAST=True):
+    if EAST:
+        longitude = fix_lons(longitude)
+    if longitude > 0:
+        hemisphere = 'E'
+    elif longitude < 0:
+        hemisphere = 'W'
+    elif longitude == 0:
         hemisphere = ''
     else:
         hemisphere = 'E'
@@ -278,6 +296,19 @@ def get_sign(val):
     else:
         sign = ''
     return sign
+def lat_formatted(latitude):
+    fmt_string = u'{latitude:{num_format}}{degree}{hemisphere}'
+    return fmt_string.format(latitude=abs(latitude), num_format='g',
+                            hemisphere=lat_hemisphere(latitude),
+                            degree=u'\u00B0')
+def lat_hemisphere(latitude):
+    if latitude == 0:
+        hemisphere = ''
+    elif latitude > 0:
+        hemisphere = 'N'
+    else:
+        hemisphere = 'S'
+    return hemisphere
 
 #############################################
 
@@ -383,7 +414,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             lonticks = [-180, -90, 0, 90, 180]
         latticks = [-90, -45, 0, 45, 90]
 
-    themap = plt.axes(transform=ccrs.RotatedPole())
+    themap = plt.axes()
     themap.set_xticks([])
     themap.set_yticks([])
 

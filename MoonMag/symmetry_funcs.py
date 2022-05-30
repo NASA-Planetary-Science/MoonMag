@@ -8,7 +8,6 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
-import logging as log
 import numpy as np
 from collections.abc import Iterable
 import mpmath as mp

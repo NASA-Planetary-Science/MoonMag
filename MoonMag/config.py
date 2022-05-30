@@ -6,7 +6,7 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """   
 
-import logging as log
+import logging
 
 # @@@@@@@@@@@@@@@@@
 #   Main settings
@@ -15,45 +15,45 @@ import logging as log
 ppgc = 540  # Points per great circle (sets longitudinal resolution for plots)
 
 verbose = True
-relative = True    # Whether to use relative (ε/R*chi_pq) or absolute (direct spherical harmonic coefficients) formulation for reading Ypq. Affects which files are needed/read to interpret the asymmetric interior structure.
-synodic_period_only = False # Whether to consider only the synodic period for induction
-orbital_time_series = False # Whether to plot a time series that considers only the orbital period
-sub_planet_vert = True # Whether to plot a vertical cut at the sub-planetary point (or nearby) for a snapshot in time
-plot_diffs = True # Whether to plot magnetic fields as differences arising due to asymmetry
-gif_diff = True # Whether to plot differences in animation frames or the absolute component
+relative = True  # Whether to use relative (ε/R*chi_pq) or absolute (direct spherical harmonic coefficients) formulation for reading Ypq. Affects which files are needed/read to interpret the asymmetric interior structure.
+synodic_period_only = False  # Whether to consider only the synodic period for induction
+orbital_time_series = False  # Whether to plot a time series that considers only the orbital period
+sub_planet_vert = True  # Whether to plot a vertical cut at the sub-planetary point (or nearby) for a snapshot in time
+plot_diffs = True  # Whether to plot magnetic fields as differences arising due to asymmetry
+gif_diff = True  # Whether to plot differences in animation frames or the absolute component
 
 nprm_max_main = 1  # Highest degree in excitation field to use
-eval_radius = 2.0 # Distance (in units of body radii) from body center to use for evaluating B. Overridden for Europa and Enceladus.
+eval_radius = 2.0  # Distance (in units of body radii) from body center to use for evaluating B. Overridden for Europa and Enceladus.
 
-debug = False # Special use debug flag
-convert_depth_to_chipq = True # Prints a file named interior/chi_pq_bodyname.txt for copying over relative harmonic coefficients to degree<p>_shapes_bodyname.txt files. Only used if relative = False.
-output_Schmidt = False # Record induced moment coefficients in Schmidt semi-normalized form in addition to fully normalized moments. Also reads in and plots fields using this normalization.
+debug = False  # Special use debug flag
+convert_depth_to_chipq = True  # Prints a file named interior/chi_pq_bodyname.txt for copying over relative harmonic coefficients to degree<p>_shapes_bodyname.txt files. Only used if relative = False.
+output_Schmidt = False  # Record induced moment coefficients in Schmidt semi-normalized form in addition to fully normalized moments. Also reads in and plots fields using this normalization.
 
 # @@@@@@@@@@@@@@@@@@@@@@@@
 #   Calculation settings
 # @@@@@@@@@@@@@@@@@@@@@@@@
 
-do_parallel = True # Whether to run certain calculations in parallel. Setting to False makes debugging much more straightforward.
-digits_precision = 750 # Number of digits of precision for use in calculations involving Bessel functions. Calculations involve small differences between large numbers when conductivities are very large or very small.
-                       # If you encounter divide-by-zero errors, try increasing this number.
+do_parallel = True  # Whether to run certain calculations in parallel. Setting to False makes debugging much more straightforward.
+digits_precision = 750  # Number of digits of precision for use in calculations involving Bessel functions. Calculations involve small differences between large numbers when conductivities are very large or very small.
+                        # If you encounter divide-by-zero errors, try increasing this number.
 
-eval_datetime = "2000-01-01T11:58:55.816" # UTC datetime string for the time to evaluate the induced fields (and start animations from) in yyyy-mm-ddThh:mm:mm:ss.sss format
+eval_datetime = "2000-01-01T11:58:55.816"  # UTC datetime string for the time to evaluate the induced fields (and start animations from) in yyyy-mm-ddThh:mm:mm:ss.sss format
 
 # The following are only used if synodic_period_only is True:
-loclat = 0 # degrees latitude (IAU) for plotting a time series
-loclon = 0 # degrees longitude (IAU) for plotting a time series
-localt = 0 # km altitude for plotting a time series
+loclat = 0  # degrees latitude (IAU) for plotting a time series
+loclon = 0  # degrees longitude (IAU) for plotting a time series
+localt = 0  # km altitude for plotting a time series
 
 # @@@@@@@@@@@@@@@@@@@
 #   Plotting params
 # @@@@@@@@@@@@@@@@@@@
 
-t_pts = 200 # Number of points in 1-period time series (or spatial points in vertical cut)
-n_frames = 100 # Number of animation frames to use, spaced evenly throughout one period of oscillation
-vert_start = 1.0 # Units of body radii to start vertical cut
-vert_stop = 1.0 + 2000/1561 # And where to stop it
-vert_cut_hr = 0.7 # Time in hrs past J2000 to perform vertical cut
-vert_cut_lat = 30 # Lat/lon to project upward from the surface
+t_pts = 200  # Number of points in 1-period time series (or spatial points in vertical cut)
+n_frames = 100  # Number of animation frames to use, spaced evenly throughout one period of oscillation
+vert_start = 1.0  # Units of body radii to start vertical cut
+vert_stop = 1.0 + 2000/1561  # And where to stop it
+vert_cut_hr = 0.7  # Time in hrs past J2000 to perform vertical cut
+vert_cut_lat = 30  # Lat/lon to project upward from the surface
 vert_cut_lon = 0
 
 # Color and style options
@@ -66,11 +66,11 @@ style2 = "dashed"
 deft_figsize = (8,4)
 lat_min = -90
 lat_max = 90
-do_360 = False # Whether to plot from 0 to 360 (True) or from -180 to 180 (False).
+do_360 = False  # Whether to plot from 0 to 360 (True) or from -180 to 180 (False).
 no_title_text = False
-save_vector = False # Toggle for saving additional vector graphics (pdf)
-pub_override = True # Use fixed colorbar scale for both Europa models
-clabel_pad = 5 # Whitespace to add adjacent to contour labels
+save_vector = False  # Toggle for saving additional vector graphics (pdf)
+pub_override = True  # Use fixed colorbar scale for both Europa models
+clabel_pad = 5  # Whitespace to add adjacent to contour labels
 
 # Colorbar and tick formatting
 cbar_pos = [0.90, 0.18, 0.02, 0.6]
@@ -85,11 +85,15 @@ deft_ticksize = 14
 font_choice = "serif"
 
 # Set output message level
+log = logging.getLogger('MoonMag')
 if verbose:
-    logLevel = log.DEBUG
+    logLevel = logging.DEBUG
 else:
-    logLevel = log.INFO
+    logLevel = logging.INFO
 printFmt = '[%(levelname)s] %(message)s'
-log.basicConfig(level=logLevel, format=printFmt)
-# Stop matplotlib spamming debug messages
-log.getLogger('matplotlib').setLevel(log.WARNING)
+stream = logging.StreamHandler()
+stream.setFormatter(logging.Formatter(printFmt))
+log.setLevel(logLevel)
+log.addHandler(stream)
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
+logging.getLogger('PIL').setLevel(logging.WARNING)

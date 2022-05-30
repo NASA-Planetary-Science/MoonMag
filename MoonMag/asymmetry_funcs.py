@@ -8,7 +8,6 @@ Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
 import numpy as np
-import logging as log
 from scipy.io import savemat, loadmat
 from collections.abc import Iterable
 from numpy import sqrt

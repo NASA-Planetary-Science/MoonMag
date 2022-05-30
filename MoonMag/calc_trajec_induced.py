@@ -1,10 +1,15 @@
 import numpy as np
 import os
-import log as logging
+import logging
 import spiceypy as spice
 from glob import glob as filesMatchingPattern
 import MoonMag.trajec_analysis as traj
 import matplotlib.pyplot as plt
+
+log = logging.getLogger(__name__)
+logLevel = logging.DEBUG
+printFmt = '[%(levelname)s] %(message)s'
+logging.basicConfig(level=logLevel, format=printFmt)
 
 bname = "Ganymede"
 parent = "Jupiter"
