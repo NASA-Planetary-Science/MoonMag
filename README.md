@@ -9,7 +9,6 @@ You will need the following Python modules:
 * matplotlib
 * mpmath
 * scipy
-* cartopy
 * skyfield (not part of standard Anaconda, use conda install -c conda-forge skyfield to obtain)
 and you will need a working version of LaTeX installed.
 
