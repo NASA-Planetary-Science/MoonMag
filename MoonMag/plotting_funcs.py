@@ -266,7 +266,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
 
 #############################################
 
-#For configuring longitudes from -180 to 180 or 0 to 360.
+# For configuring longitudes from -180 to 180 or 0 to 360.
 def east_formatted(longitude, EAST=True):
     fmt_string = u'{longitude:{num_format}}{degree}{hemisphere}'
     return fmt_string.format(longitude=abs(longitude), num_format='g',
@@ -353,11 +353,13 @@ plotMagSurf()
         component: string (None). Optional component to plot instead of magnitude. Accepts 'x', 'y', and 'z'.
         absolute: boolean (False). Optional flag to plot the absolute induced field in addition to differences.
         no_title: boolean (False). If true, print figures without title text.
+        outFname: string (None). Optional string with full file path to override other infrastructure for determining output path.
         gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
     """
 def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mean=1.0, asym_frac=None, pvals=None, qvals=None,
                 difference=False, Binm_sph=None, nprmvals=None, mprmvals=None, fpath=None, bodyname=None, append="", fend="",
-                tstr="", component=None, absolute=False, no_title=False):
+                tstr="", component=None, absolute=False, no_title=False, outFname=None, fmt=None, title=None, sym_title=None,
+                fig_dpi=None):
     lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end = get_latlon(do_large)
     do_cbar = not do_large
 
@@ -366,8 +368,13 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         if difference:
             gnm_sph, hnm_sph = Binm_sph
 
-    if fpath is None:
-        fpath = "figures"
+    if outFname is None:
+        if fpath is None:
+            fpath = "figures"
+    if fmt is None:
+        fmt = 'png'
+    if fig_dpi is None:
+        fig_dpi = 150
     if component is None:
         compstr = ""
         comptitlestr = " magnitude"
@@ -595,7 +602,9 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
 
     themap.tick_params(axis='both', which='major', labelsize=tick_size)
     if not no_title:
-        fig.suptitle(ptitle, size=tsize)
+        if title is None:
+            title = ptitle
+        fig.suptitle(title, size=tsize)
 
     # Generate the plot
 
@@ -623,16 +632,15 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         sym_topofig = f"{bodyname}_field_sym"
         asym_topofig = f"{bodyname}_field_asym"
 
-    if fend == "":
-        if not do_large and save_vector:
-            fig.savefig(os.path.join(fpath, f"{topofig}.pdf"), format="pdf")
-        fig_dpi = 300
-    else:
-        fig_dpi = 150
-        fpath = os.path.join(fpath, "anim_frames")
-    print_fname = os.path.join(fpath, topofig)
-    fig.savefig(f"{print_fname}.png", format="png", dpi=fig_dpi)
-    log.info(f"Contour plot for asym field saved to: {print_fname}.png")
+    if outFname is None:
+        if fend == "":
+            if not do_large and save_vector:
+                fig.savefig(os.path.join(fpath, f"{topofig}.pdf"), format="pdf")
+        else:
+            fpath = os.path.join(fpath, "anim_frames")
+        outFname = os.path.join(fpath, f"{topofig}.{fmt}")
+    fig.savefig(outFname, format=fmt, dpi=fig_dpi)
+    log.info(f"Contour plot for asym field saved to: {outFname}.png")
 
     # Plot the absolute induced field in addition to a difference
     if (absolute and difference) and fend=="":
@@ -700,7 +708,9 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
                 title_tstring = f" at t={tstr} h"
             else:
                 title_tstring = ""
-            fig.suptitle(f"{sym_ptitle}{title_tstring}", size=tsize)
+            if sym_title is None:
+                sym_title = f"{sym_ptitle}{title_tstring}"
+            fig.suptitle(sym_title, size=tsize)
         print_abs_sym_fname = os.path.join(fpath, f"{sym_topofig}{append}{lg_end}")
         fig.savefig(f"{print_abs_sym_fname}.png", format="png", dpi=fig_dpi)
         log.info(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.png")
