@@ -56,7 +56,7 @@ def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
             Bz = 0
         else:
             print(" m = ", m)
-            raise ValueError(f"In field_xyz.eval_Bi, n={n} and m is not between -n and n.")
+            raise ValueError(f"In field_xyz.eval_Be, n={n} and m is not between -n and n.")
 
     elif n==2:
         #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -89,7 +89,7 @@ def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
             Bz = 0
         else:
             print(" m = ", m)
-            raise ValueError(f"In field_xyz.eval_Bi, n={n} and m is not between -n and n.")
+            raise ValueError(f"In field_xyz.eval_Be, n={n} and m is not between -n and n.")
 
     else:
         print(" n = ", n)
@@ -101,6 +101,85 @@ def eval_Be(n,m,Benm, x,y,z,r, omega=None, t=None):
 
     return Bx, By, Bz
     
+#############################################
+
+"""
+eval_Be_Schmidt()
+    Evaluates the excitation field at the given coordinates due to a particular Schmidt semi-normalized
+    magnetic moment identified by Gauss coefficients Gnm, Hnm.
+    Usage: `Bx`, `By`, `Bz` = eval_Be(`n`, `m`, `Gnm`, `Hnm`, `x`, `y`, `z`, `r`, `omega=None`, `t=None`)
+    Returns:
+        Bx, By, Bz (each): complex, ndarray shape(Nvals). A linear array of field values due to these particular n,m values,
+            at each of the specified points. Returns a time sequence if ω and t are passed.
+    Parameters:
+        n: integer. Degree of magnetic moment to be evaluated.
+        m: integer. Order of magnetic moment to be evaluated.
+        Benm: complex. Excitation moment of degree and order n,m. Units match the output field.
+        x,y,z,r: float, shape(Nvals). Linear arrays of corresponding x,y, and z values. r is not needed
+            but requiring it as an argument makes the function call identical to eval_Bi. If omega and t
+            are passed, these quantities are the trajectory locations.
+        omega: float (None). Optional oscillation frequency in rads/s for evaluating time series. Requires t to be passed as well.
+        t: float, shape(Nvals) (None). Optional time values in TDB seconds since J2000 epoch. Required if omega is passed.
+    """
+def eval_Be_Schmidt(n,m,Gnm,Hnm, x,y,z,r, omega=None, t=None):
+
+    if omega is None:
+        timeRot = 1.0
+    else:
+        timeRot = np.exp(-1j * omega * t)
+
+    if n == 1:
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        #   Uniform field components
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        if m == 0:
+            Bx = 0
+            By = 0
+            Bz = -Gnm
+        elif m == 1:
+            Bx = -Gnm
+            By = -Hnm
+            Bz = 0
+        else:
+            print(" m = ", m)
+            raise ValueError(f"In field_xyz.eval_Be_Schmidt, n={n} and m is not between 0 and n.")
+
+    elif n==2:
+        #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        #   Linear field components
+        #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        rt3 = sqrt(3)
+        A2 = rt3/2
+        Be = -2*A2
+
+        if m==0:
+            Bx = Be * Gnm*-x/rt3
+            By = Be * Gnm*-y/rt3
+            Bz = Be * Gnm*2*z/rt3
+        elif m==1:
+            Bx = Be * Gnm*z
+            By = Be * Hnm*z
+            Bz = Be * (Gnm*x + Hnm*y)
+        elif m==2:
+            Bx = Be * (Gnm*x + Hnm*y)
+            By = Be * (Gnm*-y + Hnm*x)
+            Bz = 0
+        else:
+            print(" m = ", m)
+            raise ValueError(f"In field_xyz.eval_Be_Schmidt, n={n} and m is not between 0 and n.")
+
+    else:
+        print(" n = ", n)
+        raise ValueError("In field_xyz.eval_Be_Schmidt, n>2 but only n=1 to n=2 are supported.")
+
+    Bx = Bx * timeRot
+    By = By * timeRot
+    Bz = Bz * timeRot
+
+    return Bx, By, Bz
+
 #############################################
 
 """
