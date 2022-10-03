@@ -863,7 +863,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
 
     else:
         print(" n = ", n)
-        raise ValueError("In field_xyz.eval_Bi, n>4 but only n=1 to n=4 are supported.")
+        raise ValueError("In field_xyz.eval_Bi, n>10 but only n=1 to n=10 are supported.")
 
     Bx = Bx * timeRot
     By = By * timeRot
