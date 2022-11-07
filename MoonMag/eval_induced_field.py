@@ -384,7 +384,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                                     R_body=R, component=comp, difference=True, Binm_sph=Binm_sph, bodyname=bname, 
                                     append=bname_opt+sw_opt+compstr)
 
-        # Plot a time series at the sub-parent-planet point--(0°, 0°) in IAU coordinates.
+        # Plot a time series at the sub-parent-planet point--(0 deg, 0 deg) in IAU coordinates.
         # Only tested for Europa, with no ionosphere.
         if (synodic_only and actually_plot_traces) and not output_Schmidt:
             if not recalc:

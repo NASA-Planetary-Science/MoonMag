@@ -124,14 +124,14 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         mean_thick = abs(R_cmp - r_mean)
 
         log.debug("Calculating topographic data, this may take some time.")
-        # Evaluate the deviations to get r(θ,ϕ)
+        # Evaluate the deviations to get r(theta, phi)
         surf = asym.get_rsurf(pvals, qvals, asym_shape_km[index, :, :, :], r_mean, tht, phi)
 
         thicks = np.abs(R_cmp - surf)
 
         # Save data to disk for reading in with recalc=False
         fout = open(datpath, "w")
-        headinfo = "Each row runs from -90° to +90° latitude, i.e. lat = np.linspace(-90, 90, leny).\n"
+        headinfo = "Each row runs from -90 deg to +90 deg latitude, i.e. lat = np.linspace(-90, 90, leny).\n"
         fout.write(headinfo)
         headlbls = "Layer descrip., leny (#lats), compared radius (km), mean layer thickness (km):\n"
         fout.write(headlbls)

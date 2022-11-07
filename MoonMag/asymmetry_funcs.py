@@ -245,18 +245,18 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
 
 """
 get_chipq_from_CSpq()
-    Convert from real, 4π-normalized harmonic coefficients with no Condon-Shortley phase
+    Convert from real, 4pi-normalized harmonic coefficients with no Condon-Shortley phase
     (the common normalization in the geodesy community) to orthonormal harmonic coefficients having
     the C-S phase. Handles all values for a given p at once.
     Usage: `chipq` = get_chipq_from_CSpq(`p`,`Cpq`,`Spq`)
     Returns:
         chipq: complex, shape(2,p+1). chi_pq values for all q = [-p,p], organized such that chipq[int(q<0),abs(q)]
             returns the result for a particular q value. Orthonormal, with Condon-Shortley phase.
-            Orthonormal here means the integral of |Ynm|^2 * dΩ over a unit sphere is 1 for all n and m.
+            Orthonormal here means the integral of |Ynm|^2 * dOmega over a unit sphere is 1 for all n and m.
     Parameters:
         p: integer. Degree of boundary shapes; results for all q values are returned for this p value.
-        Cpq: float. Spherical harmonic coefficient that multiplies cos(mϕ) for p,q boundary. 4π-normalized with no Condon-Shortley phase.
-        Spq: float. Spherical harmonic coefficient that multiplies sin(mϕ) for p,q boundary. 4π-normalized with no Condon-Shortley phase.
+        Cpq: float. Spherical harmonic coefficient that multiplies cos(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+        Spq: float. Spherical harmonic coefficient that multiplies sin(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
     """
 def get_chipq_from_CSpq(p,Cpq,Spq):
     chipq = np.zeros((2,p+1),dtype=np.complex_)
@@ -283,8 +283,9 @@ get_gh_from_Binm()
     Usage: `gnm, hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
     Returns:
         gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
-            Schmidt normalization here means the integral of |Ynm|^2 * dΩ over a unit sphere is
-            4π/(2n+1) for all n and m. No Condon-Shortley phase.
+
+            Schmidt normalization here means the integral of |Ynm|^2 * dOmega over a unit sphere is
+            4pi/(2n+1) for all n and m. No Condon-Shortley phase.
     Parameters:
         n_max: integer. Maximum degree n of induced moments.
         Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments calculated using fully normalized spherical harmonic coefficients.
@@ -528,7 +529,7 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
 """
 BiList()
     Evaluate the induced magnetic moments Binm for the given excitation moments Benm,
-    for the given interior structure described by r_bds, sigmas, and asym_shape and for a list of ω values.
+    for the given interior structure described by r_bds, sigmas, and asym_shape and for a list of omega values.
     Usage: `Binms` = BiList(`r_bds`, `sigmas`, `peak_omegas`, `asym_shape`, `Benm`, `nprmvals`, `mprmvals`, `rscale_moments`,
                          `pvals`, `qvals`, `nvals`, `mvals`, `nprm_max`, `p_max`, `writeout=True`, `path=None`,
                          `append=""`, `debug=False`)
@@ -1316,7 +1317,7 @@ eval_dev()
         p: integer. Degree of shape harmonic to be evaluated.
         q: integer. Order of shape harmonic to be evaluated.
         chi_pq: complex. Coefficient for spherical harmonics of degree and order p,q,
-            such that r(θ,ϕ) = R + Sum[chi_pq * Ypq(θ,ϕ)].
+            such that r(theta, phi) = R + Sum[chi_pq * Ypq(theta, phi)].
         ltht: float, shape(lleny). Local copy of theta grid values (faster execution than referencing a global variable).
         lphi: float, shape(lleny). Local copy of phi grid values.
         lleny: integer. Local copy of leny, the number of y (theta) grid values. Passed to avoid repeated calls in parallel execution.
@@ -1335,10 +1336,10 @@ def eval_dev(p, q, chi_pq, ltht, lphi, lleny, llenx):
 
 """
 get_rsurf()
-    Calculates r(θ,ϕ) from r_mean and chi_pq, where r(θ,ϕ) = r_mean + Sum[chi_pq*Ypq(θ,ϕ)].
+    Calculates r(theta, phi) from r_mean and chi_pq, where r(theta, phi) = r_mean + Sum[chi_pq*Ypq(theta, phi)].
     Usage: get_rsurf(`Binm`, `n_max`, `fpath=None`, `difference=True`, `Binm_sph=None`)
     Returns:
-        surf: float, shape(lleny,llenx). r(θ,ϕ) values corresponding to the input grid of
+        surf: float, shape(lleny,llenx). r(theta, phi) values corresponding to the input grid of
             ltht and lphi values. Same units as asym_shape and r_mean.
     Parameters:
         pvals, qvals: integer, shape(Npq). Linear arrays of paired p,q values for parallel computation.
@@ -1387,7 +1388,7 @@ getMagSurf()
         mvals: integer, shape(Nnm). Linear list of magnetic moment orders to be evaluated, corresponding to nvals of the same index.
         Binm: complex, shape(2,n_max+1,n_max+1) OR shape(Nnm); if Schmidt=True, tuple of (gnm,hnm). Magnetic moment of degree and
             order n,m that can be indexed by the matched entries in nvals and mvals. Units match the output field.
-        r_th_ph: float, shape(lleny,llenx). Meshgrid array of r(θ,ϕ) values corresponding to the following tht and phi values.
+        r_th_ph: float, shape(lleny,llenx). Meshgrid array of r(theta, phi) values corresponding to the following tht and phi values.
             r_th_ph has units of R_body, i.e. the physical surface is 1.0.
         ltht: float, shape(lleny). Array of theta values over which to evaluate the field components.
         lphi: float, shape(llenx). Array of phi values over which to evaluate the field components.
@@ -1422,7 +1423,7 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False, 
     llenx = np.size(lphi)
     Bx, By, Bz = ( np.zeros((1,lleny*llenx), dtype=np.complex_) for _ in range(3) )
 
-    # If we pass a single value for r(θ,ϕ) = R, evaluate over a sphere with that radius.
+    # If we pass a single value for r(theta, phi) = R, evaluate over a sphere with that radius.
     # Otherwise, evaluate *at* the asymmetric 3D surface.
     if not isinstance(r_th_ph, Iterable):
         x = np.array([ r_th_ph*np.sin(thti)*np.cos(phii) for thti in ltht for phii in lphi ])

@@ -6,7 +6,7 @@ fNameLow = "GanymedeProfile_MgSO41WtPct_Ts110Zb94295mQm1mWm2_CMR2p3115_CM2hy1wt_
 fNameSaur = "GanymedeSaur2015.txt"
 fNameList = [fNameHigh, fNameLow, fNameSaur]
 fNameOut = ["high", "low", "simple"]
-header = "Radius (m),Conductivity (S/m),Bdy deviation (ε/R)\n"
+header = "Radius (m),Conductivity (S/m),Bdy deviation (epsilon/R)\n"
 
 for i,fName in enumerate(fNameList):
     infPath = os.path.join("interior", fName)

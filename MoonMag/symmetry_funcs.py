@@ -108,7 +108,7 @@ def ydx(n,x):
 """
 AeResponse()
     The complex response amplitude A^e for degree n excitation field,
-    with spherical symmetry and for one value of ω.
+    with spherical symmetry and for one value of omega.
     Usage: `Ae` = AeResponse(`r_bds`, `sigmas`, `omega`, `nn=1`)
     Returns:
         Ae: mpc. The complex amplitude response for the given n and interior structure.
@@ -232,7 +232,7 @@ def cpx_div_val(a, b):
 """
 InducedAeList()
     The complex response amplitude A^e for degree n excitation field,
-    with spherical symmetry and for a list of ω values.
+    with spherical symmetry and for a list of omega values.
     Usage: `Aes`, `AeM`, `AeA` = InducedAeList(`r_bds`, `sigmas`, `omegas`, `nn=1`, `writeout=False`, `path=None`)
     Returns:
         Aes: mpc, shape(P). List of complex amplitude responses for the given n and interior structure.
@@ -300,7 +300,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
 """
 BiList()
     The complex induced magnetic moments for a given excitation field,
-    with spherical symmetry and for a list of ω values.
+    with spherical symmetry and for a list of omega values.
     Usage: `Binm` = BiList(`r_bds`, `sigmas`, `peak_omegas`, `Benm`, `nprmvals`, `mprmvals`, `rscale_moments`, `n_max=1`, `writeout=True`,
                             `path=None`, `bodyname=None`, `append=""`)
     Returns:
@@ -389,8 +389,8 @@ get_gh_from_Binm()
     Usage: `gnm, hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
     Returns:
         gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
-            Schmidt normalization here means the integral of |Ynm|^2 * dΩ over a unit sphere is
-            4π/(2n+1) for all n and m. No Condon-Shortley phase.
+            Schmidt normalization here means the integral of |Ynm|^2 * dOmega over a unit sphere is
+            4pi/(2n+1) for all n and m. No Condon-Shortley phase.
     Parameters:
         n_max: integer. Maximum degree n of induced moments.
         Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments calculated using fully normalized spherical harmonic coefficients.
