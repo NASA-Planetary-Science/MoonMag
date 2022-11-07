@@ -24,8 +24,14 @@ from MoonMag.field_xyz import eval_Bi, eval_Bi_Schmidt
 
 # Parallelization is through multiprocessing module
 import multiprocessing as mtp
+import platform
+plat = platform.system()
+if plat == 'Windows':
+    mtpType = 'spawn'
+else:
+    mtpType = 'fork'
+mtpContext = mtp.get_context(mtpType)
 num_cores = mtp.cpu_count()
-mtpFork = mtp.get_context("fork")
 
 # Global variables and settings
 # Set maximum precision for mpmath quantities
@@ -586,7 +592,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
     if do_parallel and not debug:
         par_kw = {'nprm_max':nprm_max, 'verbose':verbose}
         # For each omega, evaluate Bi:
-        pool = mtpFork.Pool(np.minimum(num_cores,n_peaks))
+        pool = mtpContext.Pool(np.minimum(num_cores,n_peaks))
         par_result = [pool.apply_async( BinmResponse, (r_bds,sigmas,peak_omegas[i_om],asym_shape,Benm[i_om,...],Xid,p_max,rscaling), par_kw ) for i_om in range(n_peaks)]
         pool.close()
         pool.join()
@@ -1031,7 +1037,7 @@ def get_all_Xid(n_max, p_max, nprm_max, nprmvals, mprmvals, do_parallel=True,
                         qabs = abs(q)
 
                         if do_parallel:
-                            pool = mtpFork.Pool(num_cores)
+                            pool = mtpContext.Pool(num_cores)
                             par_result = [pool.apply_async( calc_Xid, args=(n,m,p,q,nprmvals[iN],mprmvals[iN],nprm_max) ) for iN in range(Nnmprm)]
                             pool.close()
                             pool.join()
@@ -1351,7 +1357,7 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi, do_parallel=True):
     lin_bd_shape = np.array([ asym_shape[int(qvals[iN]<0),pvals[iN],abs(qvals[iN])] for iN in range(Npq) ])
 
     if do_parallel:
-        pool = mtpFork.Pool(num_cores)
+        pool = mtpContext.Pool(num_cores)
         par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx) ) for iN in range(Npq)]
         pool.close()
         pool.join()
@@ -1431,12 +1437,12 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False, 
 
     if do_parallel:
         if Schmidt:
-            pool = mtpFork.Pool(num_cores)
+            pool = mtpContext.Pool(num_cores)
             par_result = [pool.apply_async( eval_Bi_Schmidt, args=(nvals[iN],mvals[iN],lin_gnm[iN],lin_hnm[iN], x,y,z,r) ) for iN in range(Nnm)]
             pool.close()
             pool.join()
         else:
-            pool = mtpFork.Pool(num_cores)
+            pool = mtpContext.Pool(num_cores)
             par_result = [pool.apply_async( eval_Bi, args=(nvals[iN],mvals[iN],lin_Binm[iN], x,y,z,r) ) for iN in range(Nnm)]
             pool.close()
             pool.join()

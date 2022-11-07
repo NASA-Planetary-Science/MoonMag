@@ -14,8 +14,14 @@ import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
 import multiprocessing as mtp
+import platform
+plat = platform.system()
+if plat == 'Windows':
+    mtpType = 'spawn'
+else:
+    mtpType = 'fork'
+mtpContext = mtp.get_context(mtpType)
 num_cores = mtp.cpu_count()
-mtpFork = mtp.get_context("fork")
 
 from MoonMag import _induced
 from MoonMag.config import *
@@ -258,7 +264,7 @@ def InducedAeList(r_bds, sigmas, omegas, rscale_moments, nn=1, writeout=False, p
 
     # For each omega, evaluate Ae:
     if do_parallel:
-        pool = mtpFork.Pool(num_cores)
+        pool = mtpContext.Pool(num_cores)
         par_result = [pool.apply_async(AeResponse, args=(r_bds, sigmas, omegas[i_om], rscaling), kwds={'nn':nn}) for i_om in range(n_omegas)]
         pool.close()
         pool.join()

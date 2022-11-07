@@ -15,9 +15,15 @@ import MoonMag.eval_induced_field as eval
 from glob import glob as filesMatchingPattern
 import spiceypy as spice
 import multiprocessing as mtp
-
+import platform
+plat = platform.system()
+if plat == 'Windows':
+    mtpType = 'spawn'
+else:
+    mtpType = 'fork'
+mtpContext = mtp.get_context(mtpType)
 num_cores = mtp.cpu_count()
-mtpFork = mtp.get_context("fork")
+
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
 log = logging.getLogger(__name__)
 logLevel = logging.DEBUG
