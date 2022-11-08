@@ -640,7 +640,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             fpath = os.path.join(fpath, "anim_frames")
         outFname = os.path.join(fpath, f"{topofig}.{fmt}")
     fig.savefig(outFname, format=fmt, dpi=fig_dpi)
-    log.info(f"Contour plot for asym field saved to: {outFname}.png")
+    log.info(f"Contour plot for asym field saved to: {outFname}")
 
     # Plot the absolute induced field in addition to a difference
     if (absolute and difference) and fend=="":
@@ -1134,7 +1134,7 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
     fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
     fig.savefig(f"{fig_fname}.pdf", format="pdf")
     plt.close()
-    log.info(f"Trajectory plot saved to file: {fig_fname}")
+    log.info(f"Trajectory plot saved to file: {fig_fname}.png")
 
     return
 
