@@ -1,0 +1,241 @@
+Notebook[{Cell[
+CellGroupData[{Cell[
+BoxData[RowBox[{RowBox[{"Remove","[","\"Global`*\"","]"}],"\n",RowBox[
+{"(*",RowBox[{"Print"," ","U_pq"," ","values"}],"*)"}],"\n",RowBox[{RowBox[{RowBox[
+{"U","[",RowBox[{"p_",","," ","q_"}],"]"}]," ",":=","\n","\[NonBreakingSpace]\[NonBreakingSpace]",RowBox[
+{"1","/",RowBox[{"(",RowBox[{RowBox[{"\[Sqrt]",RowBox[{"(",RowBox[{"4"," ","\[Pi]"}],")"}]}],"*",RowBox[
+{"MaxValue","[",RowBox[{RowBox[{"SphericalHarmonicY","[",RowBox[{"p",","," ",RowBox[
+{"-","q"}],","," ","\[Theta]",","," ","0"}],"]"}],","," ",RowBox[{"{","\[Theta]","}"}]}],"]"}]}],")"}]}]}],";"}],"\n",RowBox[
+{RowBox[{"For","[",RowBox[{RowBox[{"p"," ","="," ","1"}],","," ",RowBox[{"p"," ","\[LessEqual]"," ","8"}],","," ",RowBox[
+{"p","++"}],",","\n","\[NonBreakingSpace]\[NonBreakingSpace]",RowBox[{RowBox[{"Print","[",RowBox[
+{"\"\\n U_pq for p = \"",","," ","p",","," ","\":\""}],"]"}],";","\n","\[NonBreakingSpace]\[NonBreakingSpace]",RowBox[
+{"For","[",RowBox[{RowBox[{"q"," ","="," ","0"}],","," ",RowBox[{"q"," ","\[LessEqual]"," ","p"}],","," ",RowBox[
+{"q","++"}],",","\n","\[NonBreakingSpace]\[NonBreakingSpace]\[NonBreakingSpace]",RowBox[
+{RowBox[{"Print","[",RowBox[{"\"q = \"",","," ","q",","," ","\", \"",","," ",RowBox[
+{"N","[",RowBox[{"U","[",RowBox[{"p",","," ","q"}],"]"}],"]"}],","," ","\" \""}],"]"}],";"}]}],"\n","\[NonBreakingSpace]\[NonBreakingSpace]\[NonBreakingSpace]","]"}],";"}]}],"]"}],";"}]}]],
+"Input",CellLabel -> "In[25]:= ",ExpressionUUID -> "6444e64d-df95-47f8-a989-c5aee1da0413"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",1,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "14348409-f59d-4d42-8f84-d29d19bbdfa7"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5773502691896258`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.5773502691896258," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "024803d2-2fd5-4612-9a26-d6a11cafef64"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.816496580927726`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.816496580927726," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "90b14fb3-1317-4c20-b222-ce503d6aa357"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",2,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "e155bc7d-8e59-43d0-8a4e-bb0300c6aa38"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.4472135954999579`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.4472135954999579," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "455b2a82-cf95-4a49-9979-964ba33895d7"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest1","\"Unable to decide whether numeric quantity \\!\\(\\*TagBox[RowBox[{RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"1\\\", \\\"-\\\", RowBox[{\\\"Power\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"1\\\", \\\"-\\\", RowBox[{\\\"Power\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\"-\\\", RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"1\\\", \\\"+\\\", SqrtBox[\\\"2\\\"]}], \\\"]\\\"}]}], \\\"]\\\"}], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"1\\\", \\\"+\\\", SqrtBox[\\\"2\\\"]}], \\\"]\\\"}]}], \\\"]\\\"}]}]}], Short[#1, 5] & ]\\) is equal to zero. Assuming it is.\"",2,27,14,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "14c18a6d-63b0-404e-b64a-31b80471e0e2"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.7302967433402214`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.7302967433402214," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "2c971e6f-8952-4d28-bdd8-9faeb9c06913"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.7302967433402214`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.7302967433402214," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "37e2c83f-25de-49c3-bd77-eecf40375e48"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",3,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "f215cdaa-a47e-46ae-a999-b8e882f7c520"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.3779644730092272`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.3779644730092272," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "fb841eac-e5f4-449a-89fc-d52c49d5ffa5"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest1","\"Unable to decide whether numeric quantity \\!\\(\\*TagBox[RowBox[{RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"1\\\", \\\"+\\\", RowBox[{\\\"Times\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Power\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"2\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}]}], \\\"&\\\"}], \\\",\\\", \\\"3\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"-\\\", RowBox[{\\\"5\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"3\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"Plus\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"3\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\"-\\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"Plus\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"4\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"5\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"4\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"Plus\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"4\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}]}], Short[#1, 5] & ]\\) is equal to zero. Assuming it is.\"",2,27,15,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "4ed10f61-0915-483a-90df-202fb1e1bf44"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6338656910463875`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.6338656910463875," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "3658f448-0347-4295-b369-c344980da8e4"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest1","\"Unable to decide whether numeric quantity \\!\\(\\*TagBox[RowBox[{RowBox[{RowBox[{\\\"-\\\", RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"Plus\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"2\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}]}], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"2\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"+\\\", RowBox[{RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"Plus\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"3\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"3\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}]}], Short[#1, 5] & ]\\) is equal to zero. Assuming it is.\"",2,27,16,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "839c4c33-6eaf-4885-b5ca-939ddb78303c"],Cell[
+BoxData[
+TemplateBox[{"General","stop","\"Further output of \\!\\(\\*TagBox[StyleBox[RowBox[{\\\"MaxValue\\\", \\\"::\\\", \\\"ztest1\\\"}], \\\"MessageName\\\"], Short[#1, 5] & ]\\) will be suppressed during this calculation.\"",2,27,17,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "b955f42d-cd15-4598-b3be-f6a91c9d8659"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.717137165600636`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.717137165600636," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "68b2df04-ed81-45bf-9d59-8689bc0273ac"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6761234037828132`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.6761234037828132," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "3a8a26f7-4679-4601-8706-11c8705074e9"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",4,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "62795e00-8895-4026-a29c-35cac846e8c7"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.3333333333333333`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.3333333333333333," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "6ef2d6c3-46ab-4c0a-8644-74de0d4b6413"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.564649608942483`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.564649608942483," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "a0736984-ee63-4b65-b390-ef5c52dfa399"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest","\"Unable to decide whether numeric quantities \\!\\(\\*TagBox[RowBox[{\\\"{\\\", RowBox[{RowBox[{SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"1\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\"-\\\", RowBox[{\\\"7\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"-\\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\"+\\\", RowBox[{\\\"7\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}]}], \\\",\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\",\\\", RowBox[{SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"1\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\"-\\\", RowBox[{\\\"7\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"-\\\", SuperscriptBox[RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"2\\\"], \\\"+\\\", RowBox[{\\\"7\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}]}]}], \\\"}\\\"}], Short[#1, 5] & ]\\) are equal to zero. Assuming they are.\"",2,27,18,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "9e47490c-d525-4b69-95fb-6681d70fab31"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.655879810997886`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.655879810997886," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "ef77cc2d-32c2-4f5d-82ee-b5eace4559a9"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6939733852078459`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.6939733852078459," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "2b6a50de-2629-480d-8433-812de85d4307"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6374552583116766`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",4,", ",0.6374552583116766," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "d6023877-f892-48da-b8f6-b63916e9cd57"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","5","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",5,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "1bff4562-1402-42ba-9182-5e1dffc5eacd"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.30151134457776363`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.30151134457776363," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "b3833fcf-88a2-4dce-9480-81f4c17032c6"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5132499770964023`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.5132499770964023," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "85fe63c8-7768-4b32-91e1-6247a0269960"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6026864970197335`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.6026864970197335," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "6e508096-5ac6-4362-bbde-eab9556f4692"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6542467104364246`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.6542467104364246," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "d6f78502-0584-4fc3-bc58-0e708240345c"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6715191366878166`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",4,", ",0.6715191366878166," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "11c7741c-27d9-4a89-8eec-adf7d718e2f5"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","5","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.607789741118069`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",5,", ",0.607789741118069," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "f4410f22-3698-45f7-ad7f-b3dc43790947"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","6","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",6,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "6e5ee075-c557-4e01-ad18-0a342fc4247a"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.2773500981126146`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.2773500981126146," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "e92f6de0-decd-4da8-9811-c65ded4256de"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.4734269897000834`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.4734269897000834," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "fec078b1-fc9a-4d0b-a03c-2f8aaaba82a9"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest","\"Unable to decide whether numeric quantities \\!\\(\\*TagBox[RowBox[{\\\"{\\\", RowBox[{RowBox[{RowBox[{\\\"-\\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"+\\\", RowBox[{\\\"18\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"-\\\", RowBox[{\\\"33\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"+\\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"2\\\"], \\\"-\\\", RowBox[{\\\"18\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"+\\\", RowBox[{\\\"33\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}]}], \\\",\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\",\\\", RowBox[{RowBox[{\\\"-\\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}]}], \\\"]\\\"}], \\\"2\\\"]}], \\\"+\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"6\\\", \\\"\[RightSkeleton]\\\"}], \\\"+\\\", RowBox[{\\\"33\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"4\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"2\\\"]}]}]}], \\\"}\\\"}], Short[#1, 5] & ]\\) are equal to zero. Assuming they are.\"",2,27,19,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "6e17cfe3-b8a1-4c8d-8504-c7f6b54fb86f"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5590812828112303`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.5590812828112303," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "c0edf6b2-f142-4d0e-b3bc-216a54c03641"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6135879633505992`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.6135879633505992," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "59ef0f3f-05c4-4fc9-8e44-29172863bbdd"],Cell[
+BoxData[TemplateBox[
+{"MaxValue","ztest","\"Unable to decide whether numeric quantities \\!\\(\\*TagBox[RowBox[{\\\"{\\\", RowBox[{RowBox[{SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"1\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"], \\\"-\\\", RowBox[{\\\"11\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"]}], \\\"-\\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"], \\\"+\\\", RowBox[{\\\"11\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"]}]}], \\\",\\\", RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"5\\\", \\\"\[RightSkeleton]\\\"}], \\\"+\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}]}], \\\",\\\", RowBox[{SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{RowBox[{RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"&\\\"}], \\\",\\\", \\\"1\\\", \\\",\\\", \\\"0\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"], \\\"-\\\", RowBox[{\\\"11\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}]}], \\\"]\\\"}], \\\"4\\\"]}], \\\"-\\\", SuperscriptBox[RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"4\\\"], \\\"+\\\", RowBox[{\\\"11\\\", \\\" \\\", SuperscriptBox[RowBox[{\\\"Cos\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"2\\\"], \\\" \\\", SuperscriptBox[RowBox[{\\\"Sin\\\", \\\"[\\\", RowBox[{\\\"2\\\", \\\" \\\", RowBox[{\\\"ArcTan\\\", \\\"[\\\", RowBox[{\\\"Root\\\", \\\"[\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"3\\\", \\\"\[RightSkeleton]\\\"}], \\\"]\\\"}], \\\"]\\\"}]}], \\\"]\\\"}], \\\"4\\\"]}]}]}], \\\"}\\\"}], Short[#1, 5] & ]\\) are equal to zero. Assuming they are.\"",2,27,20,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "a7a0d915-a5ef-4fb0-85db-2d2a76d50025"],Cell[
+BoxData[
+TemplateBox[{"General","stop","\"Further output of \\!\\(\\*TagBox[StyleBox[RowBox[{\\\"MaxValue\\\", \\\"::\\\", \\\"ztest\\\"}], \\\"MessageName\\\"], Short[#1, 5] & ]\\) will be suppressed during this calculation.\"",2,27,21,19289830573843773649,"Local"},
+"MessageTemplate"],StandardForm],"Message","MSG",ExpressionUUID -> "4c1cb394-c5f0-42c2-a321-ae64588e889c"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6457764046751513`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",4,", ",0.6457764046751513," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "6146a4e8-cc5c-4e79-bfba-e93f8af54d04"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","5","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6513440189093868`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",5,", ",0.6513440189093868," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "01073d1c-d900-4939-a728-08974e4ae797"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","6","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5839454948814495`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",6,", ",0.5839454948814495," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "6cbbce5e-e82f-4824-a96f-58e6f4bf370a"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","7","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",7,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "659423a1-6b18-47c7-91c7-76e573d84827"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.2581988897471611`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.2581988897471611," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "06ca9bc6-3066-4f09-902e-139c04af026b"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.4414924961034685`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.4414924961034685," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "9ec130a8-559a-4e86-923d-b73704b4e847"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5231242446990183`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.5231242446990183," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "71642ee9-6588-4d80-83f8-dcf55cdfe130"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5775105631031529`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.5775105631031529," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "abbbb37a-3b17-4e7b-862c-436983cac4c7"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6144566248645561`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",4,", ",0.6144566248645561," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "0c9e46e7-4039-4199-820c-a521327ce725"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","5","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6352219692553914`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",5,", ",0.6352219692553914," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "f9e416d8-1533-45a6-8e91-a4c93ecf165b"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","6","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6334554421193098`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",6,", ",0.6334554421193098," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "23dd06d2-90e3-4f2a-863c-dd142c2fae9d"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","7","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5641449443711414`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",7,", ",0.5641449443711414," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "e05d7b41-bf65-48b1-9f0e-4494fd768c98"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"\\n U_pq for p = \"","\[InvisibleSpace]","8","\[InvisibleSpace]","\":\""}],
+SequenceForm["\n U_pq for p = ",8,":"],Editable -> False],StandardForm],"Print",ExpressionUUID -> "b4ae7f8c-c258-4bb9-a889-308ea95a67d3"],Cell[
+BoxData[
+InterpretationBox[RowBox[{"\"q = \"","\[InvisibleSpace]","0","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.24253562503633297`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",0,", ",0.24253562503633297," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "44372583-5a30-4a4a-a7fd-81521be93cd0"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","1","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.4151819015313727`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",1,", ",0.4151819015313727," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "b5b12ab4-a8d4-47e1-b9b7-22c37a1f32fd"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","2","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.49301714696091753`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",2,", ",0.49301714696091753," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "d1046f2b-f9cb-4651-9046-5902e8bc9b09"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","3","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5462254460193839`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",3,", ",0.5462254460193839," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "3dfcfe02-3a6d-45e8-8968-1984a6bd67a5"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","4","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5846339691765045`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",4,", ",0.5846339691765045," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "3a06a08c-c786-4dd3-ba3c-b8dc44dabc20"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","5","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6109525758078973`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",5,", ",0.6109525758078973," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "7e18e52f-cdbc-4ede-ba2b-9cc891af13d6"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","6","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6242588425705187`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",6,", ",0.6242588425705187," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "2dbcc6d6-5041-4dbd-a46d-06cebd478c2d"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","7","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.6175655304416975`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",7,", ",0.6175655304416975," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "ab5bae04-353a-494f-832e-f94e9b3e444d"],Cell[
+BoxData[InterpretationBox[
+RowBox[{"\"q = \"","\[InvisibleSpace]","8","\[InvisibleSpace]","\", \"","\[InvisibleSpace]","0.5473009867765682`","\[InvisibleSpace]","\" \""}],
+SequenceForm["q = ",8,", ",0.5473009867765682," "],Editable -> False],StandardForm],
+"Print",ExpressionUUID -> "9bef15e5-413e-47f1-bc74-d69bbe11b009"]},Open],ExpressionUUID -> "0c8e4097-cf27-40c7-8b41-9f2862684359"]},
+StyleDefinitions -> "Default.nb",FrontEndVersion -> "12.2 for Wolfram Cloud 1.57.0.2 (December 8, 2020)"]
