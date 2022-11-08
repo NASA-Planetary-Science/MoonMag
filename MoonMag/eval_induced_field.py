@@ -241,8 +241,8 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
     if plot_field:
         if recalc:
             # Calculate and print to data files
-            Binm_sph = sym.BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt)
-            Binm = asym.BiList(r_bds, sigmas, peak_omegas, asym_shape, grav_shape, Benm, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt)
+            Binm_sph = sym.BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt, Schmidt=output_Schmidt)
+            Binm = asym.BiList(r_bds, sigmas, peak_omegas, asym_shape, grav_shape, Benm, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt, Schmidt=output_Schmidt)
             n_peaks = len(peak_omegas)
             if output_Schmidt:
                 nprmvals = [nprm for nprm in range(1, nprm_max_main + 1) for _ in range(0, nprm + 1)]
@@ -343,8 +343,8 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                                   bodyname=bname, append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, absolute=True, no_title=False)
 
             log.info("Animation frames printed to figures/anim_frames/ folder.\n" +
-                  "Stack them into a gif with, e.g.:\n" +
-                  "convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
+                     "Stack them into a gif with, e.g.:\n" +
+                     "convert -delay 15 figures/anim_frames/Miranda_field_asym0*.png -loop 15 figures/anim_Miranda_asym.gif")
         else:
             for i_om in range(n_peaks):
                 if output_Schmidt:
