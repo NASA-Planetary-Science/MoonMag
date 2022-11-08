@@ -562,7 +562,7 @@ BiList()
         Xid: complex (None, shape ...). Option to pass in Xid to avoid needing to reload from disk or recalculate.
     """
 def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rscale_moments, nvals, mvals, p_max, nprm_max=1, writeout=True, path=None, bodyname=None,
-           verbose=True, append="", debug=False, do_parallel=True, outFname=None, outFnameS=None, Xid=None):
+           verbose=True, append="", debug=False, do_parallel=True, Schmidt=False, outFname=None, outFnameS=None, Xid=None):
 
     # Clean inputs and initialize
     if not isinstance(peak_omegas, Iterable):
@@ -630,7 +630,7 @@ def BiList(r_bds, sigmas, peak_omegas, asym_shape_layers, grav_shape, Benm, rsca
         fout.close()
         log.info(f"Data for asymmetric Binm written to file: {fpath}")
 
-        if output_Schmidt:
+        if Schmidt:
             if outFnameS is None:
                 outFnameS = f'{bfname}ghnm_asym{append}'
             fpath = os.path.join(path, f"{outFnameS}.dat")
@@ -1398,10 +1398,10 @@ getMagSurf()
             phase. If False, moments must be in fully normalized form with the Condon-Shortley phase.
         gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
     """
-def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=4, Schmidt=False, do_parallel=True):
-    if nmax_plot>4:
-        nmax_plot = 4
-        log.warning("Evaluation of magnetic fields is supported only up to n=4. nmax_plot has been set to 4.")
+def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=10, Schmidt=False, do_parallel=True):
+    if nmax_plot > 10:
+        nmax_plot = 10
+        log.warning(f"Evaluation of magnetic fields is supported only up to n={nmax_plot}. nmax_plot has been set to {nmax_plot}.")
 
     if Schmidt:
         Nnm = min( int((nmax_plot+1)*(nmax_plot+2)/2) - 1, np.size(nvals) )
