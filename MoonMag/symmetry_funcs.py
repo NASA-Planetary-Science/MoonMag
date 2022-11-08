@@ -323,7 +323,7 @@ BiList()
         outFnameS: string (None). As above, for output Gauss coefficients in the Schmidt normalization.
     """
 def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=1, writeout=True, path=None, 
-           bodyname=None, append="", output_Schmidt=False, outFname=None, outFnameS=None):
+           bodyname=None, append="", Schmidt=False, outFname=None, outFnameS=None):
     if writeout:
         log.debug(f"Calculating symmetric B_inm for {np.size(peak_omegas)} periods.")
 
@@ -361,9 +361,9 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
         fout.close()
         log.info(f"Data for symmetric Binm written to file: {fpath}")
 
-        if output_Schmidt:
+        if Schmidt:
             if outFnameS is None:
-                outFnameS = f'{bfname}ghnm_asym{append}'
+                outFnameS = f'{bfname}ghnm_sym{append}'
             fpath = os.path.join(path, f"{outFnameS}.dat")
             fout = open(fpath, "w")
             header = "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format("Period (hr) ", "n ", "m ", "g_nm_Re (nT)", "g_nm_Im (nT)", "h_nm_Re (nT)", "h_nm_Im (nT)")
@@ -375,7 +375,7 @@ def BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments,
                     for m in range(n+1):
                         fout.write( "{:<13}, {:<4}, {:<4}, {:<24}, {:<24}, {:<24}, {:<24}\n".format(round(T_hrs,5), n, m, np.real(this_gnm[n,m]), np.imag(this_gnm[n,m]), np.real(this_hnm[n,m]), np.imag(this_hnm[n,m])) )
             fout.close()
-            log.info("Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: {fpath}")
+            log.info(f"Data for symmetric, Schmidt semi-normalized g_nm and h_nm written to file: {fpath}")
 
     return Binms
 
