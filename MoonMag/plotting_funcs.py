@@ -757,9 +757,9 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
     t_h = np.arange(0, T_hrs, T_hrs/n_pts)
     omega = 2*np.pi/T_secs
 
-    if n_max > 4:
-        n_max = 4
-        log.warning("Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
+    if n_max > 10:
+        n_max = 10
+        log.warning(f'Evaluation of magnetic fields is supported only up to n={n_max}. n_max has been set to {n_max}.')
     Nnm = (n_max + 1) ** 2 - 1
     Nnmprm = (nprm_max + 1) ** 2 - 1
 
@@ -975,9 +975,9 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
     if fpath is None:
         fpath = "figures"
 
-    if n_max > 4:
-        n_max = 4
-        log.warning("Evaluation of magnetic fields is supported only up to n=4. n_max has been set to 4.")
+    if n_max > 10:
+        n_max = 10
+        log.warning(f'Evaluation of magnetic fields is supported only up to n={n_max}. n_max has been set to {n_max}.')
 
     Nnm = (n_max + 1) ** 2 - 1
     Nnmprm = (nprm_max + 1) ** 2 - 1
