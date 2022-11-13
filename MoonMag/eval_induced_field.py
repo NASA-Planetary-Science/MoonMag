@@ -14,10 +14,10 @@ from collections.abc import Iterable
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from skyfield import api as skyapi
+import spiceypy as spice
 from datetime import datetime as dtime
-from datetime import timezone
 
+from MoonMag import _excitation
 from MoonMag.config import *
 import MoonMag.symmetry_funcs as sym
 import MoonMag.asymmetry_funcs as asym
@@ -86,16 +86,13 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
     n_max_main = nprm_max_main + p_max_main
 
     # Set time to evaluate magnetic fields
-    tscale = skyapi.load.timescale()
-    J2000 = tscale.J(2000)
+    spiceTLS = 'naif0012.tls'
+    spice.furnsh(os.path.join(_excitation, spiceTLS))
 
-    tzone = timezone.utc  # Timezone code readable by skyfield module to apply to eval_datetime string in config file -- see https://rhodesmill.org/skyfield/time.html#utc-and-your-timezone
-    t = dtime.fromisoformat(eval_datetime).replace(tzinfo=tzone) # Evaluate at the specified eval_datetime in config file, in the above time zone
-    #t = tscale.now().utc_datetime() # Evaluate as the bodies are right NOW
-    #t = J2000.utc_datetime() # Evaluate AT J2000
+    #tsec = spice.str2et(dtime.now().isoformat())  # Evaluate as the bodies are right NOW
+    #tsec = 0  # Evaluate AT J2000
+    tsec = spice.str2et(eval_datetime)
 
-    tdiff_jd = ( tscale.from_datetime(t) - J2000 )
-    tsec = tdiff_jd * 86400
 
     # Linear arrays of values to loop over for nprm,mprm,p,q,n,m
     nprmvals = [ nprm for nprm in range(1,nprm_max_main+1) for _    in range(-nprm,nprm+1) ]
