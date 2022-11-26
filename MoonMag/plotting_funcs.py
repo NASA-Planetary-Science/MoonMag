@@ -26,7 +26,7 @@ import MoonMag.field_xyz as field
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
 
 mpl.rcParams.update({
-    "text.usetex": True,
+    "text.usetex": use_latex,
     "font.family": font_choice,
     "text.latex.preamble": "\\usepackage{stix}"
 })

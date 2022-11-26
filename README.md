@@ -15,8 +15,7 @@ You will need the following Python modules:
 * matplotlib
 * mpmath
 * scipy
-* skyfield (not part of standard Anaconda, use conda install -c conda-forge skyfield to obtain)
-and you will need a working version of LaTeX installed.
+A working version of LaTeX is needed for optimal plot rendering. If you have LaTeX installed, toggle it on by setting `use_latex = True` in `config.py`. 
 
 Parallelization is done through the multiprocessing builtin module, and does not function consistently on all systems. If you encounter errors, try to set do_parallel = False in config.py.
 
