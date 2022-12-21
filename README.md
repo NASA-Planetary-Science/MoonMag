@@ -1,4 +1,5 @@
 # MoonMag
+<img src="misc/MoonMag_logo.png" width=240 title="MoonMag logo"/>
 ## Magnetic induction calculations and analysis for sounding of icy moons
 Written in Python 3.8 as supplemental material for "An analytic solution for evaluating the magnetic field induced from an arbitrary, asymmetric ocean world" DOI: [10.1016/j.icarus.2021.114840](https://doi.org/10.1016/j.icarus.2021.114840). For help, please contact M. Styczinski at [marshall.j.styczinski@jpl.nasa.gov](mailto:marshall.j.styczinski@jpl.nasa.gov).
 
