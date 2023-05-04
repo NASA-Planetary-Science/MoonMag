@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='MoonMag',
-    version='1.5.2',
+    version='1.5.3',
     author='Marshall J. Styczinski',
     author_email='marshall.j.styczinski@jpl.nasa.gov',
     description='Magnetic induction calculations for sounding of icy moons',
