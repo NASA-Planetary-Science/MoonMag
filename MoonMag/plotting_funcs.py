@@ -96,12 +96,14 @@ plotAsym()
         no_title: boolean (False). If true, print figures without title text.
     """
 def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=None, pvals=None, qvals=None, inpath=None,
-             fpath=None, outFname=None, bodyname=None, append="", descrip="Ice--ocean", no_title=False):
+             fpath=None, outFname=None, bodyname=None, append="", descrip="Ice--ocean", no_title=False, lfig_dpi=None):
     lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end = get_latlon(do_large)
     do_cbar = not do_large
 
     if fpath is None:
         fpath = "figures"
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
 
     if bodyname is None:
         bfname = ""
@@ -245,7 +247,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
         fig.suptitle(ptitle, size=tsize)
 
     # Plot the data
-    mesh = plt.pcolormesh(lon_adj, lat, thicks_adj, shading="auto", cmap="PuBu_r")
+    mesh = plt.pcolormesh(lon_adj, lat, thicks_adj, shading="auto", cmap="PuBu_r", rasterized=True)
     cont = plt.contour(lon_adj, lat, thicks_adj, levels=levels, colors="black")
     lbls = plt.clabel(cont, fmt="%1.0f", fontsize=clabel_size, inline_spacing=clabel_pad)
 
@@ -257,7 +259,7 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     # Save the figure
     topofig = f"{bstr}asym_contour"
     print_fname = os.path.join(fpath, f"{topofig}{append}{lg_end}")
-    fig.savefig(f"{print_fname}.{fmt}", format=fmt, dpi=300, rasterized=True)
+    fig.savefig(f"{print_fname}.{fmt}", format=fmt, dpi=lfig_dpi,)
     log.info(f"Contour plot for asym bdy saved to: {print_fname}.{fmt}")
 
     return
@@ -610,7 +612,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
     else:
         plot_cmap = field_cmap
 
-    mesh = plt.pcolormesh(lon, lat, B_plot, shading="auto", cmap=plot_cmap, vmin=minval, vmax=maxval)
+    mesh = plt.pcolormesh(lon, lat, B_plot, shading="auto", cmap=plot_cmap, vmin=minval, vmax=maxval, rasterized=True)
     cont = plt.contour(lon, lat, B_plot, levels=clevels, colors="black")
     lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
     # Mark points if passed
@@ -639,7 +641,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
             lfmt = animFmt
 
         outFname = os.path.join(fpath, f"{topofig}.{lfmt}")
-    fig.savefig(outFname, format=lfmt, dpi=lfig_dpi, rasterized=True)
+    fig.savefig(outFname, format=lfmt, dpi=lfig_dpi)
     log.info(f"Contour plot for asym field saved to: {outFname}")
 
     # Plot the absolute induced field in addition to a difference
@@ -716,7 +718,7 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
                 sym_title = f"{sym_ptitle}{title_tstring}"
             fig.suptitle(sym_title, size=tsize)
         print_abs_sym_fname = os.path.join(fpath, f"{sym_topofig}{append}{lg_end}")
-        fig.savefig(f"{print_abs_sym_fname}.{fmt}", format=fmt, dpi=lfig_dpi, rasterized=True)
+        fig.savefig(f"{print_abs_sym_fname}.{fmt}", format=fmt, dpi=lfig_dpi)
         log.info(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.{fmt}")
 
     plt.close()
@@ -868,7 +870,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
 
     #	Save and close
     fig_fname = os.path.join(fpath, f"{bodyname}_tSeries{append}")
-    fig.savefig(f"{fig_fname}.{fmt}", format=fmt, dpi=lfig_dpi, rasterized=True)
+    fig.savefig(f"{fig_fname}.{fmt}", format=fmt, dpi=lfig_dpi)
     plt.close()
     log.info(f"Time series plot saved to file: {fig_fname}")
     return
