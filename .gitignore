@@ -3,5 +3,6 @@ __pycache__*
 *.dat
 dist/*
 pyproject.toml
+MoonMag.egg-info/*
 .idea/*
 MoonMag/interior/chi_pq*
