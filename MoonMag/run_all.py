@@ -40,7 +40,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=False)
 
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
@@ -55,7 +55,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False, seawater=True)
 
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True, seawater=True)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, seawater=True)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, seawater=True)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, seawater=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=True)
@@ -69,7 +69,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False, seawater=False)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True, seawater=False)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, seawater=False)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, seawater=False)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, seawater=False)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=False)
@@ -83,7 +83,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False, compare_me=True)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True, compare_me=True)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, compare_me=True)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, compare_me=True)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, compare_me=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, compare_me=True)
@@ -98,7 +98,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
@@ -113,7 +113,7 @@ def run_all():
             eval.run_calcs(bname, "z", False, do_fields, False)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, False, do_fields, initial_contour, do_large=True)
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
             eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
             eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
