@@ -2,3 +2,4 @@ include LICENSE
 recursive-include MoonMag/excitation *.txt
 recursive-include MoonMag/interior *.txt
 recursive-include MoonMag/induced *.mat
+exclude MoonMag/interior/chi_pq_*
