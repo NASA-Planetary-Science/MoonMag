@@ -23,9 +23,22 @@ import MoonMag.symmetry_funcs as sym
 import MoonMag.asymmetry_funcs as asym
 import MoonMag.plotting_funcs as plots
 
-def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
-              do_large=False, seawater=True, compare_me=False, surface=False, do_gif=False,
-              inp_path=None, inp_Bi_path=None):
+def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
+              inp_path=None, inp_Bi_path=None, eval_r=None,
+              timePair=None, CAmarks=None, modelOpts=None):
+
+    if eval_r is None:
+        eval_r = eval_radius
+
+    if timePair is not None:
+        eval_datetime = timePair[1]
+    else:
+        eval_datetime = default_eval_datetime
+
+    if modelOpts is None:
+        modelOpts = []
+
+    flyby_opt = ""  # Label for flyby-specific models
 
     absolute = (comp==None)   # Whether to plot the symmetric and asymmetric absolute magnitudes in addition to the desired component
     if comp is None:
@@ -46,41 +59,39 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
         inp_Bi_path = os.path.join("MoonMag", "induced")
 
     # p_max is highest degree in boundary shapes to use
-    # bname_opt and sw_opt are strings to append to filenames to identify special cases
-    sw_opt = ""
+    # bname_opt is a string to append to filenames to identify special cases
+    bname_opt = ""
+    p_max_main = 2
     if bname == "Enceladus":
         p_max_main = 8
-        bname_opt = ""
-        eval_r = 1.1 # About 25 km altitude
+        eval_r = 1.1  # About 25 km altitude
     elif bname == "Miranda":
         p_max_main = 8
-        if surface:
-            bname_opt = "_surface"
-            eval_r = 1.0
-        else:
-            bname_opt = ""
-            eval_r = eval_radius
     elif bname == "Europa":
-        if compare_me:
+        if prevEuropa in modelOpts:
             p_max_main = 2
             bname_opt = "_prev"
             eval_r = 1.0
-        else:
+            synodic_only = True
+        elif TobieHigh in modelOpts or TobieLow in modelOpts:
             p_max_main = 4
-            bname_opt = "_Tobie"
-            if seawater:
-                sw_opt = "_high"
+            if TobieHigh in modelOpts:
+                bname_opt = "_Tobie_high"
             else:
-                sw_opt = "_low"
-            eval_r = 1.016 # 25 km altitude, the planned CA for some Clipper flybys
-    else:
+                bname_opt = "_Tobie_low"
+            eval_r = 1.016  # 25 km altitude, the planned CA for some Clipper flybys
+    elif bname == "Callisto":
         p_max_main = 2
-        bname_opt = ""
-        eval_r = eval_radius
+        if CochraneBestFit in modelOpts or CochraneLikely in modelOpts:
+            if timePair is not None:
+                flyby_opt = timePair[0]
+            if CochraneBestFit in modelOpts:
+                bname_opt = "_inverted"
+            else:
+                bname_opt = "_likely"
 
-    # Override synodic_only setting in the case of previous work comparison
-    if bname == "Europa" and compare_me:
-        synodic_only = True
+    if "surface" in modelOpts:
+        eval_r = 1.0
 
     # Highest degree of induced moments
     n_max_main = nprm_max_main + p_max_main
@@ -92,7 +103,6 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
     #tsec = spice.str2et(dtime.now().isoformat())  # Evaluate as the bodies are right NOW
     #tsec = 0  # Evaluate AT J2000
     tsec = spice.str2et(eval_datetime)
-
 
     # Linear arrays of values to loop over for nprm,mprm,p,q,n,m
     nprmvals = [ nprm for nprm in range(1,nprm_max_main+1) for _    in range(-nprm,nprm+1) ]
@@ -125,19 +135,22 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
         r_io = -2
     elif bname == "Europa":
         r_io = -2
-        if compare_me:
+        if prevEuropa in modelOpts:
             rscale_moments = 1/1560.0/1e3
             rscale_asym = 1/1537500
         else:
             rscale_moments = 1/1561.0/1e3
-            if seawater:
-                rscale_asym = 1/1538503.78421254
+            if TobieHigh in modelOpts or TobieLow in modelOpts:
+                if TobieHigh in modelOpts:
+                    rscale_asym = 1/1538503.78421254
+                else:
+                    rscale_asym = 1/1538489.72081887
             else:
-                rscale_asym = 1/1538489.72081887
+                rscale_asym = 1/(1561 - 30)/1e3
     elif bname == "Miranda":
         rscale_moments = 1/235.8/1e3
         rscale_asym = 1/185989.764241229
-        if bname_opt == "_surface":
+        if "surface" in modelOpts:
             r_io = -2
         else:
             r_io = -3
@@ -157,7 +170,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
         asym.print_Xi_table(nprm_max_main, p_max_main, n_max_main)
 
     if recalc:
-        int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
+        int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}.txt")
         log.debug(f"Using interior model: {int_model}")
 
         r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
@@ -170,7 +183,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
         else:
             single_asym = r_io
         asym_shape, grav_shape = asym.read_shape(n_bds, p_max_main, rscale_asym, bodyname=bname, relative=relative, single_asym=single_asym,
-                                     eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt, convert_depth_to_chipq=convert_depth_to_chipq)
+                                     eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt+flyby_opt, convert_depth_to_chipq=convert_depth_to_chipq)
         r_bds, sigmas, asym_shape = asym.validate(r_bds, sigmas, bcdev, asym_shape, p_max_main)
 
         # Read in Benm info
@@ -229,17 +242,19 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
             descrip = "Ionosphere"
         else:
             R_surface = r_io + 1
-            if do_large:
+            if DO_LARGE in modelOpts:
                 descrip = "Ice shell"
             else:
                 descrip = "Ice--ocean"
-        plots.plotAsym(recalc, do_large, index=r_io, cmp_index=R_surface, r_bds=r_bds, asym_shape=asym_shape, pvals=pvals, qvals=qvals, bodyname=bname, append=bname_opt+sw_opt, descrip=descrip, no_title=no_title_text)
+        plots.plotAsym(recalc, DO_LARGE in modelOpts, index=r_io, cmp_index=R_surface, r_bds=r_bds,
+                       asym_shape=asym_shape, pvals=pvals, qvals=qvals, bodyname=bname,
+                       append=bname_opt+flyby_opt, descrip=descrip, no_title=no_title_text)
 
     if plot_field:
         if recalc:
             # Calculate and print to data files
-            Binm_sph = sym.BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt, Schmidt=output_Schmidt)
-            Binm = asym.BiList(r_bds, sigmas, peak_omegas, asym_shape, grav_shape, Benm, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+sw_opt, Schmidt=output_Schmidt)
+            Binm_sph = sym.BiList(r_bds, sigmas, peak_omegas, Benm, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt, Schmidt=output_Schmidt)
+            Binm = asym.BiList(r_bds, sigmas, peak_omegas, asym_shape, grav_shape, Benm, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt, Schmidt=output_Schmidt)
             n_peaks = len(peak_omegas)
             if output_Schmidt:
                 nprmvals = [nprm for nprm in range(1, nprm_max_main + 1) for _ in range(0, nprm + 1)]
@@ -258,17 +273,17 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                 nvals = [n for n in range(1, n_max_main + 1) for _ in range(0, n + 1)]
                 mvals = [m for n in range(1, n_max_main + 1) for m in range(0, n + 1)]
                 T_hrs, n_asy, m_asy, lin_gnm_Re, lin_gnm_Im, lin_hnm_Re, lin_hnm_Im = np.loadtxt(
-                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_asym{bname_opt}{sw_opt}.dat"),
+                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_asym{bname_opt}{flyby_opt}.dat"),
                     skiprows=1, unpack=True, delimiter=',')
                 T_hrs_sym, n_sph, m_sph, lin_gnm_sph_Re, lin_gnm_sph_Im, lin_hnm_sph_Re, lin_hnm_sph_Im = np.loadtxt(
-                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_sym{bname_opt}{sw_opt}.dat"),
+                    os.path.join(inp_Bi_path, f"{bin_name}ghnm_sym{bname_opt}{flyby_opt}.dat"),
                     skiprows=1, unpack=True, delimiter=',')
             else:
                 T_hrs, n_asy, m_asy, lin_Binm_Re, lin_Binm_Im = np.loadtxt(
-                    os.path.join(inp_Bi_path, f"{bin_name}Binm_asym{bname_opt}{sw_opt}.dat"),
+                    os.path.join(inp_Bi_path, f"{bin_name}Binm_asym{bname_opt}{flyby_opt}.dat"),
                     skiprows=1, unpack=True, delimiter=',')
                 T_hrs_sym, n_sph, m_sph, lin_Binm_sph_Re, lin_Binm_sph_Im = np.loadtxt(
-                    os.path.join(inp_Bi_path, f"{bin_name}Binm_sym{bname_opt}{sw_opt}.dat"),
+                    os.path.join(inp_Bi_path, f"{bin_name}Binm_sym{bname_opt}{flyby_opt}.dat"),
                     skiprows=1, unpack=True, delimiter=',')
 
             peak_periods = np.unique(T_hrs)
@@ -315,7 +330,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
             Binm_sph_rot = Binm_sph * 1.0
             Binm_rot = Binm * 1.0
 
-        if do_gif:
+        if DO_GIF in modelOpts:
             log.debug(f"Making {n_frames} animation frames.")
             for iT in range(n_frames):
                 iT_str = f"{iT:04}"
@@ -335,9 +350,10 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                 if output_Schmidt:
                     Binm_rot = (gnm_rot, hnm_rot)
                     Binm_sph_rot = (gnm_sph_rot, hnm_sph_rot)
-                plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
+                plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, DO_LARGE in modelOpts, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
                                   pvals=pvals, qvals=qvals, difference=gif_diff, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
-                                  bodyname=bname, append=bname_opt+sw_opt, fend=iT_str, tstr=tstr, component=comp, absolute=True, no_title=False)
+                                  bodyname=bname, append=bname_opt+flyby_opt, fend=iT_str, tstr=tstr, component=comp,
+                                  absolute=True, no_title=False, marks=CAmarks)
 
             log.info("Animation frames printed to figures/anim_frames/ folder.\n" +
                      "Stack them into a gif with, e.g.:\n" +
@@ -357,16 +373,18 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
             if output_Schmidt:
                 Binm_rot = (gnm_rot, hnm_rot)
                 Binm_sph_rot = (gnm_sph_rot, hnm_sph_rot)
-            plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, do_large, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
+            plots.plotMagSurf(n_peaks, Binm_rot, nvals, mvals, DO_LARGE in modelOpts, Schmidt=output_Schmidt, r_surf_mean=eval_r, asym_frac=asym_frac,
                             pvals=pvals, qvals=qvals, difference=plot_diffs, Binm_sph=Binm_sph_rot, nprmvals=nprmvals, mprmvals=mprmvals,
-                            bodyname=bname, append=bname_opt+sw_opt, component=comp, absolute=absolute, no_title=no_title_text)
+                            bodyname=bname, append=bname_opt+flyby_opt, component=comp, absolute=absolute, no_title=no_title_text,
+                            marks=CAmarks)
 
         # Restrict plotting of certain diagnostic plots so we don't get spammed when we only want to do this for special conditions
-        actually_plot_traces = bname == "Europa" and (compare_me or seawater) and comp == "x"
+        actually_plot_traces = bname == "Europa" and comp == "x" \
+                               and (prevEuropa in modelOpts or TobieLow in modelOpts or TobieHigh in modelOpts)
         if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
                 peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
-                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
+                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{flyby_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
             t_cut = vert_cut_hr * 3600
@@ -379,7 +397,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
             t += t_cut
             plots.calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max_main, n_max_main, nvals, mvals, 
                                     R_body=R, component=comp, difference=True, Binm_sph=Binm_sph, bodyname=bname, 
-                                    append=bname_opt+sw_opt+compstr)
+                                    append=bname_opt+flyby_opt+compstr)
 
         # Plot a time series at the sub-parent-planet point--(0 deg, 0 deg) in IAU coordinates.
         # Only tested for Europa, with no ionosphere.
@@ -388,7 +406,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                 synodic_period, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
                 peak_periods = [synodic_period]
             if not sub_planet_vert:
-                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{sw_opt}.txt")
+                int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{flyby_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
             r = (localt + R) / R
@@ -400,7 +418,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                 locz = r * np.sin(np.radians(loclat))
                 loc = [ locx, locy, locz, r ] # Now IAU planetocentric in terms of body radii
                 plots.plotTimeSeries(loc, Binm[0,...], Benm[0,...], tsec, peak_periods[0], nprm_max_main, n_max_main, nvals, mvals,
-                                     n_pts=t_pts, component=comp, Binm_sph=Binm_sph[0,...], bodyname=bname, append=bname_opt+sw_opt+compstr)
+                                     n_pts=t_pts, component=comp, Binm_sph=Binm_sph[0,...], bodyname=bname, append=bname_opt+flyby_opt+compstr)
 
                 if orbital_time_series:
                     if not recalc:
@@ -411,11 +429,11 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=True,
                         else:
                             single_asym = r_io
                         asym_shape, grav_shape = asym.read_shape(n_bds, p_max_main, rscale_asym, bodyname=bname, relative=relative, single_asym=single_asym,
-                                                     eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt, convert_depth_to_chipq=convert_depth_to_chipq)
+                                                     eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt+flyby_opt, convert_depth_to_chipq=convert_depth_to_chipq)
                         r_bds, sigmas, asym_shape = asym.validate(r_bds, sigmas, bcdev, asym_shape, p_max_main)
 
                     orbital_period, Benm_orbital, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, orbital=True)
                     orbital_omega = 2*np.pi/(orbital_period*3600)
-                    Binm_sph_orbital = sym.BiList(r_bds, sigmas, [orbital_omega], Benm_orbital, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt + sw_opt)
-                    Binm_orbital = asym.BiList(r_bds, sigmas, [orbital_omega], asym_shape, grav_shape, Benm_orbital, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt + sw_opt)
-                    plots.plotTimeSeries(loc, Binm_orbital[0, ...], Benm_orbital[0, ...], tsec, orbital_period, nprm_max_main, n_max_main, nvals, mvals, n_pts=t_pts, component=comp, Binm_sph=Binm_sph_orbital[0, ...], bodyname=bname, append=bname_opt+sw_opt+compstr+"_orbital")
+                    Binm_sph_orbital = sym.BiList(r_bds, sigmas, [orbital_omega], Benm_orbital, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt)
+                    Binm_orbital = asym.BiList(r_bds, sigmas, [orbital_omega], asym_shape, grav_shape, Benm_orbital, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt)
+                    plots.plotTimeSeries(loc, Binm_orbital[0, ...], Benm_orbital[0, ...], tsec, orbital_period, nprm_max_main, n_max_main, nvals, mvals, n_pts=t_pts, component=comp, Binm_sph=Binm_sph_orbital[0, ...], bodyname=bname, append=bname_opt+flyby_opt+compstr+"_orbital")

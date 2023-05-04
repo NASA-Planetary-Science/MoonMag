@@ -6,16 +6,16 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """   
 
-import logging
+import logging, shutil
 
 # @@@@@@@@@@@@@@@@@
 #   Main settings
 # @@@@@@@@@@@@@@@@@
 
-ppgc = 1440  # Points per great circle (sets longitudinal resolution for plots)
+ppgc = 540  # Points per great circle (sets longitudinal resolution for plots)
 
 verbose = True
-use_latex = False  # Whether to use Latex in rendering plot text
+use_latex = True  # Whether to use Latex in rendering plot text
 relative = False  # Whether to use relative (epsilon/R*chi_pq) or absolute (direct spherical harmonic coefficients) formulation for reading Ypq. Affects which files are needed/read to interpret the asymmetric interior structure.
 synodic_period_only = False  # Whether to consider only the synodic period for induction
 orbital_time_series = False  # Whether to plot a time series that considers only the orbital period
@@ -24,7 +24,7 @@ plot_diffs = True  # Whether to plot magnetic fields as differences arising due 
 gif_diff = True  # Whether to plot differences in animation frames or the absolute component
 
 nprm_max_main = 1  # Highest degree in excitation field to use
-eval_radius = 1.5  # Distance (in units of body radii) from body center to use for evaluating B. Overridden for Europa and Enceladus.
+eval_radius = 2  # Distance (in units of body radii) from body center to use for evaluating B. Overridden for Europa and Enceladus.
 
 debug = False  # Special use debug flag
 convert_depth_to_chipq = True  # Prints a file named interior/chi_pq_bodyname.txt for copying over relative harmonic coefficients to degree<p>_shapes_bodyname.txt files. Only used if relative = False.
@@ -38,12 +38,21 @@ do_parallel = True  # Whether to run certain calculations in parallel. Setting t
 digits_precision = 750  # Number of digits of precision for use in calculations involving Bessel functions. Calculations involve small differences between large numbers when conductivities are very large or very small.
                         # If you encounter divide-by-zero errors, try increasing this number.
 
-eval_datetime = "2000-01-01T11:58:55.816"  # UTC datetime string for the time to evaluate the induced fields (and start animations from) in yyyy-mm-ddThh:mm:mm:ss.sss format
+default_eval_datetime = "2000-01-01T11:58:55.816"  # UTC datetime string for the time to evaluate the induced fields (and start animations from) in yyyy-mm-ddThh:mm:mm:ss.sss format
 
 # The following are only used if synodic_period_only is True:
 loclat = 0  # degrees latitude (IAU) for plotting a time series
 loclon = 0  # degrees longitude (IAU) for plotting a time series
 localt = 0  # km altitude for plotting a time series
+
+# Model option strings
+prevEuropa = 'prev'
+TobieHigh = 'Tobie_high'
+TobieLow = 'Tobie_low'
+CochraneBestFit = 'Cochrane_best'
+CochraneLikely = 'Cochrane_likely'
+DO_LARGE = 'large'
+DO_GIF = 'do_gif'
 
 # @@@@@@@@@@@@@@@@@@@
 #   Plotting params
@@ -105,3 +114,8 @@ log.setLevel(logLevel)
 log.addHandler(stream)
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('PIL').setLevel(logging.WARNING)
+
+if use_latex and not shutil.which('latex'):
+    log.warning('A LaTeX installation was not found. LaTeX will not be used for plot labels.')
+    use_latex = False
+

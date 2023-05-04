@@ -8,6 +8,7 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import MoonMag.eval_induced_field as eval
+from MoonMag.config import prevEuropa, TobieHigh, TobieLow, DO_LARGE
 
 def run_all():
     # Each body to include in calculations
@@ -30,105 +31,118 @@ def run_all():
     # Uses the following command structure:
     # eval.run_calcs(bname, comp, recalc, plot_field, plot_asym, do_large=False, seawater=False, compare_me=False, do_gif=False)
 
+    opts = []
     if do_Miranda:
         bname = "Miranda"
         print(f" - {bname} - ")
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, do_large=False)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=False)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=False)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=False)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
 
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
 
     if do_Europa:
         bname = "Europa"
         print(f" - {bname} Tobie model high salinity (Seawater) - ")
+        opts = [TobieHigh]
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, seawater=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, seawater=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, seawater=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, seawater=True)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
 
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, seawater=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, seawater=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, seawater=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=True)
-    
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
+
         bname = "Europa"
         print(f" - {bname} Tobie model low salinity (10% Seawater) - ")
+        opts = [TobieLow]
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, seawater=False)
-            eval.run_calcs(bname, "x", False, do_fields, False, seawater=False)
-            eval.run_calcs(bname, "y", False, do_fields, False, seawater=False)
-            eval.run_calcs(bname, "z", False, do_fields, False, seawater=False)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, seawater=False)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, seawater=False)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, seawater=False)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, seawater=False)
-    
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
+
         bname = "Europa"
         print(f" - {bname} previous comparison - ")
+        opts = [prevEuropa]
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, compare_me=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, compare_me=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, compare_me=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, compare_me=True)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True, compare_me=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True, compare_me=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True, compare_me=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True, compare_me=True)
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
     if do_Callisto:
         bname = "Callisto"
         print(f" - {bname} - ")
+        opts = []
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour)
-            eval.run_calcs(bname, "x", False, do_fields, False)
-            eval.run_calcs(bname, "y", False, do_fields, False)
-            eval.run_calcs(bname, "z", False, do_fields, False)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
     if do_Triton:
         bname = "Triton"
         print(f" - {bname} - ")
+        opts = []
         if do_detailed:
-            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour)
-            eval.run_calcs(bname, "x", False, do_fields, False)
-            eval.run_calcs(bname, "y", False, do_fields, False)
-            eval.run_calcs(bname, "z", False, do_fields, False)
+            eval.run_calcs(bname, None, do_recalc, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
         if do_large_plots:
-            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, do_large=True)
-            eval.run_calcs(bname, "x", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "y", False, do_fields, False, do_large=True)
-            eval.run_calcs(bname, "z", False, do_fields, False, do_large=True)
+            opts += [DO_LARGE]
+            eval.run_calcs(bname, None, do_recalc and not do_detailed, do_fields, initial_contour, modelOpts=opts)
+            eval.run_calcs(bname, "x", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "y", False, do_fields, False, modelOpts=opts)
+            eval.run_calcs(bname, "z", False, do_fields, False, modelOpts=opts)
     
     if make_gifs:
+        opts = [DO_GIF]
         if do_Europa:
-            eval.run_calcs("Europa", gif_comp, False, True, False, seawater=True, do_gif=True)
-            eval.run_calcs("Europa", gif_comp, False, True, False, seawater=False, do_gif=True)
-            eval.run_calcs("Europa", gif_comp, False, True, False, compare_me=True, do_gif=True)
+            eval.run_calcs("Europa", gif_comp, False, True, False, modelOpts=opts+[TobieHigh])
+            eval.run_calcs("Europa", gif_comp, False, True, False, modelOpts=opts+[TobieLow])
+            eval.run_calcs("Europa", gif_comp, False, True, False, modelOpts=opts+[prevEuropa])
         if do_Miranda:
-            eval.run_calcs("Miranda", gif_comp, False, True, False, do_gif=True)
+            eval.run_calcs("Miranda", gif_comp, False, True, False, modelOpts=opts)
         if do_Callisto:
-            eval.run_calcs("Callisto", gif_comp, False, True, False, do_gif=True)
+            eval.run_calcs("Callisto", gif_comp, False, True, False, modelOpts=opts)
         if do_Triton:
-            eval.run_calcs("Triton", gif_comp, False, True, False, do_gif=True)
+            eval.run_calcs("Triton", gif_comp, False, True, False, modelOpts=opts)
 
 
 if __name__ == "__main__":
