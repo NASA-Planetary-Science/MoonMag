@@ -62,6 +62,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
     # bname_opt is a string to append to filenames to identify special cases
     bname_opt = ""
     p_max_main = 2
+    Benm_model = None
     if bname == "Enceladus":
         p_max_main = 8
         eval_r = 1.1  # About 25 km altitude
@@ -70,27 +71,28 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
     elif bname == "Europa":
         if prevEuropa in modelOpts:
             p_max_main = 2
-            bname_opt = "_prev"
+            bname_opt = '_prev'
             eval_r = 1.0
             synodic_only = True
         elif TobieHigh in modelOpts or TobieLow in modelOpts:
             p_max_main = 4
             if TobieHigh in modelOpts:
-                bname_opt = "_Tobie_high"
+                bname_opt = '_Tobie_high'
             else:
-                bname_opt = "_Tobie_low"
+                bname_opt = '_Tobie_low'
             eval_r = 1.016  # 25 km altitude, the planned CA for some Clipper flybys
     elif bname == "Callisto":
         p_max_main = 2
         if CochraneBestFit in modelOpts or CochraneLikely in modelOpts:
+            Benm_model = 'Cochrane'
             if timePair is not None:
                 flyby_opt = timePair[0]
             if CochraneBestFit in modelOpts:
-                bname_opt = "_inverted"
+                bname_opt = '_inverted'
             else:
-                bname_opt = "_likely"
+                bname_opt = '_likely'
 
-    if "surface" in modelOpts:
+    if 'surface' in modelOpts:
         eval_r = 1.0
 
     # Highest degree of induced moments
@@ -188,7 +190,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
 
         # Read in Benm info
         if plot_field:
-            peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False)
+            peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False, model=Benm_model)
             peak_omegas = 2*np.pi/(peak_periods*3600)
             if not isinstance(peak_omegas, Iterable):
                 peak_periods = [peak_periods]
@@ -383,7 +385,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
                                and (prevEuropa in modelOpts or TobieLow in modelOpts or TobieHigh in modelOpts)
         if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
-                peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only)
+                peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, model=Benm_model)
                 int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{flyby_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
