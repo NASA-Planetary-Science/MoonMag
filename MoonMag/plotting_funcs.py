@@ -50,7 +50,7 @@ def get_latlon(do_large):
         n_latticks = 7
         n_lonticks = 9
         lg_end = ""
-    latticks = np.linspace(lat_min, lat_max, n_latticks, endpoint=True, dtype=np.int)
+    latticks = np.linspace(lat_min, lat_max, n_latticks, endpoint=True, dtype=np.int_)
 
     # Generate lat/lon formatters
     if do_360:
@@ -60,12 +60,12 @@ def get_latlon(do_large):
         lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=True))
         lon_min = 0
         lon_max = 360
-        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int_)
     else:
         lon_formatter = tick.FuncFormatter(lambda v, pos: east_formatted(v, EAST=False))
         lon_min = -180
         lon_max = 180
-        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, n_lonticks, dtype=np.int_)
 
     return lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end
 
@@ -211,8 +211,8 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     if do_cbar:
         cbar_ax = fig.add_axes(cbar_pos)
     else:
-        lonticks = np.linspace(lon_min, lon_max, 5, dtype=np.int)
-        latticks = np.linspace(lat_min, lat_max, 5, dtype=np.int)
+        lonticks = np.linspace(lon_min, lon_max, 5, dtype=np.int_)
+        latticks = np.linspace(lat_min, lat_max, 5, dtype=np.int_)
 
     themap = plt.axes()
     fig.subplots_adjust(left=0.07, right=0.88, wspace=0.15, hspace=0.05, top=0.90, bottom=0.07)
@@ -257,10 +257,8 @@ def plotAsym(recalc, do_large, index=-2, cmp_index=-1, r_bds=None, asym_shape=No
     # Save the figure
     topofig = f"{bstr}asym_contour"
     print_fname = os.path.join(fpath, f"{topofig}{append}{lg_end}")
-    fig.savefig(f"{print_fname}.png", format="png", dpi=300)
-    if not do_large:
-        fig.savefig(f"{print_fname}.pdf", format="pdf")
-    log.info(f"Contour plot for asym bdy saved to: {print_fname}.png")
+    fig.savefig(f"{print_fname}.{fmt}", format=fmt, dpi=300, rasterized=True)
+    log.info(f"Contour plot for asym bdy saved to: {print_fname}.{fmt}")
 
     return
 
@@ -355,11 +353,12 @@ plotMagSurf()
         no_title: boolean (False). If true, print figures without title text.
         outFname: string (None). Optional string with full file path to override other infrastructure for determining output path.
         gnm, hnm: complex, shape(n_max+1,n_max+1). Schmidt semi-normalized magnetic moments. Passed as a tuple in Binm.
+        marks: tuple of 2 arrays, each shape(j). Lat/lon pairs (array 1 is lat, array 2 is lon) in degrees to mark on the plot.
     """
 def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mean=1.0, asym_frac=None, pvals=None, qvals=None,
                 difference=False, Binm_sph=None, nprmvals=None, mprmvals=None, fpath=None, bodyname=None, append="", fend="",
-                tstr="", component=None, absolute=False, no_title=False, outFname=None, fmt=None, title=None, sym_title=None,
-                fig_dpi=None):
+                tstr="", component=None, absolute=False, no_title=False, outFname=None, title=None, sym_title=None,
+                lfig_dpi=None, marks=None):
     lon, lat, lon_min, lon_max, tht, phi, lenx, leny, lonticks, latticks, n_lonticks, n_latticks, lon_formatter, lg_end = get_latlon(do_large)
     do_cbar = not do_large
 
@@ -371,10 +370,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
     if outFname is None:
         if fpath is None:
             fpath = "figures"
-    if fmt is None:
-        fmt = 'png'
-    if fig_dpi is None:
-        fig_dpi = 150
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
     if component is None:
         compstr = ""
         comptitlestr = " magnitude"
@@ -616,6 +613,9 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
     mesh = plt.pcolormesh(lon, lat, B_plot, shading="auto", cmap=plot_cmap, vmin=minval, vmax=maxval)
     cont = plt.contour(lon, lat, B_plot, levels=clevels, colors="black")
     lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
+    # Mark points if passed
+    if marks is not None:
+        marked = plt.scatter(marks[1], marks[0], color=cMark, edgecolors=cMarkE, marker=stMark, s=szMark)
 
     # Show colorbar if there's room
     if do_cbar:
@@ -632,14 +632,14 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         sym_topofig = f"{bodyname}_field_sym"
         asym_topofig = f"{bodyname}_field_asym"
 
+    lfmt = fmt + ''
     if outFname is None:
-        if fend == "":
-            if not do_large and save_vector:
-                fig.savefig(os.path.join(fpath, f"{topofig}.pdf"), format="pdf")
-        else:
+        if fend != "":
             fpath = os.path.join(fpath, "anim_frames")
-        outFname = os.path.join(fpath, f"{topofig}.{fmt}")
-    fig.savefig(outFname, format=fmt, dpi=fig_dpi)
+            lfmt = animFmt
+
+        outFname = os.path.join(fpath, f"{topofig}.{lfmt}")
+    fig.savefig(outFname, format=lfmt, dpi=lfig_dpi, rasterized=True)
     log.info(f"Contour plot for asym field saved to: {outFname}")
 
     # Plot the absolute induced field in addition to a difference
@@ -668,6 +668,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         mesh.set_clim(minval, maxval)
         cont = plt.contour(lon, lat, asym_plot, colors="black")
         lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
+        if marks is not None:
+            marked = plt.scatter(marks[1], marks[0], color=cMark, edgecolors=cMarkE, marker=stMark, s=szMark)
 
         if do_cbar:
             cbar.set_label(abs_cbar_title)
@@ -675,8 +677,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         if not no_title:
             fig.suptitle(asym_ptitle, size=tsize)
         print_abs_asym_fname = os.path.join(fpath, f"{asym_topofig}{append}{lg_end}")
-        fig.savefig(f"{print_abs_asym_fname}.png", format="png", dpi=fig_dpi)
-        log.info(f"Contour plot for absolute asym field saved to: {print_abs_asym_fname}.png")
+        fig.savefig(f"{print_abs_asym_fname}.{fmt}", format=fmt, dpi=lfig_dpi)
+        log.info(f"Contour plot for absolute asym field saved to: {print_abs_asym_fname}.{fmt}")
 
         # Plot analogous plot for field from symmetric shape for comparison
         for old_cont in cont.collections:
@@ -699,6 +701,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
         mesh.set_clim(minval,maxval)
         cont = plt.contour(lon, lat, sym_plot, colors="black")
         lbls = plt.clabel(cont, fmt=con_formatter, fontsize=clabel_size, inline_spacing=clabel_pad)
+        if marks is not None:
+            marked = plt.scatter(marks[1], marks[0], color=cMark, edgecolors=cMarkE, marker=stMark, s=szMark)
 
         if do_cbar:
             cbar.set_label(abs_cbar_title)
@@ -712,8 +716,8 @@ def plotMagSurf(n_peaks, Binm, nvals, mvals, do_large, Schmidt=False, r_surf_mea
                 sym_title = f"{sym_ptitle}{title_tstring}"
             fig.suptitle(sym_title, size=tsize)
         print_abs_sym_fname = os.path.join(fpath, f"{sym_topofig}{append}{lg_end}")
-        fig.savefig(f"{print_abs_sym_fname}.png", format="png", dpi=fig_dpi)
-        log.info(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.png")
+        fig.savefig(f"{print_abs_sym_fname}.{fmt}", format=fmt, dpi=lfig_dpi, rasterized=True)
+        log.info(f"Contour plot for absolute sym field saved to: {print_abs_sym_fname}.{fmt}")
 
     plt.close()
     return
@@ -744,9 +748,12 @@ plotTimeSeries()
         append: string (""). Optional string to append to filenames.
         fpath: string (None). Optional path to figure save location. Passing None defaults to "figures/".  
     """
-def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mvals, n_pts=200, component=None, Binm_sph=None, bodyname=None, append="", fpath=None):
+def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mvals, n_pts=200, component=None, Binm_sph=None, bodyname=None, append="", fpath=None,
+                   lfig_dpi=None):
     if fpath is None:
         fpath = "figures"
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
 
     T_secs = T_hrs * 3600
     x = loc[0]
@@ -861,8 +868,7 @@ def plotTimeSeries(loc, Binm, Benm, t_start, T_hrs, nprm_max, n_max, nvals, mval
 
     #	Save and close
     fig_fname = os.path.join(fpath, f"{bodyname}_tSeries{append}")
-    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
-    fig.savefig(f"{fig_fname}.pdf", format="pdf")
+    fig.savefig(f"{fig_fname}.{fmt}", format=fmt, dpi=lfig_dpi, rasterized=True)
     plt.close()
     log.info(f"Time series plot saved to file: {fig_fname}")
     return
@@ -894,9 +900,11 @@ plotTrajec()
         append: string (""). Optional string to append to filenames.
         fpath: string (None). Optional path to figure save location. Passing None defaults to "figures/".  
     """
-def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fpath=None):
+def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fpath=None, lfig_dpi=None):
     if fpath is None:
         fpath = "figures"
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
 
     # Set plot labels
     fig, axes = plt.subplots(3, 1)
@@ -936,10 +944,9 @@ def plotTrajec(t, Bx, By, Bz, Bdat=None, bodyname=None, t_CA=None, append="", fp
 
     # Save and close
     fig_fname = os.path.join(fpath, f"{bodyname}-{append}")
-    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
-    fig.savefig(f"{fig_fname}.pdf", format="pdf")
+    fig.savefig(f"{fig_fname}.{fmt}", format=fmt, dpi=lfig_dpi)
     plt.close()
-    log.info(f"Trajectory plot saved to file: {fig_fname}.pdf")
+    log.info(f"Trajectory plot saved to file: {fig_fname}.{fmt}")
 
     return
 
@@ -971,9 +978,11 @@ calcAndPlotTrajec()
         fpath: string (None). Optional path to figure save location. Passing None defaults to "figures/".  
     """
 def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals, mvals, R_body=None, difference=False,
-               component=None, Binm_sph=None, net_field=False, bodyname=None, append="", fpath=None):
+               component=None, Binm_sph=None, net_field=False, bodyname=None, append="", fpath=None, lfig_dpi=None):
     if fpath is None:
         fpath = "figures"
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
 
     if n_max > 10:
         n_max = 10
@@ -1131,10 +1140,9 @@ def calcAndPlotTrajec(x,y,z,r,t, Binm, Benm, peak_omegas, nprm_max, n_max, nvals
 
     # Save and close
     fig_fname = os.path.join(fpath, f"{bodyname}{append}")
-    fig.savefig(f"{fig_fname}.png", format="png", dpi=200)
-    fig.savefig(f"{fig_fname}.pdf", format="pdf")
+    fig.savefig(f"{fig_fname}.{fmt}", format=fmt, dpi=lfig_dpi)
     plt.close()
-    log.info(f"Trajectory plot saved to file: {fig_fname}.png")
+    log.info(f"Trajectory plot saved to file: {fig_fname}.{fmt}")
 
     return
 
@@ -1156,7 +1164,10 @@ plotAfunctions()
         Ads: mpc, shape(n_omegas). "Mixing" amplitude A_n'^\star.
         AtAds: mpc, shape(n_omegas). Ats and Ads multiplied together, which should be asymptotic to (1+0i).
     """
-def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_mag, AtAd_arg):
+def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_mag, AtAd_arg, lfig_dpi=None):
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
+
     c = ["black", "blue", "brown", "green"]
     style1 = "solid"
     style2 = "dashed"
@@ -1209,16 +1220,18 @@ def plotAfunctions(kr, n, Ae_mag, Ae_arg, At_mag, At_arg, Ad_mag, Ad_arg, AtAd_m
 
     #	Save and close
     plt.legend(loc="best")
-    xtn = "png"
-    thefig = os.path.join("figures", f"A_functions.{xtn}")
-    fig.savefig(thefig, format=xtn, dpi=300)
+    thefig = os.path.join("figures", f"A_functions.{fmt}")
+    fig.savefig(thefig, format=fmt, dpi=lfig_dpi)
     plt.close()
     log.info(f"A functions plot printed to: {thefig}")
 
     return
 
 
-def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
+def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd="", lfig_dpi=None):
+    if lfig_dpi is None:
+        lfig_dpi = fig_dpi
+
     c = ["blue", "green", "brown", "black", "red"]
     style1 = "solid"
     style2 = "dashed"
@@ -1261,9 +1274,8 @@ def plotAes(T_h, Ae_mag, Ae_arg, Tinterest_h, BeRatio, intModels, n=1, fEnd=""):
 
     # Save and close
     plt.legend(loc="upper right")
-    xtn = "png"
-    thefig = os.path.join("figures", f"A1e{fEnd}.{xtn}")
-    fig.savefig(thefig, format=xtn, dpi=300)
+    thefig = os.path.join("figures", f"A1e{fEnd}.{fmt}")
+    fig.savefig(thefig, format=fmt, dpi=lfig_dpi)
     plt.close()
     log.info(f"Ae plot printed to: {thefig}")
 
