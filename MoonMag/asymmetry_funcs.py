@@ -12,7 +12,7 @@ from scipy.io import savemat, loadmat
 from collections.abc import Iterable
 from numpy import sqrt
 from math import floor
-from scipy.special import factorial as ft
+from scipy.special import factorial as ft, lpmv as legenp, sph_harm
 
 import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
@@ -77,7 +77,8 @@ read_shape()
         fpath: string (None). Optional location to search for .txt files. Defaults to "interior/".
         r_bds: float, shape(n_bds) (None). Boundary radii in m. Required if concentric = True.
         r_io: integer (-2). The index of r_bds corresponding to the ice-ocean interface, where asymmetry is expected to
-            be its most pronounced. Defaults to -2, i.e. no ionosphere. Set to -3 for a symmetric ionosphere.
+            be its most pronounced. Defaults to -2, i.e. no ionosphere. Set to -3 for the ice-ocean boundary when a 
+            symmetric ionosphere (one layer) is included.
         append: string (""). Optional string appended to file names.
         convert_depth_to_chipq: boolean (False). Optional flag to print relative chi_pq values to disk.
     """
@@ -106,7 +107,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
             Cpq = -shape_n[this_min:this_max, 2]
             Spq = -shape_n[this_min:this_max, 3]
 
-            chi_pqs = get_chipq_from_CSpq(p, Cpq, Spq)
+            chi_pqs = get_chipq_from_CSpq_single(p, Cpq, Spq)
             asym_shape[single_asym,:,p,:p+1] = chi_pqs * 1e3 * scaled_rad[single_asym]
 
         if bodyname == "Miranda":
@@ -147,7 +148,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
             Cpq = -shape_n[this_min:this_max,2]
             Spq = -shape_n[this_min:this_max,3]
 
-            chi_pqs = get_chipq_from_CSpq(p,Cpq,Spq)
+            chi_pqs = get_chipq_from_CSpq_single(p,Cpq,Spq)
             for i_layer in range(n_bds):
                 asym_shape[i_layer,:,p,:p+1] = chi_pqs*1e3 * scaled_rad[i_layer]
 
@@ -166,7 +167,7 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
 
                 chi_min = p**2 - 1
                 chi_max = (p+1)**2 - 1
-                asym_shape[n_layer,chi_min:chi_max] = get_chipq_from_CSpq(p,Cpq,Spq)"""
+                asym_shape[n_layer,chi_min:chi_max] = get_chipq_from_CSpq_single(p,Cpq,Spq)"""
 
     if convert_depth_to_chipq and not relative:
         if bodyname == "Europa":
@@ -222,14 +223,14 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
         grav_shape = None
     else:
         log.debug(f"Using surface gravity shape: {grav_model}")
-        for p in range(1, p_max + 1):
-            this_min = int(p * (p + 1) / 2)
-            this_max = this_min + p + 1
+        for p in range(1, p_max+1):
+            this_min = int(p * (p+1) / 2)
+            this_max = this_min + p+1
             # Unlike above, we do not need to negate because deviations are already in radii
             gCpq = g_shape_n[this_min:this_max, 2]
             gSpq = g_shape_n[this_min:this_max, 3]
 
-            g_chi_pqs = get_chipq_from_CSpq(p, gCpq, gSpq)
+            g_chi_pqs = get_chipq_from_CSpq_single(p, gCpq, gSpq)
             for ii in range(n_bds + r_io + 1):
                 # If we are modeling asymmetry in any surface, it is adjacent to a conducting layer
                 if (asym_shape[ii, ...] != 0).any():
@@ -244,11 +245,11 @@ def read_shape(n_bds, p_max, rscale, bodyname=None, relative=False, eps_scaled=N
 #############################################
 
 """
-get_chipq_from_CSpq()
+get_chipq_from_CSpq_single()
     Convert from real, 4pi-normalized harmonic coefficients with no Condon-Shortley phase
     (the common normalization in the geodesy community) to orthonormal harmonic coefficients having
     the C-S phase. Handles all values for a given p at once.
-    Usage: `chipq` = get_chipq_from_CSpq(`p`,`Cpq`,`Spq`)
+    Usage: `chipq` = get_chipq_from_CSpq_single(`p`,`Cpq`,`Spq`)
     Returns:
         chipq: complex, shape(2,p+1). chi_pq values for all q = [-p,p], organized such that chipq[int(q<0),abs(q)]
             returns the result for a particular q value. Orthonormal, with Condon-Shortley phase.
@@ -257,8 +258,10 @@ get_chipq_from_CSpq()
         p: integer. Degree of boundary shapes; results for all q values are returned for this p value.
         Cpq: float. Spherical harmonic coefficient that multiplies cos(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
         Spq: float. Spherical harmonic coefficient that multiplies sin(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+        CSchange: bool (True). If False, do NOT correct for Condon-Shortley phase, i.e. return gnm, hnm
+            that contain the CS phase.
     """
-def get_chipq_from_CSpq(p,Cpq,Spq):
+def get_chipq_from_CSpq_single(p, Cpq, Spq, CSchange=True):
     chipq = np.zeros((2,p+1),dtype=np.complex_)
 
     norm = sqrt4pi / sqrt2
@@ -267,9 +270,140 @@ def get_chipq_from_CSpq(p,Cpq,Spq):
         # Negative q (first index 1):
         chipq[1,q] = (Cpq[q] + 1j*Spq[q]) * norm
         # Positive q (first index 0):
-        chipq[0,q] = (-1)**q * (Cpq[q] - 1j*Spq[q]) * norm
+        chipq[0,q] = (-1)**(q*CSchange) * (Cpq[q] - 1j*Spq[q]) * norm
 
     chipq[0,0] = Cpq[0] * sqrt4pi
+
+    return chipq
+
+#############################################
+
+"""
+get_chipq_from_CSpq()
+    Convert from real, 4pi-normalized harmonic coefficients with no Condon-Shortley phase
+    (the common normalization in the geodesy community) to orthonormal harmonic coefficients having
+    the C-S phase. Handles all values at once.
+    Usage: `chipq` = get_chipq_from_CSpq(`pmax`,`Cpq`,`Spq`)
+    Returns:
+        chipq: complex, shape(2,pmax+1,pmax+1). chi_pq values for all q = [-p,p] for p up to pmax,
+            organized such that chipq[int(q<0),p,abs(q)] returns the result for a particular q value.
+            Orthonormal, with Condon-Shortley phase. Orthonormal here means the integral of
+            |Ynm|^2 * dOmega over a unit sphere is 1 for all n and m.
+    Parameters:
+        pmax: integer. Maximum degree of boundary shapes; results for all p and q values up to this pmax are returned.
+        Cpq: float, shape(pmax+1,pmax+1). Spherical harmonic coefficient that multiplies cos(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+        Spq: float, shape(pmax+1,pmax+1). Spherical harmonic coefficient that multiplies sin(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+        CSchange: bool (True). If False, do NOT correct for Condon-Shortley phase, i.e. return gnm, hnm
+            that contain the CS phase.
+    """
+def get_chipq_from_CSpq(pmax, Cpq, Spq, CSchange=True):
+    chipq = np.zeros((2,pmax+1,pmax+1),dtype=np.complex_)
+
+    norm = sqrt4pi / sqrt2
+
+    for p in range(pmax+1):
+        for q in range(1, p+1):
+            # Negative q (first index 1):
+            chipq[1,p,q] = (Cpq[p,q] + 1j*Spq[p,q]) * norm
+            # Positive q (first index 0):
+            chipq[0,p,q] = (-1)**(q*CSchange) * (Cpq[p,q] - 1j*Spq[p,q]) * norm
+
+        chipq[0,p,0] = Cpq[p,0] * sqrt4pi
+
+    return chipq
+
+#############################################
+
+"""
+get_CSpq_from_chipq()
+    Convert from orthonormal harmonic coefficients having the C-S phase to real, 4pi-normalized
+    harmonic coefficients with no Condon-Shortley phase. Handles all values at once.
+    Usage: `Cpq`, `Spq` = get_chipq_from_CSpq(`pmax`,`chipq`)
+    Returns:
+        Cpq: float, shape(pmax+1,pmax+1). Spherical harmonic coefficient that multiplies cos(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+        Spq: float, shape(pmax+1,pmax+1). Spherical harmonic coefficient that multiplies sin(m*phi) for p,q boundary. 4pi-normalized with no Condon-Shortley phase.
+    Parameters:
+        pmax: integer. Maximum degree of boundary shapes; results for all p and q values up to this pmax are returned.
+        chipq: complex, shape(2,pmax+1,pmax+1). chi_pq values for all q = [-p,p] for p up to pmax,
+            organized such that chipq[int(q<0),p,abs(q)] returns the result for a particular q value.
+            Orthonormal, with Condon-Shortley phase. Orthonormal here means the integral of
+            |Ynm|^2 * dOmega over a unit sphere is 1 for all n and m.
+        CSchange: bool (True). If False, do NOT correct for Condon-Shortley phase, i.e. return gnm, hnm
+            that contain the CS phase.
+        noRenorm: bool (False). If True, return Cpq and Spq as fully normalized, real harmonic coefficients.
+    """
+def get_CSpq_from_chipq(pmax, chipq, CSchange=True, noRenorm=False):
+    Cpq, Spq = ( np.zeros((pmax+1,pmax+1)) for _ in range(2) )
+
+    if noRenorm:
+        norm = 1
+        norm0 = 1
+    else:
+        norm = 1 / sqrt4pi / sqrt2
+        norm0 = norm * sqrt2
+
+    for q in range(1, pmax+1):
+        CS = (-1)**(q*(not CSchange))
+        # cos(m*phi) part:
+        Cpq[:,q] = np.real(((-1)**q * chipq[0,:,q] + chipq[1,:,q]) * norm) * CS
+        # sin(m*phi) part:
+        Spq[:,q] = np.real(((-1)**q * chipq[0,:,q] - chipq[1,:,q]) * 1j * norm) * CS
+
+    Cpq[:,0] = np.real(chipq[0,:,0] * norm0)
+
+    return Cpq, Spq
+
+#############################################
+
+"""
+get_apq_from_chipq()
+    Convert complex orthonormal harmonic coefficients with the Condon-Shortley phase to 
+    the format expected by healpy routines, i.e. a linear list with the m<0 values
+    excluded. Handles all values at once.
+    Usage: `apq` = get_apq_from_chipq(`pvals`, `qvals`, `chipq`)
+    Returns:
+        apq: complex, shape(pvals). Orthonormal spherical harmonic coefficients with the C-S phase for m>0 only. 
+            Coefficients for m<0 are simply discarded; the values are inferred from what they must be to match the
+            m>0 values in order to return a real-valued map from healpy.alm2map.
+    Parameters:
+        pvals, qvals: integer, shape(Npq). List of paired p and q indices for apq, as returned from healpy.sphtfunc.Alm.getlm(pmax).
+        chipq: complex, shape(2,pmax+1,pmax+1). chi_pq values for all q = [-p,p] for p up to pmax,
+            organized such that chipq[int(q<0),p,abs(q)] returns the result for a particular p,q pair.
+            Orthonormal, with Condon-Shortley phase. Orthonormal here means the integral of
+            |Ynm|^2 * dOmega over a unit sphere is 1 for all n and m.
+    """
+def get_apq_from_chipq(pvals, qvals, chipq):
+    # Arrange into a linear list compatible with healpy evaluation routines
+    apq = np.array([chipq[0,p,q] for p,q in zip(pvals, qvals)])
+
+    return apq
+
+#############################################
+
+"""
+get_chipq_from_apq()
+    Convert complex orthonormal harmonic coefficients with the Condon-Shortley phase from 
+    the format expected by healpy routines, i.e. a linear list with the m<0 values
+    excluded, to the full set for all values of -p <= m <= p. Handles all values at once.
+    Usage: `chipq` = get_chipq_from_apq(`pvals`, `qvals`, `apq`)
+    Returns:
+        chipq: complex, shape(2,pmax+1,pmax+1). chi_pq values for all q = [-p,p] for p up to pmax,
+            organized such that chipq[int(q<0),p,abs(q)] returns the result for a particular p,q pair.
+            Orthonormal, with Condon-Shortley phase. Orthonormal here means the integral of
+            |Ynm|^2 * dOmega over a unit sphere is 1 for all n and m.
+    Parameters:
+        pvals, qvals: integer, shape(Npq). List of paired p and q indices for apq, as returned from healpy.sphtfunc.Alm.getlm(pmax).
+        apq: complex, shape(pvals). Orthonormal spherical harmonic coefficients with the C-S phase for m>0 only. 
+            Coefficients for m<0 are simply discarded; the values are inferred from what they must be to match the
+            m>0 values in order to return a real-valued map from healpy.alm2map.
+    """
+def get_chipq_from_apq(pvals, qvals, apq):
+    # Reconstruct all complex coefficients as needed to result in real-valued outputs
+    pmax = np.max(pvals)
+    chipq = np.zeros((2,pmax+1,pmax+1), dtype=np.complex_)
+    for a,p,q in zip(apq, pvals, qvals):
+        chipq[0,p,q] = a
+        chipq[1,p,q] = np.conj(a) * (-1)**q
 
     return chipq
 
@@ -280,7 +414,7 @@ get_gh_from_Binm()
     Convert from orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics)
     to Schmidt semi-normalized form without the C-S phase (common in geophysics).
     Handles all values for a given n at once.
-    Usage: `gnm, hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
+    Usage: `gnm`, `hnm` = get_gh_from_Binm(`n`, `n_max`, `Binm`)
     Returns:
         gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
 
@@ -291,12 +425,12 @@ get_gh_from_Binm()
         Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments calculated using fully normalized spherical harmonic coefficients.
     """
 def get_gh_from_Binm(n_max, Binm):
-    gnm, hnm = ( np.zeros((n_max+1,n_max+1),dtype=np.complex_) for _ in range(2) )
+    gnm, hnm = ( np.zeros((n_max+1,n_max+1), dtype=np.complex_) for _ in range(2) )
 
     for n in range(1,n_max+1):
         norm = np.sqrt(2*n+1) / sqrt2 / sqrt4pi
 
-        for m in range(1,n+1):
+        for m in range(1, n+1):
             # g terms:
             gnm[n,m] = ((-1)**m * Binm[0,n,m] + Binm[1,n,m]) * norm
             # h terms:
@@ -305,6 +439,37 @@ def get_gh_from_Binm(n_max, Binm):
         gnm[n,0] = Binm[0,n,0] * norm * sqrt2
 
     return gnm, hnm
+
+#############################################
+
+def get_Binm_from_gh(n_max, gnm, hnm):
+    """
+    Convert from Schmidt semi-normalized form without the C-S phase (common in geophysics)
+    to orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics).
+    Handles all values for a given n at once.
+    Args:
+        n_max: int. Maximum degree n of induced moments.
+        gnm, hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
+            Schmidt normalization here means the integral of |Ynm|^2 * dOmega over a unit sphere is
+            4pi/(2n+1) for all n and m. No Condon-Shortley phase.
+
+    Returns:
+        Binm: complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments for fully normalized spherical harmonics.
+    """
+    Binm = np.zeros((2,n_max+1,n_max+1), dtype=np.complex_)
+
+    for n in range(1, n_max+1):
+        norm = sqrt4pi / np.sqrt(2*n+1) / sqrt2
+
+        for m in range(1, n+1):
+            # m>0 terms:
+            Binm[0,n,m] = (-1)**m * norm * (gnm[n,m] - 1j * hnm[n,m])
+            # m<0 terms:
+            Binm[1,n,m] =           norm * (gnm[n,m] + 1j * hnm[n,m])
+
+        Binm[0,n,0] = norm * sqrt2 * gnm[n,0]
+
+    return Binm
 
 #############################################
 
@@ -1318,17 +1483,14 @@ eval_dev()
         q: integer. Order of shape harmonic to be evaluated.
         chi_pq: complex. Coefficient for spherical harmonics of degree and order p,q,
             such that r(theta, phi) = R + Sum[chi_pq * Ypq(theta, phi)].
-        ltht: float, shape(lleny). Local copy of theta grid values (faster execution than referencing a global variable).
-        lphi: float, shape(lleny). Local copy of phi grid values.
-        lleny: integer. Local copy of leny, the number of y (theta) grid values. Passed to avoid repeated calls in parallel execution.
-        llenx: integer. Local copy of lenx, the number of x (phi) grid values.
+        ltht: float, shape(lleny) or shape(l1D). Local copy of theta grid values (faster execution than referencing a global variable).
+        lphi: float, shape(llenx) or shape(l1D). Local copy of phi grid values.
     """
-def eval_dev(p, q, chi_pq, ltht, lphi, lleny, llenx):
+def eval_dev(p, q, chi_pq, ltht, lphi, outShape):
     if chi_pq == 0:
-        this_devs = np.zeros((lleny,llenx), dtype=np.float_)
+        this_devs = np.zeros(outShape, dtype=np.float_)
     else:
-        this_devs = np.array([ np.real( chi_pq*complex(mp.spherharm(p,q,thti,phii)) ) for thti in ltht for phii in lphi ])
-        this_devs = np.reshape(this_devs,(lleny,llenx))
+        this_devs = np.real(chi_pq * sph_harm(q, p, lphi, ltht))
     log.debug(f"p,q = {p}{q} completed")
     return this_devs
 
@@ -1353,13 +1515,19 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi, do_parallel=True):
     Npq = np.size(pvals)
     lleny = np.size(ltht)
     llenx = np.size(lphi)
-    devs = np.zeros((lleny,llenx))
+    if lleny == llenx:
+        # Assume 1D arrays if both ltht and lphi are same length
+        outShape = (lleny)
+    else:
+        outShape = (lleny,llenx)
+        ltht, lphi = np.meshgrid(ltht, lphi, indexing='ij')
+    devs = np.zeros(outShape)
 
     lin_bd_shape = np.array([ asym_shape[int(qvals[iN]<0),pvals[iN],abs(qvals[iN])] for iN in range(Npq) ])
 
     if do_parallel:
         pool = mtpContext.Pool(num_cores)
-        par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx) ) for iN in range(Npq)]
+        par_result = [pool.apply_async( eval_dev, args=(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,outShape) ) for iN in range(Npq)]
         pool.close()
         pool.join()
 
@@ -1368,8 +1536,10 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi, do_parallel=True):
             devs = devs + res.get()
     else:
         for iN in range(Npq):
-            devs = devs + eval_dev(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,lleny,llenx)
+            devs = devs + eval_dev(pvals[iN],qvals[iN],lin_bd_shape[iN],ltht,lphi,outShape)
 
+    if r_mean is None:
+        r_mean = np.abs(asym_shape[0,0,0]) / np.sqrt(4*np.pi)
     surf = devs + r_mean
     return surf
 
@@ -1467,3 +1637,42 @@ def getMagSurf(nvals,mvals,Binm, r_th_ph,ltht,lphi, nmax_plot=10, Schmidt=False,
     By = np.reshape(By, (lleny,llenx))
     Bz = np.reshape(Bz, (lleny,llenx))
     return Bx, By, Bz
+
+
+def norm4pi(n, m):
+    """
+    Calculate normalization factor for 4pi-normalized spherical harmonics.
+    Args:
+        n: int. Degree of spherical harmonic.
+        m: int. Order of spherical harmonic.
+
+    Returns:
+        norm: float. Normalization factor, not including any possible Condon-Shortley phase.
+    """
+    norm = np.sqrt(2*n + 1)
+    if m != 0:
+        norm = norm * np.sqrt(2 * ft(n - abs(m)) / ft(n + abs(m)))
+    return norm
+
+
+def spherharm4pi(n, m, ltht, lphi):
+    """
+    Determines the 4pi-normalized surface spherical harmonic without the Condon-Shortley phase.
+    Args:
+        n: int. Degree of spherical harmonic to evaluate.
+        m: int. Order of spherical harmonic to evaluate.
+        ltht: float, shape(lleny). 1D list along theta at which to evaluate.
+        lphi: float, shape(llenx). 1D list along phi at which to evaluate.
+
+    Returns:
+        cSnm, sSnm: float, shape(lleny, llenx). Real surface spherical harmonics in 4pi normalization
+            for input n, m. cSnm is the cos of tesseral part and sSnm is the sin part.
+    """
+    norm = norm4pi(n, m) * (-1)**m  # Scipy lpmv function (legenp) includes Condon-Shortley phase; this removes it.
+    Pnm = norm * legenp(m, n, np.cos(ltht))  # Scipy lpmv also has n and m reversed--m first.
+    cmphi = np.cos(m*lphi)
+    smphi = np.sin(m*lphi)
+    cSnm = np.squeeze(np.array([cmphi * Pnmi for Pnmi in Pnm]))
+    sSnm = np.squeeze(np.array([smphi * Pnmi for Pnmi in Pnm]))
+
+    return cSnm + sSnm
