@@ -6,3 +6,7 @@ pyproject.toml
 MoonMag.egg-info/*
 .idea/*
 MoonMag/interior/chi_pq*
+SPICE/*
+configPP.py
+configPPplots.py
+configPPinduct.py
