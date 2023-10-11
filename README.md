@@ -2,12 +2,12 @@
 <img src="misc/MoonMag_logo.png" width=240 title="MoonMag logo"/>
 
 ## Magnetic induction calculations and analysis for sounding of icy moons
-Written in Python 3.8 as supplemental material for "An analytic solution for evaluating the magnetic field induced from an arbitrary, asymmetric ocean world" DOI: [10.1016/j.icarus.2021.114840](https://doi.org/10.1016/j.icarus.2021.114840). For help, please contact M. Styczinski at [marshall.j.styczinski@jpl.nasa.gov](mailto:marshall.j.styczinski@jpl.nasa.gov).
+Written in Python 3.8 as supplemental material for "An analytic solution for evaluating the magnetic field induced from an arbitrary, asymmetric ocean world" DOI: [10.1016/j.icarus.2021.114840](https://doi.org/10.1016/j.icarus.2021.114840). For help, please contact M. Styczinski at [marshall.styczinski@bmsis.org](mailto:marshall.styczinski@bmsis.org).
 
 The main repository is mirrored at https://github.com/NASA-Planetary-Science/MoonMag; any pull requests should be submitted to https://github.com/itsmoosh/MoonMag.
 
 ## Acknowledging MoonMag
-Thank you for your interest in MoonMag! Please consider alerting us to your work (marshall.j.styczinski@jpl.nasa.gov). Suggested acknowledgement in publications: "Data used in this work were generated with the open source MoonMag framework hosted on GitHub."
+Thank you for your interest in MoonMag! Please consider alerting us to your work (marshall.styczinski@bmsis.org). Suggested acknowledgement in publications: "Data used in this work were generated with the open source MoonMag framework hosted on GitHub."
 
 ## Quick start
 * Run the file `runMoonMag.py` using a Python 3 interpreter.

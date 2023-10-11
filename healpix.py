@@ -115,6 +115,6 @@ almDiff = hp.map2alm(hpDiff, lmax=pmax)
 
 # Plot maps
 levels = round(fCpq[0, 0]) + np.array([-15, -11, -7, -3, 1, 5, 9])
-PlotMap(mpix, MakeTitle('HEALpix evaluation', descrip, pmax), 'healpix.pdf', levels=levels, cmap=Color.cmap['asymDev'])
-PlotMap(asymDevs, MakeTitle('Direct cylindrical evaluation', descrip, pmax), 'direct.pdf', levels=levels, cmap=Color.cmap['asymDev'])
-PlotMap(hpDiff[pix], MakeTitle('HEALpix $-$ direct', descrip, pmax), 'healpixDiff.pdf', levels=None, cmap=Color.cmap['BmapDiv'])
+PlotMap(mpix, MakeTitle('HEALpix evaluation', descrip, pmax), 'figures/healpix.pdf', levels=levels, cmap=Color.cmap['asymDev'])
+PlotMap(asymDevs, MakeTitle('Direct cylindrical evaluation', descrip, pmax), 'figures/direct.pdf', levels=levels, cmap=Color.cmap['asymDev'])
+PlotMap(hpDiff[pix], MakeTitle('HEALpix $-$ direct', descrip, pmax), 'figures/healpixDiff.pdf', levels=None, cmap=Color.cmap['BmapDiv'])
