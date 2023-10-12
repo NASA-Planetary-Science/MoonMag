@@ -4,7 +4,6 @@ import os
 import numpy as np
 import healpy as hp
 import logging
-from MoonMag.plotting_funcs import get_latlon
 
 # Set up log messages
 printFmt = '[%(levelname)s] %(message)s'
@@ -15,22 +14,17 @@ logHP.setLevel(logging.WARNING)
 log = logging.getLogger('MoonMag')
 log.setLevel(logging.DEBUG)
 
-# Set output file name and location
-outDir = 'outData'
-fName = 'healpix_locs.txt'
-outFile = os.path.join(outDir, fName)
+# HEALpix settings
+nside = 2**6  # Must match that in print_healpix_locs.py
 
-# Generate HEALpix and mapping parameters
-nside = 2**6
-npix = hp.nside2npix(nside)
-lonMap_deg, latMap_deg, lon_min, lon_max, _, _, nLonMap, nLatMap, _, _, _, _, _, _ = get_latlon(False)
-theta_rad, phi_rad = hp.pix2ang(nside, np.arange(npix))
-
-# Header strings
-header_info = f'Contains (theta, phi) pairs for HEALpix pixel locations with Nside = {nside} ({npix} pix).\n'
-thetaDescrip = 'Colatitude (rad)'
-phiDescrip = 'E longitude (rad)'
-header_cols = f'{thetaDescrip:>24},{phiDescrip:>24}\n'
+# Header strings for output
+nDescrip = 'n'
+mDescrip = 'm'
+gDescrip = 'gnm?'
+hDescrip = 'hnm?'
+yesInd = '.'
+noInd = '@'
+header_cols = f'{nDescrip:>5}{mDescrip:>5}{gDescrip:>5}{hDescrip:>5}\n'
 
 log.info(f'Printing locations for Nside = {nside} ({npix} pix).')
 with open(outFile, 'w') as f:
