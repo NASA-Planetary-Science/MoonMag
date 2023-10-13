@@ -245,7 +245,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
 
         if m==-2:
             Bx = Bx * ( x*(3*x**2 - 7*y**2 - 2*z**2) + 1j*2*y*(-4*x**2 + y**2 + z**2) )
-            By = By * ( y*(7*x**2 - 3*y**2 + 2*z**2) + 1j*2*x*(x**2 - 4*y**2 + 2*z**2) )
+            By = By * ( y*(7*x**2 - 3*y**2 + 2*z**2) + 1j*2*x*(x**2 - 4*y**2 + z**2) )
             Bz = Bz * ( 5*(x**2 - y**2)*z + 1j*(-10*x*y*z) )
         elif m==-1:
             Bx = Bx * ( (8*x**2*z - 2*z*(y**2 + z**2)) + 1j*(-10*x*y*z) )
@@ -262,7 +262,7 @@ def eval_Bi(n,m,Binm, x,y,z,r, omega=None, t=None):
             Bz = Bz * ( 2*x*(x**2 + y**2 - 4*z**2) + 1j*2*y*(x**2 + y**2 - 4*z**2) )
         elif m==2:
             Bx = Bx * ( x*(3*x**2 - 7*y**2 - 2*z**2) + 1j*(8*x**2*y - 2*y*(y**2 + z**2)) )
-            By = By * ( y*(7*x**2 - 3*y**2 + 2*z**2) + 1j*-2*x*(x**2 - 4*y**2 + 2*z**2) )
+            By = By * ( y*(7*x**2 - 3*y**2 + 2*z**2) + 1j*-2*x*(x**2 - 4*y**2 + z**2) )
             Bz = Bz * ( 5*(x**2 - y**2)*z + 1j*(10*x*y*z) )
         else:
             print(" m = ", m)
