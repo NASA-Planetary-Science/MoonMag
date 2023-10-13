@@ -1548,7 +1548,7 @@ def get_rsurf(pvals,qvals,asym_shape, r_mean,ltht,lphi, do_parallel=True):
 """
 getMagSurf()
     Evaluates the induced magnetic field at the surface for all magnetic moments Binm.
-    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `r_th_ph`, `ltht`, `lphi`, `nmax_plot=4`, `Schmidt=False`)
+    Usage: `Bx`, `By`, `Bz` = getMagSurf(`nvals`, `mvals`, `Binm`, `r_th_ph`, `ltht`, `lphi`, `nmax_plot=10`, `Schmidt=False`)
     Returns:
         Bx,By,Bz (each): complex, shape(lleny,llenx). A (lleny,llenx) array of field values due to the particular Binm values passed.
             Field values can be obtained for any future time by multiplying each Binm[i,:,:,:] by the corresponding e^-iωt factor.

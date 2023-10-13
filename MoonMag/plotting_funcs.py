@@ -12,10 +12,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdt
 import matplotlib.ticker as tick
+from matplotlib.gridspec import GridSpec
 #import pyshtools as pysh
+from healpy.projector import CartesianProj
+from healpy.pixelfunc import vec2pix
 import mpmath as mp
 # mpmath is needed for enhanced precision to avoid
 # divide-by-zero errors induced by underflow.
+
+from PlanetProfile.GetConfig import FigLbl, FigSize, FigMisc
 
 from MoonMag import _interior
 from MoonMag.config import *
@@ -1288,3 +1293,41 @@ def getphase(A):
     return A*90.0
 def getmag(phi):
     return phi/90.0
+
+def SetMap(ax):
+    ax.set_xticks(FigMisc.lonMapTicks_deg)
+    ax.set_yticks(FigMisc.latMapTicks_deg)
+    ax.tick_params(axis='both', which='major', labelsize=FigMisc.latlonSize)
+    ax.xaxis.set_major_formatter(tick.FuncFormatter(FigMisc.LonMapFormatter))
+    ax.yaxis.set_major_formatter(tick.FuncFormatter(FigMisc.LatMapFormatter))
+
+    return
+
+def healpixMap(nside, map, title, fName, levels=None, cmap=None):
+    lonMap_deg, latMap_deg, lon_min, lon_max, _, _, nLonMap, nLatMap, _, _, _, _, _, _ = get_latlon(False)
+    cp = CartesianProj(flipconv='geo')
+    cp.set_proj_plane_info(xsize=nLonMap, ysize=nLatMap,
+        lonra=np.array([lon_min, lon_max]), latra=None)
+    vecFunc = lambda vec: vec2pix(nside, vec[0], vec[1], vec[2])
+    pix = vecFunc(cp.xy2vec(cp.ij2xy()))
+    plotData = map[pix]
+
+    fig = plt.figure(figsize=FigSize.asym)
+    grid = GridSpec(1, 1)
+    ax = fig.add_subplot(grid[0, 0])
+    SetMap(ax)
+    asymMap = ax.pcolormesh(lonMap_deg, latMap_deg, plotData,
+                            shading='auto', cmap=cmap, rasterized=FigMisc.PT_RASTER)
+    asymContours = ax.contour(lonMap_deg, latMap_deg, plotData,
+                              levels=levels, colors='black')
+    ax.clabel(asymContours, fmt=tick.FuncFormatter(FigMisc.Cformat),
+              fontsize=FigMisc.cLabelSize, inline_spacing=FigMisc.cLabelPad)
+    ax.set_title(title, size=FigMisc.mapTitleSize)
+    ax.set_aspect(1)
+    cax = ax.inset_axes([1 + 0.02, 0, 0.03, 1])
+    fig.colorbar(asymMap, ax=ax, cax=cax, label=FigLbl.asymCbarLabel)
+    FigMisc.SetLatex()  # Shouldn't be necessary but rcParams seem to not be getting set
+    plt.tight_layout()
+    fig.savefig(fName, bbox_inches='tight', format='pdf', dpi=FigMisc.dpi, metadata=FigLbl.meta)
+    log.debug(f'Map figure saved to file: {fName}')
+    plt.close()
