@@ -19,6 +19,10 @@ log.setLevel(logging.INFO)
 logPP = logging.getLogger('PlanetProfile')
 logPP.setLevel(logging.INFO)
 
+fh = logging.FileHandler('pureHarmComp.txt')
+fh.setLevel(logging.INFO)
+log.addHandler(fh)
+
 def GetxyzrFromData(data):
     # Retrieve cartesian locations in units of R_P from (r,theta,phi)
     r_RP = np.squeeze(data['r_RP'])
@@ -35,6 +39,8 @@ ghVal = 1.0 * 1e5  # Must match ghVal from PlanetMag printout script (times 10^5
 atol = 1e-8  # Absolute tolerance to use in comparisons with np.isclose
 rtol = 1e-5  # Relative tolerance to use in comparisons with np.isclose
 zeros = np.zeros((11,11), dtype=np.complex_)
+PLOT_DIFFS = True
+PLOT_ONLY_SIGNIF = True
 
 # Header strings for formatted output
 nDescrip = 'n'
@@ -64,11 +70,13 @@ for n in range(1, 11):
         # Compare g using Gauss coefficient calculation
         BvecSchmidt = np.real(np.vstack(eval_Bi_Schmidt(n, m, ghVal, 0.0, x, y, z, r)))
         gMatch = np.all(np.isclose(BvecSchmidt, gData['Bvec'], rtol, atol))
-        # Plot vector component differences
-        fName = os.path.join('figures', f'MMSdiffPM_n{n:02}m{m:02}g')
-        healpixMap(nside, BvecSchmidt[0,:] - gData['Bvec'][0,:], f'$B_x$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}x.pdf', cmap='seismic')
-        healpixMap(nside, BvecSchmidt[1,:] - gData['Bvec'][1,:], f'$B_y$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}y.pdf', cmap='seismic')
-        healpixMap(nside, BvecSchmidt[2,:] - gData['Bvec'][2,:], f'$B_z$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}z.pdf', cmap='seismic')
+        if PLOT_DIFFS:
+            if (not gMatch) or not PLOT_ONLY_SIGNIF:
+                # Plot vector component differences
+                fName = os.path.join('figures', f'MMSdiffPM_n{n:02}m{m:02}g')
+                healpixMap(nside, BvecSchmidt[0,:] - gData['Bvec'][0,:], f'$B_x$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}x.pdf', cmap='seismic')
+                healpixMap(nside, BvecSchmidt[1,:] - gData['Bvec'][1,:], f'$B_y$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}y.pdf', cmap='seismic')
+                healpixMap(nside, BvecSchmidt[2,:] - gData['Bvec'][2,:], f'$B_z$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}z.pdf', cmap='seismic')
 
         # Prep for orthonormal calculation
         gBlock = zeros + 0.0
@@ -77,38 +85,48 @@ for n in range(1, 11):
         # Compare g using orthonormal calculation
         BvecOrtho = np.real(np.vstack(eval_Bi(n, m, gBinm[0,n,m], x, y, z, r)) + np.vstack(eval_Bi(n, -m, gBinm[1,n,m], x, y, z, r)))
         gMatchOrtho = np.all(np.isclose(BvecOrtho, gData['Bvec'], rtol, atol))
-        # Plot vector component differences
-        fName = os.path.join('figures', f'MMOdiffPM_n{n:02}m{m:02}g')
-        healpixMap(nside, BvecOrtho[0,:] - gData['Bvec'][0,:], f'$B_x$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}x.pdf', cmap='seismic')
-        healpixMap(nside, BvecOrtho[1,:] - gData['Bvec'][1,:], f'$B_y$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}y.pdf', cmap='seismic')
-        healpixMap(nside, BvecOrtho[2,:] - gData['Bvec'][2,:], f'$B_z$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}z.pdf', cmap='seismic')
+        if PLOT_DIFFS:
+            if (not gMatchOrtho) or not PLOT_ONLY_SIGNIF:
+                # Plot vector component differences
+                fName = os.path.join('figures', f'MMOdiffPM_n{n:02}m{m:02}g')
+                healpixMap(nside, BvecOrtho[0,:] - gData['Bvec'][0,:], f'$B_x$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}x.pdf', cmap='seismic')
+                healpixMap(nside, BvecOrtho[1,:] - gData['Bvec'][1,:], f'$B_y$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}y.pdf', cmap='seismic')
+                healpixMap(nside, BvecOrtho[2,:] - gData['Bvec'][2,:], f'$B_z$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ g', f'{fName}z.pdf', cmap='seismic')
 
-        # Load in h data from PlanetMag
-        hData = loadmat(f'{thisFname}h.mat')
-        # Get evaluation locations
-        x, y, z, r = GetxyzrFromData(hData)
+        if m == 0:
+            hMatch = True
+            hMatchOrtho = True
+        else:
+            # Load in h data from PlanetMag
+            hData = loadmat(f'{thisFname}h.mat')
+            # Get evaluation locations
+            x, y, z, r = GetxyzrFromData(hData)
 
-        # Compare h using Gauss coefficient calculation
-        BvecSchmidt = np.real(np.vstack(eval_Bi_Schmidt(n, m, 0.0, ghVal, x, y, z, r)))
-        hMatch = np.all(np.isclose(BvecSchmidt, hData['Bvec'], rtol, atol))
-        # Plot vector component differences
-        fName = os.path.join('figures', f'MMSdiffPM_n{n:02}m{m:02}h')
-        healpixMap(nside, BvecSchmidt[0,:] - hData['Bvec'][0,:], f'$B_x$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}x.pdf', cmap='seismic')
-        healpixMap(nside, BvecSchmidt[1,:] - hData['Bvec'][1,:], f'$B_y$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}y.pdf', cmap='seismic')
-        healpixMap(nside, BvecSchmidt[2,:] - hData['Bvec'][2,:], f'$B_z$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}z.pdf', cmap='seismic')
+            # Compare h using Gauss coefficient calculation
+            BvecSchmidt = np.real(np.vstack(eval_Bi_Schmidt(n, m, 0.0, ghVal, x, y, z, r)))
+            hMatch = np.all(np.isclose(BvecSchmidt, hData['Bvec'], rtol, atol))
+            if PLOT_DIFFS:
+                if (not hMatch) or not PLOT_ONLY_SIGNIF:
+                    # Plot vector component differences
+                    fName = os.path.join('figures', f'MMSdiffPM_n{n:02}m{m:02}h')
+                    healpixMap(nside, BvecSchmidt[0,:] - hData['Bvec'][0,:], f'$B_x$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}x.pdf', cmap='seismic')
+                    healpixMap(nside, BvecSchmidt[1,:] - hData['Bvec'][1,:], f'$B_y$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}y.pdf', cmap='seismic')
+                    healpixMap(nside, BvecSchmidt[2,:] - hData['Bvec'][2,:], f'$B_z$ MoonMagSch $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}z.pdf', cmap='seismic')
 
-        # Prep for orthonormal calculation
-        hBlock = zeros + 0.0
-        hBlock[n,m] = ghVal
-        hBinm = get_Binm_from_gh(10, zeros, hBlock)
-        # Compare h using orthonormal calculation
-        BvecOrtho = np.real(np.vstack(eval_Bi(n, m, hBinm[0,n,m], x, y, z, r)) + np.vstack(eval_Bi(n, -m, hBinm[1,n,m], x, y, z, r)))
-        hMatchOrtho = np.all(np.isclose(BvecOrtho, hData['Bvec'], rtol, atol))
-        # Plot vector component differences
-        fName = os.path.join('figures', f'MMOdiffPM_n{n:02}m{m:02}h')
-        healpixMap(nside, BvecOrtho[0,:] - hData['Bvec'][0,:], f'$B_x$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}x.pdf', cmap='seismic')
-        healpixMap(nside, BvecOrtho[1,:] - hData['Bvec'][1,:], f'$B_y$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}y.pdf', cmap='seismic')
-        healpixMap(nside, BvecOrtho[2,:] - hData['Bvec'][2,:], f'$B_z$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}z.pdf', cmap='seismic')
+            # Prep for orthonormal calculation
+            hBlock = zeros + 0.0
+            hBlock[n,m] = ghVal
+            hBinm = get_Binm_from_gh(10, zeros, hBlock)
+            # Compare h using orthonormal calculation
+            BvecOrtho = np.real(np.vstack(eval_Bi(n, m, hBinm[0,n,m], x, y, z, r)) + np.vstack(eval_Bi(n, -m, hBinm[1,n,m], x, y, z, r)))
+            hMatchOrtho = np.all(np.isclose(BvecOrtho, hData['Bvec'], rtol, atol))
+            if PLOT_DIFFS:
+                if (not hMatchOrtho) or not PLOT_ONLY_SIGNIF:
+                    # Plot vector component differences
+                    fName = os.path.join('figures', f'MMOdiffPM_n{n:02}m{m:02}h')
+                    healpixMap(nside, BvecOrtho[0,:] - hData['Bvec'][0,:], f'$B_x$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}x.pdf', cmap='seismic')
+                    healpixMap(nside, BvecOrtho[1,:] - hData['Bvec'][1,:], f'$B_y$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}y.pdf', cmap='seismic')
+                    healpixMap(nside, BvecOrtho[2,:] - hData['Bvec'][2,:], f'$B_z$ MoonMagOrtho $-$ PlanetMag, $n,m = {n:d},{m:d}$ h', f'{fName}z.pdf', cmap='seismic')
 
         # Print line to console
-        log.info(f'{n:>3}{m:>3}{yesInd if gMatch else noInd:>5}{yesInd if hMatch else noInd:>5}{yesInd if gMatchOrtho else noInd:>5}{yesInd if hMatchOrtho else noInd:>5}')
+        log.info(f'{n:>3}{m:>3}{yesInd if gMatch else noInd:>6}{yesInd if hMatch else noInd:>6}{yesInd if gMatchOrtho else noInd:>6}{yesInd if hMatchOrtho else noInd:>6}')
