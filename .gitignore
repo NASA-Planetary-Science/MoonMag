@@ -10,3 +10,5 @@ SPICE/*
 configPP.py
 configPPplots.py
 configPPinduct.py
+outData/*
+pureHarmComp.txt
