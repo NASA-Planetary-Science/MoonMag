@@ -1,4 +1,11 @@
-# Compares MoonMag- and PlanetMag-evaluated .
+""" Compares MoonMag- and PlanetMag-evaluated magnetic field calculations for validation purposes.
+    To compare outputs:
+        1. Run print_healpix_locs.py to print a text file of HEALpix locations on a sphere
+        2. Run PlanetMag/OutputHEALpixTo_n10.m using Matlab. Requires healpix_locs.txt, expected
+            to be at ~/MoonMag/outData/healpix_locs.txt
+        3. Run this script. Requires output data from PlanetMag, expected to be at
+            ~/PlanetMag/out/pureHarmMap_n##m##x.mat, where ## are harmonic indices and x is g or h.
+"""
 
 import os
 import numpy as np
@@ -39,8 +46,8 @@ ghVal = 1.0 * 1e5  # Must match ghVal from PlanetMag printout script (times 10^5
 atol = 1e-8  # Absolute tolerance to use in comparisons with np.isclose
 rtol = 1e-5  # Relative tolerance to use in comparisons with np.isclose
 zeros = np.zeros((11,11), dtype=np.complex_)
-PLOT_DIFFS = True
-PLOT_ONLY_SIGNIF = True
+PLOT_DIFFS = True  # Whether to generate map figures showing differences
+PLOT_ONLY_SIGNIF = False  # Whether to limit printed maps to those harmonics identified as differing
 
 # Header strings for formatted output
 nDescrip = 'n'
