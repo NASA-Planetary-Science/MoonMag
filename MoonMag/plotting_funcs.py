@@ -1303,7 +1303,7 @@ def SetMap(ax):
 
     return
 
-def healpixMap(nside, map, title, fName, levels=None, cmap=None):
+def healpixMap(nside, map, title, fName, levels=None, cmap=None, FIELD=True):
     lonMap_deg, latMap_deg, lon_min, lon_max, _, _, nLonMap, nLatMap, _, _, _, _, _, _ = get_latlon(False)
     cp = CartesianProj(flipconv='geo')
     cp.set_proj_plane_info(xsize=nLonMap, ysize=nLatMap,
@@ -1325,7 +1325,8 @@ def healpixMap(nside, map, title, fName, levels=None, cmap=None):
     ax.set_title(title, size=FigMisc.mapTitleSize)
     ax.set_aspect(1)
     cax = ax.inset_axes([1 + 0.02, 0, 0.03, 1])
-    fig.colorbar(asymMap, ax=ax, cax=cax, label=FigLbl.asymCbarLabel)
+    cbarLbl = FigLbl.MagSurfCbarDiffLabel if FIELD else FigLbl.asymCbarLabel
+    fig.colorbar(asymMap, ax=ax, cax=cax, label=cbarLbl)
     FigMisc.SetLatex()  # Shouldn't be necessary but rcParams seem to not be getting set
     plt.tight_layout()
     fig.savefig(fName, bbox_inches='tight', format='pdf', dpi=FigMisc.dpi, metadata=FigLbl.meta)
