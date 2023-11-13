@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='MoonMag',
-    version='1.5.3',
+    version='1.6.0',
     author='Marshall J. Styczinski',
-    author_email='marshall.j.styczinski@jpl.nasa.gov',
+    author_email='marshall.styczinski@bmsis.org',
     description='Magnetic induction calculations for sounding of icy moons',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
