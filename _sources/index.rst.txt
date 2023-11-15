@@ -2,7 +2,7 @@ MoonMag documentation
 =====================
 
 This is the documentation for the code base of the MoonMag framework.
-The software is hosted on GitHub at https://github.com/itsmoosh/moonmag.
+The software is hosted on GitHub at https://github.com/itsmoosh/moonmag and mirrored at https://github.com/NASA-Planetary-Science/MoonMag.
 
 **These pages are under construction.**
 
