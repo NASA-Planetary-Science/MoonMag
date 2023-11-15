@@ -1,4 +1,4 @@
-""" This program contains functions for calculating induced magnetic fields
+""" Contains functions for calculating induced magnetic fields
     from near-spherical conductors.
     Developed in Python 3.8 for "A perturbation method for evaluating the
     magnetic field induced from an arbitrary, asymmetric ocean world

@@ -1,4 +1,4 @@
-""" This program calculates magnetic fields along a trajectory
+""" Calculates magnetic fields along a trajectory
     and is intended for supporting analysis of spacecraft data.
     Requires installation of spiceypy and several SPICE kernels
     available from the NAIF data pages:
@@ -25,10 +25,14 @@ mtpContext = mtp.get_context(mtpType)
 num_cores = mtp.cpu_count()
 
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
-log = logging.getLogger(__name__)
-logLevel = logging.DEBUG
+
+# Set up log messages
 printFmt = '[%(levelname)s] %(message)s'
-log.basicConfig(level=logLevel, format=printFmt)
+stream = logging.StreamHandler()
+stream.setFormatter(logging.Formatter(printFmt))
+log = logging.getLogger('MoonMag')
+log.setLevel(logging.DEBUG)
+
 
 """
 fitData()

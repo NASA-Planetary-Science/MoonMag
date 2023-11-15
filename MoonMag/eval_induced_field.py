@@ -1,4 +1,4 @@
-""" This program runs calculations for induced magnetic fields
+""" Calculations for induced magnetic fields
     from near-spherical conductors and plots the results.
     Developed in Python 3.8 for "A perturbation method for evaluating the
     magnetic field induced from an arbitrary, asymmetric ocean world 
@@ -6,16 +6,11 @@
     DOI: 10.1016/j.icarus.2021.114840
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
-import os, sys
-from typing import List
-
+import os
 import numpy as np
 from collections.abc import Iterable
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 
 import spiceypy as spice
-from datetime import datetime as dtime
 
 from MoonMag import _excitation
 from MoonMag.config import *

@@ -1,4 +1,4 @@
-""" This file contains runtime options for the program eval_induced_field.py
+""" Contains runtime options for the program eval_induced_field.py
     and dependent functions.
     Developed in Python 3.8 for "A perturbation method for evaluating the
     magnetic field induced from an arbitrary, asymmetric ocean world 

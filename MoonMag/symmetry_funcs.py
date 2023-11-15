@@ -1,4 +1,4 @@
-""" This program contains functions for calculating induced magnetic fields
+""" Contains functions for calculating induced magnetic fields
     from spherical conductors. Outputs typically appear as mpc, which is
     the mpmath complex type.
     Developed in Python 3.8 for "A perturbation method for evaluating the
@@ -25,7 +25,6 @@ num_cores = mtp.cpu_count()
 
 from MoonMag import _induced
 from MoonMag.config import *
-from MoonMag.field_xyz import eval_Bi
 
 # Global variables and settings
 # Set maximum precision for mpmath quantities

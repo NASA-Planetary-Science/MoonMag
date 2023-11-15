@@ -1,4 +1,4 @@
-""" This program contains functions for plotting topography and magnetic fields
+""" Contains functions for plotting topography and magnetic fields
     from near-spherical conductors.
     Developed in Python 3.8 for "A perturbation method for evaluating the
     magnetic field induced from an arbitrary, asymmetric ocean world 
@@ -13,22 +13,22 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdt
 import matplotlib.ticker as tick
 from matplotlib.gridspec import GridSpec
-#import pyshtools as pysh
 from healpy.projector import CartesianProj
 from healpy.pixelfunc import vec2pix
-import mpmath as mp
-# mpmath is needed for enhanced precision to avoid
-# divide-by-zero errors induced by underflow.
-
-from PlanetProfile.GetConfig import FigLbl, FigSize, FigMisc
 
 from MoonMag import _interior
 from MoonMag.config import *
-import MoonMag.symmetry_funcs as sym
 import MoonMag.asymmetry_funcs as asym
 import MoonMag.field_xyz as field
 
 J2000 = np.datetime64("2000-01-01T11:58:55.816")
+
+# Set up log messages
+printFmt = '[%(levelname)s] %(message)s'
+stream = logging.StreamHandler()
+stream.setFormatter(logging.Formatter(printFmt))
+log = logging.getLogger('MoonMag')
+log.setLevel(logging.DEBUG)
 
 mpl.rcParams.update({
     "text.usetex": use_latex,
@@ -1295,6 +1295,8 @@ def getmag(phi):
     return phi/90.0
 
 def SetMap(ax):
+    from PlanetProfile.GetConfig import FigMisc
+
     ax.set_xticks(FigMisc.lonMapTicks_deg)
     ax.set_yticks(FigMisc.latMapTicks_deg)
     ax.tick_params(axis='both', which='major', labelsize=FigMisc.latlonSize)
@@ -1304,6 +1306,8 @@ def SetMap(ax):
     return
 
 def healpixMap(nside, map, title, fName, levels=None, cmap=None, FIELD=True):
+    from PlanetProfile.GetConfig import FigLbl, FigSize, FigMisc
+
     lonMap_deg, latMap_deg, lon_min, lon_max, _, _, nLonMap, nLatMap, _, _, _, _, _, _ = get_latlon(False)
     cp = CartesianProj(flipconv='geo')
     cp.set_proj_plane_info(xsize=nLonMap, ysize=nLatMap,
