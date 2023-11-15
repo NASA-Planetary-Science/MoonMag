@@ -25,7 +25,8 @@ setup(
         'scipy >= 1.10.1',
         'mpmath >= 1.2.1',
         'matplotlib >= 3.7.1',
-        'spiceypy >= 5.1.2'
+        'spiceypy >= 5.1.2',
+        'healpy'
     ],
     include_package_data=True  # Files to include are listed in MANIFEST.in
 )
