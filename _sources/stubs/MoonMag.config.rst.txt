@@ -1,23 +1,7 @@
-MoonMag.config
-==============
+MoonMag.config module
+=====================
 
 .. automodule:: MoonMag.config
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

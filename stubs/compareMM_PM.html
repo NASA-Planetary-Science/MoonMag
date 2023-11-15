@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>compareMM_PM &mdash; MoonMag v1.6.0 documentation</title>
+  <title>compareMM_PM module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MoonMag" href="MoonMag.html" />
-    <link rel="prev" title="Package documentation" href="../documentation.html" /> 
+    <link rel="next" title="healpix module" href="healpix.html" />
+    <link rel="prev" title="MoonMag.trajec_analysis module" href="MoonMag.trajec_analysis.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,9 +48,19 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">compareMM_PM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="MoonMag.html">MoonMag</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.html">MoonMag package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">compareMM_PM module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#compareMM_PM.GetxyzrFromData"><code class="docutils literal notranslate"><span class="pre">GetxyzrFromData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compareMM_PM.compareMM_PM"><code class="docutils literal notranslate"><span class="pre">compareMM_PM()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -69,8 +79,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
-      <li class="breadcrumb-item active">compareMM_PM</li>
+          <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
+      <li class="breadcrumb-item active">compareMM_PM module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/stubs/compareMM_PM.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -81,26 +92,51 @@
            <div itemprop="articleBody">
              
   <section id="module-compareMM_PM">
-<span id="comparemm-pm"></span><h1>compareMM_PM<a class="headerlink" href="#module-compareMM_PM" title="Permalink to this heading"></a></h1>
-<p class="rubric">Functions</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetxyzrFromData</span></code>(data)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compareMM_PM</span></code>([nside, ghVal, atol, rtol, ...])</p></td>
-<td><p>Compare multipole magnetic field calculations by MoonMag and PlanetMag for the same magnetic moments and at the same points.</p></td>
-</tr>
-</tbody>
-</table>
+<span id="comparemm-pm-module"></span><h1>compareMM_PM module<a class="headerlink" href="#module-compareMM_PM" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="compareMM_PM.GetxyzrFromData">
+<span class="sig-prename descclassname"><span class="pre">compareMM_PM.</span></span><span class="sig-name descname"><span class="pre">GetxyzrFromData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compareMM_PM.GetxyzrFromData" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="compareMM_PM.compareMM_PM">
+<span class="sig-prename descclassname"><span class="pre">compareMM_PM.</span></span><span class="sig-name descname"><span class="pre">compareMM_PM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghVal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PLOT_DIFFS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PLOT_ONLY_SIGNIF</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#compareMM_PM.compareMM_PM" title="Permalink to this definition"></a></dt>
+<dd><p>Compare multipole magnetic field calculations by MoonMag and PlanetMag for the same magnetic moments
+and at the same points.</p>
+<p>To compare outputs:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Run print_healpix_locs.py to print a text file of HEALpix locations on a sphere</p></li>
+<li><p>Run PlanetMag/OutputHEALpixTo_n10.m using Matlab. Requires healpix_locs.txt, expected
+to be at ~/MoonMag/outData/healpix_locs.txt</p></li>
+<li><p>Run this script. Requires output data from PlanetMag, expected to be at
+~/PlanetMag/out/pureHarmMap_n##m##x.mat, where ## are harmonic indices and x is g or h.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nside</strong> (<em>int</em><em>, </em><em>default=2**6</em>) – Resolution of surface for comparison. 12 * nside**2 is the total number of pixels.
+Must match the nside value used in print_healpics_locs.</p></li>
+<li><p><strong>ghVal</strong> (<em>float</em><em>, </em><em>default=1.0*1e5</em>) – Strength of magnetic moments to use in comparison in nT.
+Must match ghVal from PlanetMag printout script (times 10^5 to convert from G to nT).</p></li>
+<li><p><strong>atol</strong> (<em>float</em><em>, </em><em>default=1e-8</em>) – Absolute tolerance to use in comparisons with np.isclose()</p></li>
+<li><p><strong>rtol</strong> (<em>float</em><em>, </em><em>default=1e-5</em>) – Relative tolerance to use in comparisons with np.isclose()</p></li>
+<li><p><strong>PLOT_DIFFS</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to generate map figures showing differences</p></li>
+<li><p><strong>PLOT_ONLY_SIGNIF</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Whether to limit printed maps to those harmonics identified as differing</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../documentation.html" class="btn btn-neutral float-left" title="Package documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MoonMag.html" class="btn btn-neutral float-right" title="MoonMag" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MoonMag.trajec_analysis.html" class="btn btn-neutral float-left" title="MoonMag.trajec_analysis module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="healpix.html" class="btn btn-neutral float-right" title="healpix module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

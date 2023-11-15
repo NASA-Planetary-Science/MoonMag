@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoonMag.trajec_analysis &mdash; MoonMag v1.6.0 documentation</title>
+  <title>MoonMag.trajec_analysis module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,7 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="MoonMag.symmetry_funcs" href="MoonMag.symmetry_funcs.html" /> 
+    <link rel="next" title="compareMM_PM module" href="compareMM_PM.html" />
+    <link rel="prev" title="MoonMag.symmetry_funcs module" href="MoonMag.symmetry_funcs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,21 +48,37 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="compareMM_PM.html">compareMM_PM</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="MoonMag.html">MoonMag</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.config.html">MoonMag.config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MoonMag.trajec_analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="MoonMag.html">MoonMag package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="MoonMag.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.config.html">MoonMag.config module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs module</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">MoonMag.trajec_analysis module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.trajec_analysis.Bsph2Bxyz"><code class="docutils literal notranslate"><span class="pre">Bsph2Bxyz()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.trajec_analysis.calc_trajec"><code class="docutils literal notranslate"><span class="pre">calc_trajec()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.trajec_analysis.fitData"><code class="docutils literal notranslate"><span class="pre">fitData()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.trajec_analysis.fit_trajec"><code class="docutils literal notranslate"><span class="pre">fit_trajec()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.trajec_analysis.saveDat"><code class="docutils literal notranslate"><span class="pre">saveDat()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compareMM_PM.html">compareMM_PM module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
 </ul>
 </li>
 </ul>
@@ -82,9 +99,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
-          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag</a></li>
-      <li class="breadcrumb-item active">MoonMag.trajec_analysis</li>
+          <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
+          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag package</a></li>
+      <li class="breadcrumb-item active">MoonMag.trajec_analysis module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/stubs/MoonMag.trajec_analysis.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -95,7 +113,7 @@
            <div itemprop="articleBody">
              
   <section id="module-MoonMag.trajec_analysis">
-<span id="moonmag-trajec-analysis"></span><h1>MoonMag.trajec_analysis<a class="headerlink" href="#module-MoonMag.trajec_analysis" title="Permalink to this heading"></a></h1>
+<span id="moonmag-trajec-analysis-module"></span><h1>MoonMag.trajec_analysis module<a class="headerlink" href="#module-MoonMag.trajec_analysis" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>Calculates magnetic fields along a trajectory</dt><dd><p>and is intended for supporting analysis of spacecraft data.
 Requires installation of spiceypy and several SPICE kernels
@@ -104,33 +122,39 @@ available from the NAIF data pages:
 </dd>
 </dl>
 <p>Author: M. J. Styczinski, <a class="reference external" href="mailto:mjstyczi&#37;&#52;&#48;uw&#46;edu">mjstyczi<span>&#64;</span>uw<span>&#46;</span>edu</a></p>
-<p class="rubric">Functions</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bsph2Bxyz</span></code>(Br, Bth, Bphi, th, phi)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_trajec</span></code>(x, y, z, r, t, Binm, Benm, B0, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fitData</span></code>(bname[, recalcMoments, recalcData, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_trajec</span></code>(x, y, z, r, tRel, BxDat, ByDat, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">saveDat</span></code>(t, x, y, z, Bx, By, Bz, tDescrip[, ...])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.trajec_analysis.Bsph2Bxyz">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.trajec_analysis.</span></span><span class="sig-name descname"><span class="pre">Bsph2Bxyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Br</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bphi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">th</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.trajec_analysis.Bsph2Bxyz" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.trajec_analysis.calc_trajec">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.trajec_analysis.</span></span><span class="sig-name descname"><span class="pre">calc_trajec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'net'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noiseAmp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.trajec_analysis.calc_trajec" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.trajec_analysis.fitData">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.trajec_analysis.</span></span><span class="sig-name descname"><span class="pre">fitData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalcMoments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalcData</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recalcFlybys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.trajec_analysis.fitData" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.trajec_analysis.fit_trajec">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.trajec_analysis.</span></span><span class="sig-name descname"><span class="pre">fit_trajec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tRel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BxDat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ByDat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BzDat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.trajec_analysis.fit_trajec" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.trajec_analysis.saveDat">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.trajec_analysis.</span></span><span class="sig-name descname"><span class="pre">saveDat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">By</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tDescrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'trajectory.dat'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.trajec_analysis.saveDat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MoonMag.symmetry_funcs.html" class="btn btn-neutral float-left" title="MoonMag.symmetry_funcs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MoonMag.symmetry_funcs.html" class="btn btn-neutral float-left" title="MoonMag.symmetry_funcs module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compareMM_PM.html" class="btn btn-neutral float-right" title="compareMM_PM module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,29 +1,7 @@
-MoonMag.calc\_Ganymede\_induced
-===============================
+MoonMag.calc\_Ganymede\_induced module
+======================================
 
 .. automodule:: MoonMag.calc_Ganymede_induced
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      calc_Ganymede_induced
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

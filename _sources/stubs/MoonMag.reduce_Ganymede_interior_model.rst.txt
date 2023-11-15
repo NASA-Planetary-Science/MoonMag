@@ -1,23 +1,7 @@
-MoonMag.reduce\_Ganymede\_interior\_model
-=========================================
+MoonMag.reduce\_Ganymede\_interior\_model module
+================================================
 
 .. automodule:: MoonMag.reduce_Ganymede_interior_model
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

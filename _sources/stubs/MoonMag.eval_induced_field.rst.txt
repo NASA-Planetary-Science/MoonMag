@@ -1,29 +1,7 @@
-MoonMag.eval\_induced\_field
-============================
+MoonMag.eval\_induced\_field module
+===================================
 
 .. automodule:: MoonMag.eval_induced_field
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      run_calcs
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

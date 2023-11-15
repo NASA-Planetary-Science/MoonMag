@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoonMag.asymmetry_funcs &mdash; MoonMag v1.6.0 documentation</title>
+  <title>MoonMag.asymmetry_funcs module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MoonMag.calc_Ganymede_induced" href="MoonMag.calc_Ganymede_induced.html" />
-    <link rel="prev" title="MoonMag" href="MoonMag.html" /> 
+    <link rel="next" title="MoonMag.calc_Ganymede_induced module" href="MoonMag.calc_Ganymede_induced.html" />
+    <link rel="prev" title="MoonMag package" href="MoonMag.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,21 +48,72 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="compareMM_PM.html">compareMM_PM</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="MoonMag.html">MoonMag</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MoonMag.asymmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.config.html">MoonMag.config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="MoonMag.html">MoonMag package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="MoonMag.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">MoonMag.asymmetry_funcs module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.BiList"><code class="docutils literal notranslate"><span class="pre">BiList()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.BinmResponse"><code class="docutils literal notranslate"><span class="pre">BinmResponse()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.F_M"><code class="docutils literal notranslate"><span class="pre">F_M()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.F_P"><code class="docutils literal notranslate"><span class="pre">F_P()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.XidDenom"><code class="docutils literal notranslate"><span class="pre">XidDenom()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.XidSeriesLower"><code class="docutils literal notranslate"><span class="pre">XidSeriesLower()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.XidSeriesUpper"><code class="docutils literal notranslate"><span class="pre">XidSeriesUpper()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.calc_Xi"><code class="docutils literal notranslate"><span class="pre">calc_Xi()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.calc_Xid"><code class="docutils literal notranslate"><span class="pre">calc_Xid()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.calc_Xiw"><code class="docutils literal notranslate"><span class="pre">calc_Xiw()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.cpx_div"><code class="docutils literal notranslate"><span class="pre">cpx_div()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.cpx_div_val"><code class="docutils literal notranslate"><span class="pre">cpx_div_val()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.eval_dev"><code class="docutils literal notranslate"><span class="pre">eval_dev()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.eval_inner_recur_sym"><code class="docutils literal notranslate"><span class="pre">eval_inner_recur_sym()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.getMagSurf"><code class="docutils literal notranslate"><span class="pre">getMagSurf()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_Binm_from_gh"><code class="docutils literal notranslate"><span class="pre">get_Binm_from_gh()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_CSpq_from_chipq"><code class="docutils literal notranslate"><span class="pre">get_CSpq_from_chipq()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_Deltanmi"><code class="docutils literal notranslate"><span class="pre">get_Deltanmi()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_all_Xid"><code class="docutils literal notranslate"><span class="pre">get_all_Xid()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_apq_from_chipq"><code class="docutils literal notranslate"><span class="pre">get_apq_from_chipq()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_chipq_from_CSpq"><code class="docutils literal notranslate"><span class="pre">get_chipq_from_CSpq()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_chipq_from_CSpq_single"><code class="docutils literal notranslate"><span class="pre">get_chipq_from_CSpq_single()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_chipq_from_apq"><code class="docutils literal notranslate"><span class="pre">get_chipq_from_apq()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_gh_from_Binm"><code class="docutils literal notranslate"><span class="pre">get_gh_from_Binm()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_rsurf"><code class="docutils literal notranslate"><span class="pre">get_rsurf()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.get_series_terms"><code class="docutils literal notranslate"><span class="pre">get_series_terms()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.jdx"><code class="docutils literal notranslate"><span class="pre">jdx()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.jnx"><code class="docutils literal notranslate"><span class="pre">jnx()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.mpc_global"><code class="docutils literal notranslate"><span class="pre">mpc_global</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.norm4pi"><code class="docutils literal notranslate"><span class="pre">norm4pi()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.print_Xi_table"><code class="docutils literal notranslate"><span class="pre">print_Xi_table()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.print_Xid_table"><code class="docutils literal notranslate"><span class="pre">print_Xid_table()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.read_Benm"><code class="docutils literal notranslate"><span class="pre">read_Benm()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.read_shape"><code class="docutils literal notranslate"><span class="pre">read_shape()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.spherharm4pi"><code class="docutils literal notranslate"><span class="pre">spherharm4pi()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.w_M"><code class="docutils literal notranslate"><span class="pre">w_M()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.w_P"><code class="docutils literal notranslate"><span class="pre">w_P()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.ydx"><code class="docutils literal notranslate"><span class="pre">ydx()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.asymmetry_funcs.ynx"><code class="docutils literal notranslate"><span class="pre">ynx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.config.html">MoonMag.config module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compareMM_PM.html">compareMM_PM module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
 </ul>
 </li>
 </ul>
@@ -83,9 +134,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
-          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag</a></li>
-      <li class="breadcrumb-item active">MoonMag.asymmetry_funcs</li>
+          <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
+          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag package</a></li>
+      <li class="breadcrumb-item active">MoonMag.asymmetry_funcs module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/stubs/MoonMag.asymmetry_funcs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +148,7 @@
            <div itemprop="articleBody">
              
   <section id="module-MoonMag.asymmetry_funcs">
-<span id="moonmag-asymmetry-funcs"></span><h1>MoonMag.asymmetry_funcs<a class="headerlink" href="#module-MoonMag.asymmetry_funcs" title="Permalink to this heading"></a></h1>
+<span id="moonmag-asymmetry-funcs-module"></span><h1>MoonMag.asymmetry_funcs module<a class="headerlink" href="#module-MoonMag.asymmetry_funcs" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>Contains functions for calculating induced magnetic fields</dt><dd><p>from near-spherical conductors.
 Developed in Python 3.8 for “A perturbation method for evaluating the
@@ -106,144 +158,309 @@ DOI: 10.1016/j.icarus.2021.114840</p>
 </dd>
 </dl>
 <p>Author: M. J. Styczinski, <a class="reference external" href="mailto:mjstyczi&#37;&#52;&#48;uw&#46;edu">mjstyczi<span>&#64;</span>uw<span>&#46;</span>edu</a></p>
-<p class="rubric">Module Attributes</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpc_global</span></code></p></td>
-<td><p>read_shape()</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Functions</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BiList</span></code>(r_bds, sigmas, peak_omegas, ...[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BinmResponse</span></code>(r_bds, sigmas, omega, ...[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">F_M</span></code>(n, m, twokap)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">F_P</span></code>(n, m, twokap, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">XidDenom</span></code>(n, m, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">XidSeriesLower</span></code>(n, m, p, q, nprm, mprm)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">XidSeriesUpper</span></code>(n, m, p, q, nprm, mprm, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_Xi</span></code>(n, m, p, q, nprm, mprm)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_Xid</span></code>(n, m, p, q, nprm, mprm, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_Xiw</span></code>(n, m, p, q, nprm, mprm)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpx_div</span></code>(a, b)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpx_div_val</span></code>(a, b)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_dev</span></code>(p, q, chi_pq, ltht, lphi, outShape)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval_inner_recur_sym</span></code>(n_max, n_bds, beta, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMagSurf</span></code>(nvals, mvals, Binm, r_th_ph, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_Binm_from_gh</span></code>(n_max, gnm, hnm)</p></td>
-<td><p>Convert from Schmidt semi-normalized form without the C-S phase (common in geophysics) to orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics). Handles all values for a given n at once. :param n_max: int. Maximum degree n of induced moments. :param gnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n]. Schmidt normalization here means the integral of <a href="#id1"><span class="problematic" id="id2">|</span></a>Ynm|^2 * dOmega over a unit sphere is             4pi/(2n+1) for all n and m. No Condon-Shortley phase. :param hnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n]. Schmidt normalization here means the integral of <a href="#id3"><span class="problematic" id="id4">|</span></a>Ynm|^2 * dOmega over a unit sphere is             4pi/(2n+1) for all n and m. No Condon-Shortley phase.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_CSpq_from_chipq</span></code>(pmax, chipq[, CSchange, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_Deltanmi</span></code>(n_max, p_max, nprm_max, n, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_Xid</span></code>(n_max, p_max, nprm_max, ...[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_apq_from_chipq</span></code>(pvals, qvals, chipq)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chipq_from_CSpq</span></code>(pmax, Cpq, Spq[, CSchange])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chipq_from_CSpq_single</span></code>(p, Cpq, Spq[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chipq_from_apq</span></code>(pvals, qvals, apq)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_gh_from_Binm</span></code>(n_max, Binm)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rsurf</span></code>(pvals, qvals, asym_shape, r_mean, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_series_terms</span></code>(n_max, nprm_max, n, n_bds, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">jdx</span></code>(n, x)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">jnx</span></code>(n, x)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">norm4pi</span></code>(n, m)</p></td>
-<td><p>Calculate normalization factor for 4pi-normalized spherical harmonics.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_Xi_table</span></code>(n_max, p_max, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_Xid_table</span></code>(Xid, n_max, p_max, nprm_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_Benm</span></code>(nprm_max, p_max[, bodyname, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_shape</span></code>(n_bds, p_max, rscale[, bodyname, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spherharm4pi</span></code>(n, m, ltht, lphi)</p></td>
-<td><p>Determines the 4pi-normalized surface spherical harmonic without the Condon-Shortley phase.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>(r_bds, sigmas, bcdev, asym_shape, p_max)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">w_M</span></code>(n, m)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">w_P</span></code>(n, m)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ydx</span></code>(n, x)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ynx</span></code>(n, x)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.BiList">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">BiList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grav_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rscale_moments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Schmidt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFnameS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.BiList" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.BinmResponse">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">BinmResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rscaling</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.BinmResponse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.F_M">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">F_M</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twokap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.F_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.F_P">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">F_P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twokap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.F_P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.XidDenom">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">XidDenom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.XidDenom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.XidSeriesLower">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">XidSeriesLower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.XidSeriesLower" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.XidSeriesUpper">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">XidSeriesUpper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.XidSeriesUpper" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.calc_Xi">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">calc_Xi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.calc_Xi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.calc_Xid">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">calc_Xid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.calc_Xid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.calc_Xiw">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">calc_Xiw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.calc_Xiw" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.cpx_div">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">cpx_div</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.cpx_div" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.cpx_div_val">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">cpx_div_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.cpx_div_val" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.eval_dev">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">eval_dev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_pq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ltht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lphi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outShape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.eval_dev" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.eval_inner_recur_sym">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">eval_inner_recur_sym</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.eval_inner_recur_sym" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.getMagSurf">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">getMagSurf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_th_ph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ltht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lphi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmax_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Schmidt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.getMagSurf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_Binm_from_gh">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_Binm_from_gh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gnm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hnm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_Binm_from_gh" title="Permalink to this definition"></a></dt>
+<dd><p>Convert from Schmidt semi-normalized form without the C-S phase (common in geophysics)
+to orthonormal harmonic coefficients with the Condon-Shortley phase (common in physics).
+Handles all values for a given n at once.
+:param n_max: int. Maximum degree n of induced moments.
+:param gnm: complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].</p>
+<blockquote>
+<div><p>Schmidt normalization here means the integral of <a href="#id1"><span class="problematic" id="id2">|</span></a>Ynm|^2 * dOmega over a unit sphere is
+4pi/(2n+1) for all n and m. No Condon-Shortley phase.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hnm</strong> – complex, shape(n_max+1,n_max+1). g_nm and h_nm values for all m = [0,n].
+Schmidt normalization here means the integral of <a href="#id3"><span class="problematic" id="id4">|</span></a>Ynm|^2 * dOmega over a unit sphere is
+4pi/(2n+1) for all n and m. No Condon-Shortley phase.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>complex, shape(2,n_max+1,n_max+1). Complex induced magnetic moments for fully normalized spherical harmonics.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Binm</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_CSpq_from_chipq">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_CSpq_from_chipq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chipq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CSchange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noRenorm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_CSpq_from_chipq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_Deltanmi">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_Deltanmi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aBar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TransferQts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_Deltanmi" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_all_Xid">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_all_Xid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprmvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprmvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_all_Xid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_apq_from_chipq">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_apq_from_chipq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chipq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_apq_from_chipq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_chipq_from_CSpq">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_chipq_from_CSpq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cpq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Spq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CSchange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_chipq_from_CSpq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_chipq_from_CSpq_single">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_chipq_from_CSpq_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cpq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Spq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CSchange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_chipq_from_CSpq_single" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_chipq_from_apq">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_chipq_from_apq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_chipq_from_apq" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_gh_from_Binm">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_gh_from_Binm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_gh_from_Binm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_rsurf">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_rsurf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ltht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lphi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_rsurf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.get_series_terms">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">get_series_terms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TransferQts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.get_series_terms" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.jdx">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">jdx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.jdx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.jnx">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">jnx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.jnx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.mpc_global">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">mpc_global</span></span><a class="headerlink" href="#MoonMag.asymmetry_funcs.mpc_global" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>read_shape()</dt><dd><p>Get boundary shape parameters from disk.
+Usage: <cite>asym_shape</cite> = read_shape(<cite>n_bds</cite>, <cite>p_max</cite>, <cite>rscale</cite>, <cite>bodyname=None</cite>, <cite>relative=False</cite>, <cite>eps_scaled=None</cite>,</p>
+<blockquote>
+<div><p><cite>single_asym=None</cite>, <cite>concentric=True</cite>, <cite>fpath=None</cite>, <cite>r_bds=None</cite>, <cite>r_io=-2</cite>, <cite>append=””</cite>, <cite>convert_depth_to_chipq=False</cite>)</p>
+</div></blockquote>
+<dl>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>asym_shape: complex, shape(n_bds,2,p_max+1,p_max+1). A list of absolute boundary shape parameters chi_pq</dt><dd><p>for each boundary in m, converted from values in km read from .txt files.</p>
+</dd>
+<dt>grav_shape: complex, shape(n_bds,2,p_max+1,p_max+1). Analogous to asym_shape, but due to tides deforming the</dt><dd><p>body surface. Kept separate from asym_shape to preserve ice shell thickness contours for comparison to prior work.</p>
+</dd>
+</dl>
+</dd>
+<dt>Parameters:</dt><dd><p>n_bds: integer. Number of conducting boundaries in the model (this is N).
+p_max: integer. Largest degree p in boundary shape.
+rscale: float. 1/R_body; used to scale absolute asymmetry values in making asym_shape arrays.
+bodyname: string (None). Body name as it appears in file names. If None, a generic file name will be searched for.
+relative: boolean (True). Optional argument to toggle whether chi_pq values are normalized</p>
+<blockquote>
+<div><p>to bcdev (True) or give absolute coefficients for the deviations (False).</p>
+</div></blockquote>
+<dl class="simple">
+<dt>eps_scaled: float, shape(n_bds) (None). Maximum boundary deviation in km, for converting relative asym_shape values to absolute.</dt><dd><p>Required if relative = True.</p>
+</dd>
+</dl>
+<p>single_asym: integer (None). If not None, apply asymmetry only to the boundary with this index.
+concentric: boolean (True). Optional argument to toggle whether to use the same spherical harmonic</p>
+<blockquote>
+<div><p>coefficients for every boundary (concentric asymmetry). In this case, only a single file is read in.
+If concentric = True, r_bds is required.</p>
+</div></blockquote>
+<p>fpath: string (None). Optional location to search for .txt files. Defaults to “interior/”.
+r_bds: float, shape(n_bds) (None). Boundary radii in m. Required if concentric = True.
+r_io: integer (-2). The index of r_bds corresponding to the ice-ocean interface, where asymmetry is expected to</p>
+<blockquote>
+<div><p>be its most pronounced. Defaults to -2, i.e. no ionosphere. Set to -3 for the ice-ocean boundary when a
+symmetric ionosphere (one layer) is included.</p>
+</div></blockquote>
+<p>append: string (“”). Optional string appended to file names.
+convert_depth_to_chipq: boolean (False). Optional flag to print relative chi_pq values to disk.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.norm4pi">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">norm4pi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.norm4pi" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate normalization factor for 4pi-normalized spherical harmonics.
+:param n: int. Degree of spherical harmonic.
+:param m: int. Order of spherical harmonic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float. Normalization factor, not including any possible Condon-Shortley phase.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>norm</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.print_Xi_table">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">print_Xi_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.print_Xi_table" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.print_Xid_table">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">print_Xid_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.print_Xid_table" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.read_Benm">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">read_Benm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synodic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbital</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit_osc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.read_Benm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.read_shape">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">read_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rscale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_scaled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_asym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concentric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_bds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_io</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_depth_to_chipq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.read_shape" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.spherharm4pi">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">spherharm4pi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ltht</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lphi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.spherharm4pi" title="Permalink to this definition"></a></dt>
+<dd><p>Determines the 4pi-normalized surface spherical harmonic without the Condon-Shortley phase.
+:param n: int. Degree of spherical harmonic to evaluate.
+:param m: int. Order of spherical harmonic to evaluate.
+:param ltht: float, shape(lleny). 1D list along theta at which to evaluate.
+:param lphi: float, shape(llenx). 1D list along phi at which to evaluate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>float, shape(lleny, llenx). Real surface spherical harmonics in 4pi normalization</dt><dd><p>for input n, m. cSnm is the cos of tesseral part and sSnm is the sin part.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>cSnm, sSnm</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.validate">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r_bds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigmas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bcdev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.validate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.w_M">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">w_M</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.w_M" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.w_P">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">w_P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.w_P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.ydx">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">ydx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.ydx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.asymmetry_funcs.ynx">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.asymmetry_funcs.</span></span><span class="sig-name descname"><span class="pre">ynx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.asymmetry_funcs.ynx" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MoonMag.html" class="btn btn-neutral float-left" title="MoonMag" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MoonMag.calc_Ganymede_induced.html" class="btn btn-neutral float-right" title="MoonMag.calc_Ganymede_induced" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MoonMag.html" class="btn btn-neutral float-left" title="MoonMag package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MoonMag.calc_Ganymede_induced.html" class="btn btn-neutral float-right" title="MoonMag.calc_Ganymede_induced module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

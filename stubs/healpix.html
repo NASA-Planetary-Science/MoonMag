@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoonMag.calc_Ganymede_trajec_induced module &mdash; MoonMag v1.6.0 documentation</title>
+  <title>healpix module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MoonMag.config module" href="MoonMag.config.html" />
-    <link rel="prev" title="MoonMag.calc_Ganymede_induced module" href="MoonMag.calc_Ganymede_induced.html" /> 
+    <link rel="next" title="print_healpix_locs module" href="print_healpix_locs.html" />
+    <link rel="prev" title="compareMM_PM module" href="compareMM_PM.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,29 +50,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="MoonMag.html">MoonMag package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="MoonMag.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced module</a></li>
-<li class="toctree-l5 current"><a class="current reference internal" href="#">MoonMag.calc_Ganymede_trajec_induced module</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="#MoonMag.calc_Ganymede_trajec_induced.calc_Ganymede_trajec_induced"><code class="docutils literal notranslate"><span class="pre">calc_Ganymede_trajec_induced()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.config.html">MoonMag.config module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis module</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.html">MoonMag package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="compareMM_PM.html">compareMM_PM module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">healpix module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#healpix.MakeTitle"><code class="docutils literal notranslate"><span class="pre">MakeTitle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#healpix.PlotMap"><code class="docutils literal notranslate"><span class="pre">PlotMap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#healpix.healpixExample"><code class="docutils literal notranslate"><span class="pre">healpixExample()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
 </ul>
@@ -97,10 +82,9 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
           <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
-          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag package</a></li>
-      <li class="breadcrumb-item active">MoonMag.calc_Ganymede_trajec_induced module</li>
+      <li class="breadcrumb-item active">healpix module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/stubs/MoonMag.calc_Ganymede_trajec_induced.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/stubs/healpix.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -108,12 +92,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-MoonMag.calc_Ganymede_trajec_induced">
-<span id="moonmag-calc-ganymede-trajec-induced-module"></span><h1>MoonMag.calc_Ganymede_trajec_induced module<a class="headerlink" href="#module-MoonMag.calc_Ganymede_trajec_induced" title="Permalink to this heading"></a></h1>
+  <section id="module-healpix">
+<span id="healpix-module"></span><h1>healpix module<a class="headerlink" href="#module-healpix" title="Permalink to this heading"></a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="MoonMag.calc_Ganymede_trajec_induced.calc_Ganymede_trajec_induced">
-<span class="sig-prename descclassname"><span class="pre">MoonMag.calc_Ganymede_trajec_induced.</span></span><span class="sig-name descname"><span class="pre">calc_Ganymede_trajec_induced</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.calc_Ganymede_trajec_induced.calc_Ganymede_trajec_induced" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="healpix.MakeTitle">
+<span class="sig-prename descclassname"><span class="pre">healpix.</span></span><span class="sig-name descname"><span class="pre">MakeTitle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">titleSpec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descrip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#healpix.MakeTitle" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="healpix.PlotMap">
+<span class="sig-prename descclassname"><span class="pre">healpix.</span></span><span class="sig-name descname"><span class="pre">PlotMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lonMap_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latMap_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#healpix.PlotMap" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="healpix.healpixExample">
+<span class="sig-prename descclassname"><span class="pre">healpix.</span></span><span class="sig-name descname"><span class="pre">healpixExample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#healpix.healpixExample" title="Permalink to this definition"></a></dt>
+<dd><p>Demonstrate usage and test application of HEALpix evaluation of spherical harmonic data and
+compare to cylindrical evaluation.</p>
+</dd></dl>
 
 </section>
 
@@ -121,8 +117,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MoonMag.calc_Ganymede_induced.html" class="btn btn-neutral float-left" title="MoonMag.calc_Ganymede_induced module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MoonMag.config.html" class="btn btn-neutral float-right" title="MoonMag.config module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="compareMM_PM.html" class="btn btn-neutral float-left" title="compareMM_PM module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="print_healpix_locs.html" class="btn btn-neutral float-right" title="print_healpix_locs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

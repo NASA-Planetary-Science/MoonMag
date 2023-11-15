@@ -1,0 +1,7 @@
+runMoonMag module
+=================
+
+.. automodule:: runMoonMag
+   :members:
+   :undoc-members:
+   :show-inheritance:

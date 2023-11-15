@@ -1,33 +1,7 @@
-MoonMag.trajec\_analysis
-========================
+MoonMag.trajec\_analysis module
+===============================
 
 .. automodule:: MoonMag.trajec_analysis
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      Bsph2Bxyz
-      calc_trajec
-      fitData
-      fit_trajec
-      saveDat
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

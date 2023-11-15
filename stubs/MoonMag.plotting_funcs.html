@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoonMag.plotting_funcs &mdash; MoonMag v1.6.0 documentation</title>
+  <title>MoonMag.plotting_funcs module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MoonMag.reduce_Ganymede_interior_model" href="MoonMag.reduce_Ganymede_interior_model.html" />
-    <link rel="prev" title="MoonMag.plot_Ganymede_Aes" href="MoonMag.plot_Ganymede_Aes.html" /> 
+    <link rel="next" title="MoonMag.reduce_Ganymede_interior_model module" href="MoonMag.reduce_Ganymede_interior_model.html" />
+    <link rel="prev" title="MoonMag.plot_Ganymede_Aes module" href="MoonMag.plot_Ganymede_Aes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,21 +48,52 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="compareMM_PM.html">compareMM_PM</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="MoonMag.html">MoonMag</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.config.html">MoonMag.config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MoonMag.plotting_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="MoonMag.html">MoonMag package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="MoonMag.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.config.html">MoonMag.config module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes module</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">MoonMag.plotting_funcs module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.SetMap"><code class="docutils literal notranslate"><span class="pre">SetMap()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.calcAndPlotTrajec"><code class="docutils literal notranslate"><span class="pre">calcAndPlotTrajec()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.cformat"><code class="docutils literal notranslate"><span class="pre">cformat()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.con_formatter"><code class="docutils literal notranslate"><span class="pre">con_formatter</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.east_formatted"><code class="docutils literal notranslate"><span class="pre">east_formatted()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.fix_lons"><code class="docutils literal notranslate"><span class="pre">fix_lons()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.get_latlon"><code class="docutils literal notranslate"><span class="pre">get_latlon()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.get_sign"><code class="docutils literal notranslate"><span class="pre">get_sign()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.getmag"><code class="docutils literal notranslate"><span class="pre">getmag()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.getphase"><code class="docutils literal notranslate"><span class="pre">getphase()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.healpixMap"><code class="docutils literal notranslate"><span class="pre">healpixMap()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.lat_formatted"><code class="docutils literal notranslate"><span class="pre">lat_formatted()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.lat_hemisphere"><code class="docutils literal notranslate"><span class="pre">lat_hemisphere()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.lon_hemisphere"><code class="docutils literal notranslate"><span class="pre">lon_hemisphere()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotAes"><code class="docutils literal notranslate"><span class="pre">plotAes()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotAfunctions"><code class="docutils literal notranslate"><span class="pre">plotAfunctions()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotAsym"><code class="docutils literal notranslate"><span class="pre">plotAsym()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotMagSurf"><code class="docutils literal notranslate"><span class="pre">plotMagSurf()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotTimeSeries"><code class="docutils literal notranslate"><span class="pre">plotTimeSeries()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.plotting_funcs.plotTrajec"><code class="docutils literal notranslate"><span class="pre">plotTrajec()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compareMM_PM.html">compareMM_PM module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
 </ul>
 </li>
 </ul>
@@ -83,9 +114,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
-          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag</a></li>
-      <li class="breadcrumb-item active">MoonMag.plotting_funcs</li>
+          <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
+          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag package</a></li>
+      <li class="breadcrumb-item active">MoonMag.plotting_funcs module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/stubs/MoonMag.plotting_funcs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +128,7 @@
            <div itemprop="articleBody">
              
   <section id="module-MoonMag.plotting_funcs">
-<span id="moonmag-plotting-funcs"></span><h1>MoonMag.plotting_funcs<a class="headerlink" href="#module-MoonMag.plotting_funcs" title="Permalink to this heading"></a></h1>
+<span id="moonmag-plotting-funcs-module"></span><h1>MoonMag.plotting_funcs module<a class="headerlink" href="#module-MoonMag.plotting_funcs" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>Contains functions for plotting topography and magnetic fields</dt><dd><p>from near-spherical conductors.
 Developed in Python 3.8 for “A perturbation method for evaluating the
@@ -106,84 +138,144 @@ DOI: 10.1016/j.icarus.2021.114840</p>
 </dd>
 </dl>
 <p>Author: M. J. Styczinski, <a class="reference external" href="mailto:mjstyczi&#37;&#52;&#48;uw&#46;edu">mjstyczi<span>&#64;</span>uw<span>&#46;</span>edu</a></p>
-<p class="rubric">Module Attributes</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">con_formatter</span></code></p></td>
-<td><p>plotAsym() Calculates layer thicknesses gridded by lat,lon. Usage: plotAsym(<cite>recalc</cite>, <cite>do_large</cite>, <cite>index=-2</cite>, <cite>cmp_index=-1</cite>, <cite>r_bds=None</cite>, <cite>asym_shape=None</cite>,                 <cite>pvals=None</cite>, <cite>qvals=None</cite>, <cite>fpath=None</cite>, <cite>bodyname=None</cite>, <cite>descrip=&quot;Ice--ocean&quot;</cite>, <cite>no_title=False</cite>) Returns: None :param recalc: boolean. Whether to recalculate gridded values, or attempt to read them in. They are printed to disk if recalc'd. All other inputs are optional, because if recalc=True most will not be needed. :param do_large: boolean. Whether to print larger versions of labels and strip off the colorbar, to better display                  in presentation slides or side-by-side figures. :param index: integer (-2). The boundary index to reference in asym_shape, corresponding to the perturbed boundary. :param cmp_index: integer (-1). The boundary index against which to compare the primary boundary index above. :param r_bds: float, shape(N) (None). Mean radius for each boundary in the conductivity model, in m. :param asym_shape: float, shape(n_bds,2,p_max+1,p_max+1) (None). A list of boundary shape parameters chi_pq for each boundary. :param pvals: integer, shape(Npq) (None). A linear list of p values for constructing (p,q) pairs in parallelized loops. :param qvals: integer, shape(Npq) (None). A linear list of q values for constructing (p,q) pairs in parallelized loops. :param fpath: string (None). Optional location to print image file to. Defaults to &quot;figures/&quot;. :param bodyname: string (None). Optional body name to include in plot titles and file names. :param append: string(&quot;&quot;). Optional string to append to filenames. :param descrip: string (&quot;Ice--ocean&quot;). Description of the asymmetric layer being plotted, for plot titles. :param no_title: boolean (False). If true, print figures without title text.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Functions</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetMap</span></code>(ax)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calcAndPlotTrajec</span></code>(x, y, z, r, t, Binm, Benm, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cformat</span></code>(field)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">east_formatted</span></code>(longitude[, EAST])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fix_lons</span></code>(lons)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_latlon</span></code>(do_large)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sign</span></code>(val)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getmag</span></code>(phi)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getphase</span></code>(A)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">healpixMap</span></code>(nside, map, title, fName[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_formatted</span></code>(latitude)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_hemisphere</span></code>(latitude)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lon_hemisphere</span></code>(longitude[, EAST])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAes</span></code>(T_h, Ae_mag, Ae_arg, Tinterest_h, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAfunctions</span></code>(kr, n, Ae_mag, Ae_arg, ...[, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAsym</span></code>(recalc, do_large[, index, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotMagSurf</span></code>(n_peaks, Binm, nvals, mvals, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotTimeSeries</span></code>(loc, Binm, Benm, t_start, ...)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotTrajec</span></code>(t, Bx, By, Bz[, Bdat, bodyname, ...])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.SetMap">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">SetMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.SetMap" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.calcAndPlotTrajec">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">calcAndPlotTrajec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_omegas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R_body</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">difference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm_sph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">net_field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.calcAndPlotTrajec" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.cformat">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">cformat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.cformat" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.con_formatter">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">con_formatter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;matplotlib.ticker.FuncFormatter</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#MoonMag.plotting_funcs.con_formatter" title="Permalink to this definition"></a></dt>
+<dd><p>plotAsym()
+Calculates layer thicknesses gridded by lat,lon.
+Usage: plotAsym(<cite>recalc</cite>, <cite>do_large</cite>, <cite>index=-2</cite>, <cite>cmp_index=-1</cite>, <cite>r_bds=None</cite>, <cite>asym_shape=None</cite>,</p>
+<blockquote>
+<div><p><cite>pvals=None</cite>, <cite>qvals=None</cite>, <cite>fpath=None</cite>, <cite>bodyname=None</cite>, <cite>descrip=”Ice–ocean”</cite>, <cite>no_title=False</cite>)</p>
+</div></blockquote>
+<p>Returns: None
+:param recalc: boolean. Whether to recalculate gridded values, or attempt to read them in. They are printed to disk if recalc’d.</p>
+<blockquote>
+<div><p>All other inputs are optional, because if recalc=True most will not be needed.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>do_large</strong> – boolean. Whether to print larger versions of labels and strip off the colorbar, to better display
+in presentation slides or side-by-side figures.</p></li>
+<li><p><strong>index</strong> – integer (-2). The boundary index to reference in asym_shape, corresponding to the perturbed boundary.</p></li>
+<li><p><strong>cmp_index</strong> – integer (-1). The boundary index against which to compare the primary boundary index above.</p></li>
+<li><p><strong>r_bds</strong> – float, shape(N) (None). Mean radius for each boundary in the conductivity model, in m.</p></li>
+<li><p><strong>asym_shape</strong> – float, shape(n_bds,2,p_max+1,p_max+1) (None). A list of boundary shape parameters chi_pq for each boundary.</p></li>
+<li><p><strong>pvals</strong> – integer, shape(Npq) (None). A linear list of p values for constructing (p,q) pairs in parallelized loops.</p></li>
+<li><p><strong>qvals</strong> – integer, shape(Npq) (None). A linear list of q values for constructing (p,q) pairs in parallelized loops.</p></li>
+<li><p><strong>fpath</strong> – string (None). Optional location to print image file to. Defaults to “figures/”.</p></li>
+<li><p><strong>bodyname</strong> – string (None). Optional body name to include in plot titles and file names.</p></li>
+<li><p><strong>append</strong> – string(“”). Optional string to append to filenames.</p></li>
+<li><p><strong>descrip</strong> – string (“Ice–ocean”). Description of the asymmetric layer being plotted, for plot titles.</p></li>
+<li><p><strong>no_title</strong> – boolean (False). If true, print figures without title text.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.east_formatted">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">east_formatted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">longitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EAST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.east_formatted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.fix_lons">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">fix_lons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lons</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.fix_lons" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.get_latlon">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">get_latlon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_large</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.get_latlon" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.get_sign">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">get_sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.get_sign" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.getmag">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">getmag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.getmag" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.getphase">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">getphase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.getphase" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.healpixMap">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">healpixMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FIELD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.healpixMap" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.lat_formatted">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">lat_formatted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.lat_formatted" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.lat_hemisphere">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">lat_hemisphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latitude</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.lat_hemisphere" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.lon_hemisphere">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">lon_hemisphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">longitude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EAST</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.lon_hemisphere" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotAes">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotAes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ae_mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ae_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tinterest_h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BeRatio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intModels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fEnd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotAes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotAfunctions">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotAfunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ae_mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ae_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">At_mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">At_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ad_mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ad_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AtAd_mag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AtAd_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotAfunctions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotAsym">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotAsym</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recalc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_large</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmp_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_bds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descrip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Ice--ocean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotAsym" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotMagSurf">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotMagSurf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_peaks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_large</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Schmidt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_surf_mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asym_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">difference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm_sph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprmvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mprmvals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotMagSurf" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotTimeSeries">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotTimeSeries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Benm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_hrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nprm_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mvals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Binm_sph</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotTimeSeries" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.plotting_funcs.plotTrajec">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.plotting_funcs.</span></span><span class="sig-name descname"><span class="pre">plotTrajec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">By</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Bdat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bodyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_CA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lfig_dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.plotting_funcs.plotTrajec" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MoonMag.plot_Ganymede_Aes.html" class="btn btn-neutral float-left" title="MoonMag.plot_Ganymede_Aes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MoonMag.reduce_Ganymede_interior_model.html" class="btn btn-neutral float-right" title="MoonMag.reduce_Ganymede_interior_model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MoonMag.plot_Ganymede_Aes.html" class="btn btn-neutral float-left" title="MoonMag.plot_Ganymede_Aes module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MoonMag.reduce_Ganymede_interior_model.html" class="btn btn-neutral float-right" title="MoonMag.reduce_Ganymede_interior_model module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

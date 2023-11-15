@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MoonMag.run_all &mdash; MoonMag v1.6.0 documentation</title>
+  <title>MoonMag.run_all module &mdash; MoonMag v1.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="MoonMag.symmetry_funcs" href="MoonMag.symmetry_funcs.html" />
-    <link rel="prev" title="MoonMag.reduce_Ganymede_interior_model" href="MoonMag.reduce_Ganymede_interior_model.html" /> 
+    <link rel="next" title="MoonMag.symmetry_funcs module" href="MoonMag.symmetry_funcs.html" />
+    <link rel="prev" title="MoonMag.reduce_Ganymede_interior_model module" href="MoonMag.reduce_Ganymede_interior_model.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,21 +48,33 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="compareMM_PM.html">compareMM_PM</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="MoonMag.html">MoonMag</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.config.html">MoonMag.config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">MoonMag.run_all</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../pythonModules.html">MoonMag documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">workspace</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="MoonMag.html">MoonMag package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="MoonMag.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.config.html">MoonMag.config module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.plotting_funcs.html">MoonMag.plotting_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model module</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">MoonMag.run_all module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#MoonMag.run_all.run_all"><code class="docutils literal notranslate"><span class="pre">run_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="compareMM_PM.html">compareMM_PM module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="healpix.html">healpix module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="print_healpix_locs.html">print_healpix_locs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="runMoonMag.html">runMoonMag module</a></li>
 </ul>
 </li>
 </ul>
@@ -83,9 +95,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
-          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag</a></li>
-      <li class="breadcrumb-item active">MoonMag.run_all</li>
+          <li class="breadcrumb-item"><a href="../pythonModules.html">MoonMag documentation</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">workspace</a></li>
+          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag package</a></li>
+      <li class="breadcrumb-item active">MoonMag.run_all module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/stubs/MoonMag.run_all.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +109,7 @@
            <div itemprop="articleBody">
              
   <section id="module-MoonMag.run_all">
-<span id="moonmag-run-all"></span><h1>MoonMag.run_all<a class="headerlink" href="#module-MoonMag.run_all" title="Permalink to this heading"></a></h1>
+<span id="moonmag-run-all-module"></span><h1>MoonMag.run_all module<a class="headerlink" href="#module-MoonMag.run_all" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>This program runs all calculations for induced magnetic fields</dt><dd><p>from near-spherical conductors and plots results that appear in
 the associated publication.
@@ -107,22 +120,19 @@ DOI: 10.1016/j.icarus.2021.114840</p>
 </dd>
 </dl>
 <p>Author: M. J. Styczinski, <a class="reference external" href="mailto:mjstyczi&#37;&#52;&#48;uw&#46;edu">mjstyczi<span>&#64;</span>uw<span>&#46;</span>edu</a></p>
-<p class="rubric">Functions</p>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_all</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="MoonMag.run_all.run_all">
+<span class="sig-prename descclassname"><span class="pre">MoonMag.run_all.</span></span><span class="sig-name descname"><span class="pre">run_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MoonMag.run_all.run_all" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MoonMag.reduce_Ganymede_interior_model.html" class="btn btn-neutral float-left" title="MoonMag.reduce_Ganymede_interior_model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MoonMag.symmetry_funcs.html" class="btn btn-neutral float-right" title="MoonMag.symmetry_funcs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="MoonMag.reduce_Ganymede_interior_model.html" class="btn btn-neutral float-left" title="MoonMag.reduce_Ganymede_interior_model module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MoonMag.symmetry_funcs.html" class="btn btn-neutral float-right" title="MoonMag.symmetry_funcs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

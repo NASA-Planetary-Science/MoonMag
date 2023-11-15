@@ -1,30 +1,7 @@
-﻿compareMM\_PM
-=============
+compareMM\_PM module
+====================
 
 .. automodule:: compareMM_PM
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      GetxyzrFromData
-      compareMM_PM
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:

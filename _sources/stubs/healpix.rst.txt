@@ -1,0 +1,7 @@
+healpix module
+==============
+
+.. automodule:: healpix
+   :members:
+   :undoc-members:
+   :show-inheritance:

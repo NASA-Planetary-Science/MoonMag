@@ -1,0 +1,7 @@
+print\_healpix\_locs module
+===========================
+
+.. automodule:: print_healpix_locs
+   :members:
+   :undoc-members:
+   :show-inheritance:

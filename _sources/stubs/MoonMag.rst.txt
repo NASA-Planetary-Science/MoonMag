@@ -1,31 +1,16 @@
-﻿MoonMag
-=======
+MoonMag package
+===============
 
 .. automodule:: MoonMag
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-   
-   
-   
+Submodules
+----------
 
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
-.. rubric:: Modules
-
-.. autosummary::
-   :toctree:
-   :recursive:
+.. toctree::
+   :maxdepth: 4
 
    MoonMag.asymmetry_funcs
    MoonMag.calc_Ganymede_induced
@@ -39,4 +24,3 @@
    MoonMag.run_all
    MoonMag.symmetry_funcs
    MoonMag.trajec_analysis
-

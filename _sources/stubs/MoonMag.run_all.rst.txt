@@ -1,29 +1,7 @@
-MoonMag.run\_all
-================
+MoonMag.run\_all module
+=======================
 
 .. automodule:: MoonMag.run_all
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      run_all
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
