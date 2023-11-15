@@ -22,9 +22,15 @@ extensions = ['sphinx.ext.autodoc',
               'sphinxcontrib.apidoc',
               'myst_parser']
 source_suffix = ['.rst', '.md']
-sys.path.insert(0, os.path.abspath('../'))
 
-apidoc_module_dir = '../'
+_HERE = os.path.dirname(__file__)
+_ROOT_DIR = os.path.abspath(os.path.join(_HERE, '..'))
+_PACKAGE_DIR = os.path.abspath(os.path.join(_HERE, '../MoonMag'))
+
+sys.path.insert(0, _ROOT_DIR)
+sys.path.insert(0, _PACKAGE_DIR)
+
+apidoc_module_dir = _ROOT_DIR
 apidoc_output_dir = 'stubs/'
 apidoc_excluded_paths = ['configP*', 'setup.py']
 apidoc_separate_modules = True
