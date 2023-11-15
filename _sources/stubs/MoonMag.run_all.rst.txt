@@ -1,0 +1,29 @@
+MoonMag.run\_all
+================
+
+.. automodule:: MoonMag.run_all
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      run_all
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

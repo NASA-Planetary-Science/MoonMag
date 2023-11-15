@@ -1,0 +1,32 @@
+MoonMag.field\_xyz
+==================
+
+.. automodule:: MoonMag.field_xyz
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      eval_Be
+      eval_Be_Schmidt
+      eval_Bi
+      eval_Bi_Schmidt
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

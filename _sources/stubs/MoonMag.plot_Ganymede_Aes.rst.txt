@@ -1,0 +1,29 @@
+MoonMag.plot\_Ganymede\_Aes
+===========================
+
+.. automodule:: MoonMag.plot_Ganymede_Aes
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      plot_Ganymede_Aes
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

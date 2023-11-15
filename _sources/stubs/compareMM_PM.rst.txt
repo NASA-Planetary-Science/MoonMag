@@ -1,0 +1,30 @@
+﻿compareMM\_PM
+=============
+
+.. automodule:: compareMM_PM
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      GetxyzrFromData
+      compareMM_PM
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

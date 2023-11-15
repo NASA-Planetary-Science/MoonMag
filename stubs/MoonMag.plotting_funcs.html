@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoonMag.plotting_funcs &mdash; MoonMag v1.6.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/MoonMag_icon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f149d0f4"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MoonMag.reduce_Ganymede_interior_model" href="MoonMag.reduce_Ganymede_interior_model.html" />
+    <link rel="prev" title="MoonMag.plot_Ganymede_Aes" href="MoonMag.plot_Ganymede_Aes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/MoonMag_logoDocs.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">README</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Package documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="compareMM_PM.html">compareMM_PM</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="MoonMag.html">MoonMag</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.asymmetry_funcs.html">MoonMag.asymmetry_funcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_induced.html">MoonMag.calc_Ganymede_induced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.calc_Ganymede_trajec_induced.html">MoonMag.calc_Ganymede_trajec_induced</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.config.html">MoonMag.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.eval_induced_field.html">MoonMag.eval_induced_field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.field_xyz.html">MoonMag.field_xyz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.plot_Ganymede_Aes.html">MoonMag.plot_Ganymede_Aes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MoonMag.plotting_funcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.reduce_Ganymede_interior_model.html">MoonMag.reduce_Ganymede_interior_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.run_all.html">MoonMag.run_all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.symmetry_funcs.html">MoonMag.symmetry_funcs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MoonMag.trajec_analysis.html">MoonMag.trajec_analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MoonMag</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../documentation.html">Package documentation</a></li>
+          <li class="breadcrumb-item"><a href="MoonMag.html">MoonMag</a></li>
+      <li class="breadcrumb-item active">MoonMag.plotting_funcs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/stubs/MoonMag.plotting_funcs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-MoonMag.plotting_funcs">
+<span id="moonmag-plotting-funcs"></span><h1>MoonMag.plotting_funcs<a class="headerlink" href="#module-MoonMag.plotting_funcs" title="Permalink to this heading"></a></h1>
+<dl class="simple">
+<dt>Contains functions for plotting topography and magnetic fields</dt><dd><p>from near-spherical conductors.
+Developed in Python 3.8 for “A perturbation method for evaluating the
+magnetic field induced from an arbitrary, asymmetric ocean world
+analytically” by Styczinski et al.
+DOI: 10.1016/j.icarus.2021.114840</p>
+</dd>
+</dl>
+<p>Author: M. J. Styczinski, <a class="reference external" href="mailto:mjstyczi&#37;&#52;&#48;uw&#46;edu">mjstyczi<span>&#64;</span>uw<span>&#46;</span>edu</a></p>
+<p class="rubric">Module Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">con_formatter</span></code></p></td>
+<td><p>plotAsym() Calculates layer thicknesses gridded by lat,lon. Usage: plotAsym(<cite>recalc</cite>, <cite>do_large</cite>, <cite>index=-2</cite>, <cite>cmp_index=-1</cite>, <cite>r_bds=None</cite>, <cite>asym_shape=None</cite>,                 <cite>pvals=None</cite>, <cite>qvals=None</cite>, <cite>fpath=None</cite>, <cite>bodyname=None</cite>, <cite>descrip=&quot;Ice--ocean&quot;</cite>, <cite>no_title=False</cite>) Returns: None :param recalc: boolean. Whether to recalculate gridded values, or attempt to read them in. They are printed to disk if recalc'd. All other inputs are optional, because if recalc=True most will not be needed. :param do_large: boolean. Whether to print larger versions of labels and strip off the colorbar, to better display                  in presentation slides or side-by-side figures. :param index: integer (-2). The boundary index to reference in asym_shape, corresponding to the perturbed boundary. :param cmp_index: integer (-1). The boundary index against which to compare the primary boundary index above. :param r_bds: float, shape(N) (None). Mean radius for each boundary in the conductivity model, in m. :param asym_shape: float, shape(n_bds,2,p_max+1,p_max+1) (None). A list of boundary shape parameters chi_pq for each boundary. :param pvals: integer, shape(Npq) (None). A linear list of p values for constructing (p,q) pairs in parallelized loops. :param qvals: integer, shape(Npq) (None). A linear list of q values for constructing (p,q) pairs in parallelized loops. :param fpath: string (None). Optional location to print image file to. Defaults to &quot;figures/&quot;. :param bodyname: string (None). Optional body name to include in plot titles and file names. :param append: string(&quot;&quot;). Optional string to append to filenames. :param descrip: string (&quot;Ice--ocean&quot;). Description of the asymmetric layer being plotted, for plot titles. :param no_title: boolean (False). If true, print figures without title text.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetMap</span></code>(ax)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calcAndPlotTrajec</span></code>(x, y, z, r, t, Binm, Benm, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cformat</span></code>(field)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">east_formatted</span></code>(longitude[, EAST])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fix_lons</span></code>(lons)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_latlon</span></code>(do_large)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sign</span></code>(val)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getmag</span></code>(phi)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">getphase</span></code>(A)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">healpixMap</span></code>(nside, map, title, fName[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_formatted</span></code>(latitude)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lat_hemisphere</span></code>(latitude)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lon_hemisphere</span></code>(longitude[, EAST])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAes</span></code>(T_h, Ae_mag, Ae_arg, Tinterest_h, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAfunctions</span></code>(kr, n, Ae_mag, Ae_arg, ...[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotAsym</span></code>(recalc, do_large[, index, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotMagSurf</span></code>(n_peaks, Binm, nvals, mvals, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotTimeSeries</span></code>(loc, Binm, Benm, t_start, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotTrajec</span></code>(t, Bx, By, Bz[, Bdat, bodyname, ...])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MoonMag.plot_Ganymede_Aes.html" class="btn btn-neutral float-left" title="MoonMag.plot_Ganymede_Aes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MoonMag.reduce_Ganymede_interior_model.html" class="btn btn-neutral float-right" title="MoonMag.reduce_Ganymede_interior_model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Marshall J. Styczinski.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

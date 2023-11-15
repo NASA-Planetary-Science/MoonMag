@@ -1,0 +1,33 @@
+MoonMag.trajec\_analysis
+========================
+
+.. automodule:: MoonMag.trajec_analysis
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      Bsph2Bxyz
+      calc_trajec
+      fitData
+      fit_trajec
+      saveDat
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,53 @@
+MoonMag.plotting\_funcs
+=======================
+
+.. automodule:: MoonMag.plotting_funcs
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      con_formatter
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      SetMap
+      calcAndPlotTrajec
+      cformat
+      east_formatted
+      fix_lons
+      get_latlon
+      get_sign
+      getmag
+      getphase
+      healpixMap
+      lat_formatted
+      lat_hemisphere
+      lon_hemisphere
+      plotAes
+      plotAfunctions
+      plotAsym
+      plotMagSurf
+      plotTimeSeries
+      plotTrajec
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

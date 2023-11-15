@@ -1,0 +1,29 @@
+MoonMag.calc\_Ganymede\_trajec\_induced
+=======================================
+
+.. automodule:: MoonMag.calc_Ganymede_trajec_induced
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      calc_Ganymede_trajec_induced
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

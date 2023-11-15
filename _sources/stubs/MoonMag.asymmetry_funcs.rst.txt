@@ -1,0 +1,73 @@
+MoonMag.asymmetry\_funcs
+========================
+
+.. automodule:: MoonMag.asymmetry_funcs
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      mpc_global
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      BiList
+      BinmResponse
+      F_M
+      F_P
+      XidDenom
+      XidSeriesLower
+      XidSeriesUpper
+      calc_Xi
+      calc_Xid
+      calc_Xiw
+      cpx_div
+      cpx_div_val
+      eval_dev
+      eval_inner_recur_sym
+      getMagSurf
+      get_Binm_from_gh
+      get_CSpq_from_chipq
+      get_Deltanmi
+      get_all_Xid
+      get_apq_from_chipq
+      get_chipq_from_CSpq
+      get_chipq_from_CSpq_single
+      get_chipq_from_apq
+      get_gh_from_Binm
+      get_rsurf
+      get_series_terms
+      jdx
+      jnx
+      norm4pi
+      print_Xi_table
+      print_Xid_table
+      read_Benm
+      read_shape
+      spherharm4pi
+      validate
+      w_M
+      w_P
+      ydx
+      ynx
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,23 @@
+MoonMag.reduce\_Ganymede\_interior\_model
+=========================================
+
+.. automodule:: MoonMag.reduce_Ganymede_interior_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
