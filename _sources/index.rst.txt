@@ -9,7 +9,7 @@ The software is hosted on GitHub at https://github.com/itsmoosh/moonmag and mirr
 Please refer to the :doc:`README<readme>` for the overall package description and quick start guide.
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    :caption: Contents:
 
    README <readme>
