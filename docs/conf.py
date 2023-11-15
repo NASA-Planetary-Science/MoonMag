@@ -19,13 +19,18 @@ release = 'v1.6.0'
 
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.napoleon',
-              'sphinx.ext.autosummary',
+              'sphinxcontrib.apidoc',
               'myst_parser']
 source_suffix = ['.rst', '.md']
-autosummary_generate = True
 sys.path.insert(0, os.path.abspath('../'))
 
-templates_path = ['_templates']
+apidoc_module_dir = '../'
+apidoc_output_dir = 'stubs/'
+apidoc_excluded_paths = ['configP*', 'setup.py']
+apidoc_separate_modules = True
+apidoc_module_first = True
+
+templates_path = ['_templa`tes']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'configP*']
 
 

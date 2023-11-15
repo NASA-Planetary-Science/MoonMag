@@ -13,7 +13,7 @@ Please refer to the :doc:`README<readme>` for the overall package description an
    :caption: Contents:
 
    README <readme>
-   documentation
+   pythonModules
 
 
 Indices and tables

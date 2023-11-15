@@ -1,3 +1,7 @@
+"""
+Core calculation functions and plotting routines.
+"""
+
 import os
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 _excitation = os.path.join(_ROOT, 'excitation')
