@@ -22,6 +22,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinxcontrib.apidoc',
               'myst_parser']
 source_suffix = ['.rst', '.md']
+templates_path = ['templates']
 
 _HERE = os.path.dirname(__file__)
 _ROOT_DIR = os.path.abspath(os.path.join(_HERE, '..'))
@@ -31,12 +32,12 @@ sys.path.insert(0, _ROOT_DIR)
 sys.path.insert(0, _PACKAGE_DIR)
 
 apidoc_module_dir = _ROOT_DIR
-apidoc_output_dir = 'stubs/'
+apidoc_output_dir = 'stubs'
+apidoc_template_dir = 'templates'
 apidoc_excluded_paths = ['configP*', 'setup.py']
 apidoc_separate_modules = True
 apidoc_module_first = True
 
-templates_path = ['_templa`tes']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'configP*']
 
 
