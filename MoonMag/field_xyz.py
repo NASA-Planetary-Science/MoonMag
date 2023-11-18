@@ -1,10 +1,12 @@
-""" Functions for calculating magnetic fields
+r""" Functions for calculating magnetic fields
     in planetocentric Cartesian coordinates from spherical magnetic moments.
     Developed in Python 3.8 for "A perturbation method for evaluating the
     magnetic field induced from an arbitrary, asymmetric ocean world 
     analytically" by Styczinski et al.
     DOI: 10.1016/j.icarus.2021.114840
-Author: M. J. Styczinski, mjstyczi@uw.edu """
+    :math:`\hat{r}\upphi\upalpha\ce{H2SO4^{3-}}`
+Author: M. J. Styczinski, mjstyczi@uw.edu
+"""
 
 import numpy as np
 from math import *
