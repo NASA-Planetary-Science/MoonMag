@@ -4,7 +4,6 @@ r""" Functions for calculating magnetic fields
     magnetic field induced from an arbitrary, asymmetric ocean world 
     analytically" by Styczinski et al.
     DOI: 10.1016/j.icarus.2021.114840
-    :math:`\hat{r}\upphi\upalpha\ce{H2SO4^{3-}}`
 Author: M. J. Styczinski, mjstyczi@uw.edu
 """
 
