@@ -51,7 +51,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'configP*']
 
 html_theme = 'sphinx_rtd_theme'  # Install with pip install sphinx-rtd-theme
 html_static_path = ['_static']
-html_css_files = ['css/custom.css']
 html_logo = '../misc/MoonMag_logoDocs.png'
 html_favicon = '../misc/MoonMag_icon.ico'
 
@@ -93,6 +92,7 @@ else:
 # of the stix package.
 imgmath_image_format = 'svg'
 imgmath_use_preview = True
+imgmath_embed = True
 imgmath_latex_preamble = r'\usepackage[notextcomp]{stix}' + \
                          r'\usepackage[version=4]{mhchem}' + \
                          r'\usepackage{siunitx}' + \
