@@ -1,7 +1,0 @@
-MoonMag.plot\_Ganymede\_Aes module
-==================================
-
-.. automodule:: MoonMag.plot_Ganymede_Aes
-   :members:
-   :undoc-members:
-   :show-inheritance:

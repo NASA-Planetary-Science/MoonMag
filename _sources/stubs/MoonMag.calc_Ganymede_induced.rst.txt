@@ -1,7 +1,0 @@
-MoonMag.calc\_Ganymede\_induced module
-======================================
-
-.. automodule:: MoonMag.calc_Ganymede_induced
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -13,14 +13,10 @@ Submodules
    :maxdepth: 4
 
    MoonMag.asymmetry_funcs
-   MoonMag.calc_Ganymede_induced
-   MoonMag.calc_Ganymede_trajec_induced
    MoonMag.config
    MoonMag.eval_induced_field
    MoonMag.field_xyz
-   MoonMag.plot_Ganymede_Aes
    MoonMag.plotting_funcs
-   MoonMag.reduce_Ganymede_interior_model
    MoonMag.run_all
    MoonMag.symmetry_funcs
    MoonMag.trajec_analysis
