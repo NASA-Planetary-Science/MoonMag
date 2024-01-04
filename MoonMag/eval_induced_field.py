@@ -185,7 +185,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
 
         # Read in Benm info
         if plot_field:
-            peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False, model=Benm_model)
+            peak_periods, Benm, B0, exc_names = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, orbital=False, model=Benm_model)
             peak_omegas = 2*np.pi/(peak_periods*3600)
             if not isinstance(peak_omegas, Iterable):
                 peak_periods = [peak_periods]
@@ -380,7 +380,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
                                and (prevEuropa in modelOpts or TobieLow in modelOpts or TobieHigh in modelOpts)
         if (sub_planet_vert and actually_plot_traces) and not output_Schmidt:
             if not recalc:
-                peak_periods, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, model=Benm_model)
+                peak_periods, Benm, B0, exc_names = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=synodic_only, model=Benm_model)
                 int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{flyby_opt}.txt")
                 r_bds, sigmas, bcdev = np.loadtxt(int_model, skiprows=1, unpack=True, delimiter=',')
 
@@ -400,7 +400,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
         # Only tested for Europa, with no ionosphere.
         if (synodic_only and actually_plot_traces) and not output_Schmidt:
             if not recalc:
-                synodic_period, Benm, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
+                synodic_period, Benm, B0, exc_names = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, synodic=True)
                 peak_periods = [synodic_period]
             if not sub_planet_vert:
                 int_model = os.path.join(inp_path, f"interior_model_asym{bfname}{bname_opt}{flyby_opt}.txt")
@@ -429,7 +429,7 @@ def run_calcs(bname, comp, recalc, plot_field, plot_asym, synodic_only=False,
                                                      eps_scaled=eps_scaled, r_bds=r_bds, r_io=r_io, append=bname_opt+flyby_opt, convert_depth_to_chipq=convert_depth_to_chipq)
                         r_bds, sigmas, asym_shape = asym.validate(r_bds, sigmas, bcdev, asym_shape, p_max_main)
 
-                    orbital_period, Benm_orbital, B0 = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, orbital=True)
+                    orbital_period, Benm_orbital, B0, exc_names = asym.read_Benm(nprm_max_main, p_max_main, bodyname=bname, orbital=True)
                     orbital_omega = 2*np.pi/(orbital_period*3600)
                     Binm_sph_orbital = sym.BiList(r_bds, sigmas, [orbital_omega], Benm_orbital, nprmvals, mprmvals, rscale_moments, n_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt)
                     Binm_orbital = asym.BiList(r_bds, sigmas, [orbital_omega], asym_shape, grav_shape, Benm_orbital, rscale_moments, nvals, mvals, p_max_main, nprm_max=nprm_max_main, bodyname=bname, append=bname_opt+flyby_opt)

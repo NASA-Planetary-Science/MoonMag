@@ -164,7 +164,7 @@ def fitData(bname, recalcMoments=True, recalcData=True, recalcFlybys=True, do_pa
         print("Calculating fields along trajectories")
         nprm_max = 1
         p_max = 2
-        peak_periods, Benm, B0 = asym.read_Benm(nprm_max, p_max, bodyname=bname, synodic=False, orbital=False)
+        peak_periods, Benm, B0, exc_names = asym.read_Benm(nprm_max, p_max, bodyname=bname, synodic=False, orbital=False)
         peak_omegas = 2 * np.pi / (peak_periods * 3600)
 
         BinmFiles = filesMatchingPattern(os.path.join("induced", f"{bname}_Binm_asym_Tobie*"))

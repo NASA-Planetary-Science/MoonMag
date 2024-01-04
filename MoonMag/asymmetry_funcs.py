@@ -7,6 +7,7 @@
 Author: M. J. Styczinski, mjstyczi@uw.edu """
 
 import os
+import csv
 import numpy as np
 from scipy.io import savemat, loadmat
 from collections.abc import Iterable
@@ -558,11 +559,12 @@ def ydx(n,x):
 """
 read_Benm()
     Read in the complex frequency spectrum of excitation field oscillations for the strongest excitations.
-    Usage: `peak_periods`, `Benm` = read_Benm(`nprm_max`, `p_max`, `bodyname=None`, `fpath=None`, `synodic=False`, `orbital=False`)
+    Usage: `peak_periods`, `Benm`, `B0`, `exc_names` = read_Benm(`nprm_max`, `p_max`, `bodyname=None`, `fpath=None`, `synodic=False`, `orbital=False`)
     Returns:
         peak_periods: float, shape(n_peaks). Periods in hr of peak oscillations. Values read from files are assumed to be in hr.
         Benm: complex, shape(n_peaks,2,nprm_max+p_max+1,nprm_max+p_max+1). Excitation moments for each period in nT.
         B0: float, shape(3). Static background field. Used to reconstruct the net magnetic field for measurement comparisons.
+        exc_names: string, shape(n_peaks). Descriptive names for peak oscillations.
     Parameters:
         nprm_max: integer. Maximum degree of excitation harmonics to input. n' values appear in file names, so appropriate files must
             all be present from n'=1 to n'=nprm_max.
@@ -609,8 +611,13 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
             fName = f'Be1xyz{bfname}'
         Benm_moments = os.path.join(fpath, f"{fName}.txt")
     log.debug(f"Using excitation moments: {Benm_moments}")
-    peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im = np.loadtxt(Benm_moments, skiprows=1, unpack=True, delimiter=',')
+    _, peak_per1, B0x, B0y, B0z, Bex_Re, Bex_Im, Bey_Re, Bey_Im, Bez_Re, Bez_Im \
+        = np.genfromtxt(Benm_moments, skip_header=True, unpack=True, delimiter=',')
     n_peaks1_prelim = peak_per1.size
+
+    with open(Benm_moments) as f_Benm:
+        data = csv.reader(f_Benm)
+        exc1_names = np.array([row[0] for row in data])
 
     Bex = Bex_Re + 1j * Bex_Im
     Bey = Bey_Re + 1j * Bey_Im
@@ -637,6 +644,7 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         Bex = Bex[iMaxSort]
         Bey = Bey[iMaxSort]
         Bez = Bez[iMaxSort]
+        exc1_names = exc1_names[iMaxSort]
         
     n_peaks1 = np.size(peak_per1)
 
@@ -655,9 +663,15 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
         log.warning("n'=2 excitation moments are being considered, but the amplitudes are just a placeholder! Remove this warning when correct Be2xyz have been installed.")
         for nn in range(1,nprm_max+1):
             if nn == 2:
-                peak_per2, xBex_Re, xBex_Im, xBey_Re, xBey_Im, xBez_Re, xBez_Im, yBez_Re, yBez_Im, zBez_Re, zBez_Im    \
-                    = np.loadtxt(os.path.join(fpath, f"Be2xyz{bfname}.txt"), skiprows=1, unpack=True, delimiter=',')
+                Benm2_moments = f"Be2xyz{bfname}.txt"
+                _, peak_per2, xBex_Re, xBex_Im, xBey_Re, xBey_Im, xBez_Re, xBez_Im, yBez_Re, yBez_Im, zBez_Re, zBez_Im    \
+                    = np.genfromtxt(os.path.join(fpath, Benm2_moments), skip_header=True, unpack=True, delimiter=',')
                 n_peaks2 = np.size(peak_per2)
+
+                with open(Benm2_moments) as f_Benm2:
+                    data = csv.reader(f_Benm2)
+                    exc2_names = np.array([f'Be2{row[0]}' for row in data])
+
                 Benm2 = np.zeros((n_peaks2,2,nprm_max+p_max+1,nprm_max+p_max+1), dtype=np.complex_)
 
                 xBex = xBex_Re + 1j*xBex_Im
@@ -679,15 +693,17 @@ def read_Benm(nprm_max, p_max, bodyname=None, fpath=None, synodic=False, orbital
 
                 Benm[:n_peaks1,:,:,:] = Benm1
                 Benm[n_peaks1:,:,:,:] = Benm2
-                peak_periods = np.append(peak_per1,peak_per2)
+                peak_periods = np.append(peak_per1, peak_per2)
+                exc_names = np.append(exc1_names, exc2_names)
 
             elif nn > 2:
                 raise ValueError("n_max >= 3 is not implemented.")
     else:
         Benm = Benm1
         peak_periods = peak_per1
+        exc_names = exc1_names
 
-    return peak_periods, Benm, B0
+    return peak_periods, Benm, B0, exc_names
 
 #############################################
 
